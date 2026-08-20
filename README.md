@@ -84,23 +84,23 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Cycles | | 10.089.631.270 |
-| Instructions | | 27.898.743.880 |
-| IPC (Instruções por Ciclo) | | 2,8 |
-| Cache-references | | N/A |
-| Cache-misses | | N/A |
-| Branches | | 2.734.749.623 |
-| Branch-misses | | 11.627.578 |
-| L1-dcache-load-misses | | N/A |
-| LLC-load-misses | | N/A |
+| Cycles | | 10.089.609.249 |
+| Instructions | | 	27.897.569.960 |
+| IPC (Instruções por Ciclo) | | 2,77 |
+| Cache-references | | 147.740 |
+| Cache-misses | | 	46.645 |
+| Branches | | 2.734.621.544 |
+| Branch-misses | | 11.582.149 |
+| L1-dcache-load-misses | | 20.816.599 |
+| LLC-load-misses | | 3.732 |
 
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
 | Número exato de instruções (Callgrind) | | 27.868.099.001 (total) |
 | Chamadas por função (Callgrind) | |	evolve: 2001 chamadas / game: 1 chamada |
-| Acessos de memória L1 e L2 (Cachegrind) | | |
-| Misses de memória L1 e L2 (Cachegrind) | | |
+| Acessos de memória L1 e L2 (Cachegrind) | | L1: 39.876.906.692 |
+| Misses de memória L1 e L2 (Cachegrind) | | L1 miss: 20.077.762 / LL miss: 7.815|
 
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
