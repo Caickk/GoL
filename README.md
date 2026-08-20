@@ -37,7 +37,7 @@ Para satisfazer os critérios do experimento, os parâmetros de entrada (dimens�
 
 Durante a coleta de métricas, a execução do binário foi encapsulada pelas ferramentas de profiling exigidas. Utilizando o exemplo de parâmetros acima, os comandos executados foram:
 
-* **Medição de tempo total e recursos:** `/usr/bin/time ./gol 1000 1000 500 50`
+* **Medição de tempo total e recursos:** `/usr/bin/time -v ./gol 1000 1000 500 50`
 * **Contagem de eventos de hardware:** `perf stat ./gol 1000 1000 500 50`
 * **Gravação do overhead por função:** `perf record -g ./gol 1000 1000 500 50`
 * **Simulação de instruções de CPU:** `valgrind --tool=callgrind ./gol 1000 1000 500 50`
@@ -67,12 +67,12 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 ## 1. Medição de Tempo (`/usr/bin/time`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Wall-clock time |64.661919 | |
-| User time | | |
-| System time | | |
-| Maximum RSS (uso de memória) | | |
-| Page faults | | |
-| Context switches | | |
+| Wall-clock time | 1:04.45 (64.45 s) | |
+| User time | 64.42 s | |
+| System time | 0.01 s | |
+| Maximum RSS (uso de memória) | 9528 KB | |
+| Page faults | 2035 (Minor)| |
+| Context switches | 696 (3 vol / 693 invol) | |
 
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
