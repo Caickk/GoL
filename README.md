@@ -109,5 +109,5 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 | 2ª Syscall mais frequente | | |
 | 3ª Syscall mais frequente | | |
 | Tempo total despendido em modo kernel | | |
-# Análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
+# Diagnóstico e análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 ## Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
