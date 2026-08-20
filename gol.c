@@ -107,10 +107,10 @@ void game(int w, int h, int max_iter, int print_freq)
        
       // Verifica se é o momento de imprimir a placa (múltiplo de XX)
       if (iter % print_freq == 0) {
-         save_pbm(univ, w, h, iter);
+         //save_pbm(univ, w, h, iter);
          
         // mostrar a evolução no terminal (opcional, mas útil para visualização)
-          show(univ, w, h);
+          //show(univ, w, h);
           usleep(200000); 
       }
       
