@@ -67,7 +67,7 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 ## 1. Medição de Tempo (`/usr/bin/time`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Wall-clock time | | |
+| Wall-clock time |64.661919 | |
 | User time | | |
 | System time | | |
 | Maximum RSS (uso de memória) | | |
