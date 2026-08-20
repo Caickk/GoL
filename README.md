@@ -58,11 +58,11 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 * **Kernel Linux:** 7.0.0-27-generic
 
 **Ambiente 2 (CPU 2)**
-* **Processador (CPU):** [Preencher modelo da CPU]
+* **Processador (CPU):** Intel® Core™ i5-1135G7 
 * **Memória Cache:** [Preencher L1, L2, L3]
-* **Memória RAM:** [Preencher quantidade, tipo e velocidade]
-* **Sistema Operacional:** [Preencher SO]
-* **Kernel Linux:** [Preencher versão do Kernel]
+* **Memória RAM:** 12 GB
+* **Sistema Operacional:** Ubuntu 26.04 
+* **Kernel Linux:** 7.0.0-29-generic
 
 ## 1. Medição de Tempo (`/usr/bin/time`)
 | Métrica | CPU 1 | CPU 2 |
