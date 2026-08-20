@@ -80,8 +80,8 @@ void game(int w, int h, int max_iter)
 int main(void)
 {
    // Dimensões e iterações fixas
-   int w = 100;
-   int h = 100;
+   int w = 200;
+   int h = 200;
    int max_iter = 2000;
    
    // Semente randômica baseada no tempo para gerar matrizes diferentes a cada execução
