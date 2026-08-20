@@ -3,27 +3,55 @@
 #include <unistd.h>
 #include <time.h>
 
+// Função principal que calcula a próxima geração do Game of Life.
+// Por ser executada a cada iteração, este é o "hotspot" do programa.
 void evolve(void *u, int w, int h)
 {
+   // Faz o cast do ponteiro genérico 'u' para uma matriz bidimensional de dimensões h x w.
    unsigned (*univ)[w] = u;
+   
+   // Aloca uma matriz temporária na stack para armazenar o próximo estado.
+   // Isso é necessário porque as regras do jogo exigem que a matriz original 
+   // permaneça inalterada enquanto os cálculos da geração atual estão sendo feitos.
    unsigned new[h][w];
 
+   // Varredura completa da matriz, célula por célula (eixo Y e eixo X).
    for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
-         int n = 0;
+         
+         int n = 0; // Contador de vizinhos vivos para a célula atual (y, x)
+         
+         // Laços internos para inspecionar a vizinhança 3x3 ao redor da célula.
          for (int y1 = y - 1; y1 <= y + 1; y1++) {
             for (int x1 = x - 1; x1 <= x + 1; x1++) {
+               
+               // Verifica se a célula vizinha está viva.
+               // O uso da operação de módulo (%) com a soma (+ h / + w) cria um 
+               // "tabuleiro infinito" (array toroidal). Se passar da borda direita, 
+               // reaparece na esquerda.
+               // Atenção (Profiling): A operação de módulo (%) na CPU é matematicamente 
+               // cara (equivale a uma divisão), e aqui ela é executada 9 vezes por célula.
                if (univ[(y1 + h) % h][(x1 + w) % w]) {
                   n++;
                }
             }
          }
 
+         // Como o laço 3x3 acima incluiu a própria célula (y, x) na contagem caso 
+         // ela estivesse viva, precisamos descontá-la para ter apenas os vizinhos reais.
          if (univ[y][x]) n--;
+         
+         // Aplica as regras matemáticas de sobrevivência e nascimento do Game of Life:
+         // - Uma célula viva sobrevive se tiver 2 ou 3 vizinhos (n == 2 && univ[y][x] ou n == 3).
+         // - Uma célula morta nasce se tiver exatamente 3 vizinhos (n == 3).
+         // O resultado (1 para vivo, 0 para morto) é salvo na matriz temporária.
          new[y][x] = (n == 3 || (n == 2 && univ[y][x]));
       }
    }
 
+   // Segunda passagem pela matriz inteira.
+   // Copia o estado calculado da matriz temporária 'new' de volta para a matriz original 'univ'.
+   // Atenção (Profiling): Esta é uma operação intensa de acesso à memória (Memory Bound).
    for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
          univ[y][x] = new[y][x];
