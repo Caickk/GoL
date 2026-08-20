@@ -77,9 +77,9 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Função hotspot (maior self time) | | |
-| Tempo gasto na função hotspot (Self time) | | |
-| Percentual de impacto no tempo total | | |
+| Função hotspot (maior self time) | `evolve` | |
+| Tempo gasto na função hotspot (Self time) | 64.45 s | |
+| Percentual de impacto no tempo total | 100.00% | |
 
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
