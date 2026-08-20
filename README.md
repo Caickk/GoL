@@ -58,9 +58,9 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 * **Kernel Linux:** 7.0.0-27-generic
 
 **Ambiente 2 (CPU 2)**
-* **Processador (CPU):** Intel® Core™ i5-1135G7 
-* **Memória Cache:** [Preencher L1, L2, L3]
-* **Memória RAM:** 12 GB
+* **Processador (CPU):** Intel® Core™ i5-1135G7 (4 Núcleos / 8 Threads)
+* **Memória Cache:** L1: 320 / L2: 5MB / L3: 8MB 
+* **Memória RAM:** 12 GB DDR4
 * **Sistema Operacional:** Ubuntu 26.04 
 * **Kernel Linux:** 7.0.0-29-generic
 
