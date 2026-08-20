@@ -19,7 +19,7 @@ void save_pbm(void *u, int w, int h, int iter)
    }
 
    // Cabeçalho obrigatório do formato PBM (P1 = texto, seguido de largura e altura)
-   fprintf(f, "P1\n%d %d\n", w, h);
+  // fprintf(f, "P1\n%d %d\n", w, h);
    
    // Escreve os pixels (1 para vivo, 0 para morto)
    for (int y = 0; y < h; y++) {
@@ -106,13 +106,13 @@ void game(int w, int h, int max_iter, int print_freq)
        * ======================================================================= */
        
       // Verifica se é o momento de imprimir a placa (múltiplo de XX)
-      if (iter % print_freq == 0) {
+      //if (iter % print_freq == 0) {
          //save_pbm(univ, w, h, iter);
          
         // mostrar a evolução no terminal (opcional, mas útil para visualização)
           //show(univ, w, h);
-          usleep(200000); 
-      }
+         // usleep(200000); 
+    //  }
       
       evolve(univ, w, h);
    }
