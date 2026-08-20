@@ -67,47 +67,47 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 ## 1. Medição de Tempo (`/usr/bin/time`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Wall-clock time | 1:04.45 (64.45 s) | |
-| User time | 64.42 s | |
-| System time | 0.01 s | |
-| Maximum RSS (uso de memória) | 9528 KB | |
-| Page faults | 2035 (Minor)| |
-| Context switches | 696 (3 vol / 693 invol) | |
+| Wall-clock time | 1:04.45 (64.45 s) | 	0:02.40 (2.40 s) |
+| User time | 64.42 s | 	2.40 s |
+| System time | 0.01 s | 	0.00 s |
+| Maximum RSS (uso de memória) | 9528 KB | 2220 KB |
+| Page faults | 2035 (Minor)|  157 (Minor) / 0 (Major) |
+| Context switches | 696 (3 vol / 693 invol) | 	26 (1 vol / 25 invol) |
 
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Função hotspot (maior self time) | `evolve` | |
-| Tempo gasto na função hotspot (Self time) | 64.45 s | |
-| Percentual de impacto no tempo total | 100.00% | |
+| Função hotspot (maior self time) | `evolve` |  `evolve` |
+| Tempo gasto na função hotspot (Self time) | 64.45 s | 	2.39 s |
+| Percentual de impacto no tempo total | 100.00% | 	100.00% |
 
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Cycles | | |
-| Instructions | | |
-| IPC (Instruções por Ciclo) | | |
-| Cache-references | | |
-| Cache-misses | | |
-| Branches | | |
-| Branch-misses | | |
-| L1-dcache-load-misses | | |
-| LLC-load-misses | | |
+| Cycles | | 10.089.631.270 |
+| Instructions | | 27.898.743.880 |
+| IPC (Instruções por Ciclo) | | 2,8 |
+| Cache-references | | N/A |
+| Cache-misses | | N/A |
+| Branches | | 2.734.749.623 |
+| Branch-misses | | 11.627.578 |
+| L1-dcache-load-misses | | N/A |
+| LLC-load-misses | | N/A |
 
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Número exato de instruções (Callgrind) | | |
-| Chamadas por função (Callgrind) | | |
+| Número exato de instruções (Callgrind) | | 27.868.099.001 (total) |
+| Chamadas por função (Callgrind) | |	evolve: 2001 chamadas / game: 1 chamada |
 | Acessos de memória L1 e L2 (Cachegrind) | | |
 | Misses de memória L1 e L2 (Cachegrind) | | |
 
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| 1ª Syscall mais frequente | | |
-| 2ª Syscall mais frequente | | |
-| 3ª Syscall mais frequente | | |
-| Tempo total despendido em modo kernel | | |
+| 1ª Syscall mais frequente | | execve (57,91%) |
+| 2ª Syscall mais frequente | | mmap (16,12%) |
+| 3ª Syscall mais frequente | | mprotect (6,27%) |
+| Tempo total despendido em modo kernel | | 	0,000670 s (670 µs) |
 # Diagnóstico e análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 ## Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
