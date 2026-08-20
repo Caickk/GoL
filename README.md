@@ -43,7 +43,71 @@ Durante a coleta de métricas, a execução do binário foi encapsulada pelas fe
 * **Simulação de instruções de CPU:** `valgrind --tool=callgrind ./gol 1000 1000 500 50`
 * **Simulação de acessos e misses de memória L1/L2:** `valgrind --tool=cachegrind ./gol 1000 1000 500 50`
 * **Rastreamento de chamadas de sistema:** `strace -c ./gol 1000 1000 500 50`
+  
 # Tabelas de resultados do time, gprof, perf, Valgrind e strace
 
+Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois ambientes de hardware distintos, seguindo os parâmetros definidos na especificação do projeto.
+
+## Especificações dos Ambientes de Teste
+
+**Ambiente 1 (CPU 1)**
+* **Processador (CPU):** AMD Ryzen 5 7520U (4 Núcleos / 8 Threads)
+* **Memória Cache:** L1: 128 KiB / L2: 2 MiB / L3: 4 MiB
+* **Memória RAM:** 16 GB (2x 8GB) LPDDR5 Samsung @ 5500 MT/s (Dual-Channel)
+* **Sistema Operacional:** Ubuntu 26
+* **Kernel Linux:** 7.0.0-27-generic
+
+**Ambiente 2 (CPU 2)**
+* **Processador (CPU):** [Preencher modelo da CPU]
+* **Memória Cache:** [Preencher L1, L2, L3]
+* **Memória RAM:** [Preencher quantidade, tipo e velocidade]
+* **Sistema Operacional:** [Preencher SO]
+* **Kernel Linux:** [Preencher versão do Kernel]
+
+## 1. Medição de Tempo (`/usr/bin/time`)
+| Métrica | CPU 1 | CPU 2 |
+| :--- | :--- | :--- |
+| Wall-clock time | | |
+| User time | | |
+| System time | | |
+| Maximum RSS (uso de memória) | | |
+| Page faults | | |
+| Context switches | | |
+
+## 2. Profiling com `gprof`
+| Métrica | CPU 1 | CPU 2 |
+| :--- | :--- | :--- |
+| Função hotspot (maior self time) | | |
+| Tempo gasto na função hotspot (Self time) | | |
+| Percentual de impacto no tempo total | | |
+
+## 3. Profiling de Hardware (`perf stat`)
+| Métrica | CPU 1 | CPU 2 |
+| :--- | :--- | :--- |
+| Cycles | | |
+| Instructions | | |
+| IPC (Instruções por Ciclo) | | |
+| Cache-references | | |
+| Cache-misses | | |
+| Branches | | |
+| Branch-misses | | |
+| L1-dcache-load-misses | | |
+| LLC-load-misses | | |
+
+## 4. Profiling com Valgrind (Callgrind e Cachegrind)
+| Métrica | CPU 1 | CPU 2 |
+| :--- | :--- | :--- |
+| Número exato de instruções (Callgrind) | | |
+| Chamadas por função (Callgrind) | | |
+| Acessos de memória L1 e L2 (Cachegrind) | | |
+| Misses de memória L1 e L2 (Cachegrind) | | |
+
+## 5. Rastreamento com `strace`
+| Métrica | CPU 1 | CPU 2 |
+| :--- | :--- | :--- |
+| 1ª Syscall mais frequente | | |
+| 2ª Syscall mais frequente | | |
+| 3ª Syscall mais frequente | | |
+| Tempo total despendido em modo kernel | | |
 # Análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 ## Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
