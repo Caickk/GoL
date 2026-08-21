@@ -90,12 +90,18 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 | Page faults | 157 (Minor) / 0 (Major) |  157 (Minor) / 0 (Major) |
 | Context switches | 48 (1 vol / 47 invol) |      26 (1 vol / 25 invol) |
 
+O tempo gasto processando cálculos (User time) é praticamente igual ao tempo total de execução (Wall-clock time). Na CPU 1 (5.70s de 5.71s) e na CPU 2 (2.40s de 2.40s), o processador foi utilizado em quase 100% do tempo.
+
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
 | Função hotspot (maior self time) | `evolve` |  `evolve` |
 | Tempo gasto na função hotspot (Self time) | 5.62 s |      2.39 s |
 | Percentual de impacto no tempo total | 100.00% |      100.00% |
+
+Função Hotspot: A função evolve é o hotspot absoluto do programa.
+
+Percentual de Impacto: Ela é responsável por 100.00% do tempo total de execução em ambas as CPUs.
 
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
@@ -110,6 +116,16 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 | L1-dcache-load-misses | 22.761.356 | 20.816.599 |
 | LLC-load-misses | Não suportado | 3.732 |
 
+gprof (Instrumentação): Insere código no binário para rastrear funções. Gera overhead e altera o tempo real, mas é ideal para achar o gargalo lógico (a função evolve).
+
+perf (Amostragem): Lê contadores do hardware sem modificar o código. Fornece dados reais e exatos de como o processador lida com a execução.
+
+Avaliação do IPC (Instruções por Ciclo): Ambas processam ~27,9 bilhões de instruções, mas a CPU 2 (IPC 2,77) é muito mais eficiente que a CPU 1 (IPC 1,29). A CPU 2 consegue resolver mais do dobro de instruções no mesmo pulso de clock (melhor paralelismo interno do processador).
+
+Branches: A taxa de falha de predição (branch-misses) é de apenas ~0,5%. O processador quase nunca erra o caminho dos laços for e ifs.
+
+Cache: O erro de L1 é mínimo. O mais importante é o registro de apenas 3.732 LLC-load-misses na CPU 2, o que prova que os dados (as matrizes) cabem inteiramente no Cache L3. O processador não perde tempo buscando dados na Memória RAM, confirmando a alta localidade de dados e o comportamento estritamente CPU-bound.
+
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
@@ -118,6 +134,10 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 | Acessos de memória L1 e L2 (Cachegrind) | L1: 39.850.628.064 | L1: 39.876.906.692 |
 | Misses de memória L1 e L2 (Cachegrind) | L1 miss: 20.089.847 / LL miss: 7.819 | L1 miss: 20.077.762 / LL miss: 7.815|
 
+Localidade Espacial (Acesso Sequencial): A taxa de falha no Cache L1 é mínima, de apenas ~0,05% (20 milhões de misses em quase 40 bilhões de acessos). O processador aproveita os dados carregados nos blocos do cache (cache lines) sem desperdício.
+
+Localidade Temporal (Reuso de Dados): Houve apenas ~7.800 falhas no Último Nível (LL misses) durante todas as 2001 chamadas de evolve. Isso comprova que as matrizes do jogo cabem perfeitamente no cache do processador e são reutilizadas iterativamente, praticamente eliminando a necessidade de buscar dados na lenta Memória RAM.
+
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
@@ -125,6 +145,14 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 | 2ª Syscall mais frequente | mmap (11,81%) | mmap (16,12%) |
 | 3ª Syscall mais frequente | mprotect (4,18%) | mprotect (6,27%) |
 | Tempo total despendido em modo kernel | 0,000982 s (982 µs) |      0,000670 s (670 µs) |
+
+O programa possui comportamento exclusivo em User Space (Modo Usuário).
+
+A classificação é confirmada por:
+
+Syscalls de Inicialização: As chamadas mais frequentes (execve, mmap, mprotect) ocorrem apenas durante o carregamento do binário e bibliotecas, sem chamadas de I/O (leitura/escrita) durante o processamento.
+
+Tempo em Kernel Irrelevante: O tempo despendido em modo kernel é inferior a 1 milissegundo. O programa processa a lógica do jogo de forma isolada, sem interrupções ou necessidade de serviços do sistema operacional após o início da execução.
 
 # Diagnóstico e análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 ## Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
