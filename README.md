@@ -76,7 +76,7 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 **Ambiente 2 (CPU 2)**
 * **Processador (CPU):** Intel® Core™ i5-1135G7 (4 Núcleos / 8 Threads)
 * **Memória Cache:** L1: 320 / L2: 5MB / L3: 8MB 
-* **Memória RAM:** 12 GB DDR4
+* **Memória RAM:** 12 GB DDR4
 * **Sistema Operacional:** Ubuntu 26.04 
 * **Kernel Linux:** 7.0.0-29-generic
 
@@ -92,6 +92,10 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 
 O tempo gasto processando cálculos (User time) é praticamente igual ao tempo total de execução (Wall-clock time). Na CPU 1 (5.70s de 5.71s) e na CPU 2 (2.40s de 2.40s), o processador foi utilizado em quase 100% do tempo.
 
+**Análise de Proporção — Speedup entre CPUs**
+
+A CPU 2 executa a carga completa **2,38× mais rápido** que a CPU 1 (5,71 s ÷ 2,40 s), com a mesma proporção refletida no user time (5,70 s ÷ 2,40 s = 2,38×). Esse ganho será decomposto na seção de `perf stat` em seus dois componentes reais: eficiência por ciclo (IPC) e frequência de clock.
+
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
@@ -102,6 +106,10 @@ O tempo gasto processando cálculos (User time) é praticamente igual ao tempo t
 Função Hotspot: A função evolve é o hotspot absoluto do programa.
 
 Percentual de Impacto: Ela é responsável por 100.00% do tempo total de execução em ambas as CPUs.
+
+**Análise de Proporção — Overhead de Instrumentação**
+
+O self time do gprof não cobre 100% do wall-clock medido pelo `/usr/bin/time`: na CPU 1, `evolve` responde por 98,42% do tempo total (5,62 s de 5,71 s); na CPU 2, por 99,58% (2,39 s de 2,40 s). A diferença — 0,09 s na CPU 1 e 0,01 s na CPU 2 — corresponde a overhead de inicialização e instrumentação não atribuído a nenhuma função específica pelo profiler, sendo proporcionalmente maior na CPU 1 por seu tempo total de execução ser maior.
 
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
@@ -126,6 +134,25 @@ Branches: A taxa de falha de predição (branch-misses) é de apenas ~0,5%. O pr
 
 Cache: O erro de L1 é mínimo. O mais importante é o registro de apenas 3.732 LLC-load-misses na CPU 2, o que prova que os dados (as matrizes) cabem inteiramente no Cache L3. O processador não perde tempo buscando dados na Memória RAM, confirmando a alta localidade de dados e o comportamento estritamente CPU-bound.
 
+**Análise de Proporção — Decomposição do Speedup (IPC × Frequência)**
+
+O ganho de 2,38× no tempo de execução não vem de menos trabalho: o volume de instruções é praticamente idêntico entre as CPUs (diferença de apenas 0,18%). Ele se decompõe em dois fatores multiplicativos:
+- **Ganho de IPC:** 2,77 ÷ 1,29 = **2,15×** mais instruções resolvidas por ciclo na CPU 2.
+- **Ganho de frequência efetiva:** calculando `ciclos ÷ user time`, a CPU 1 operou a ~3,80 GHz e a CPU 2 a ~4,20 GHz — um ganho de **1,11×**.
+- **Produto dos dois fatores:** 2,15 × 1,11 = **2,37×**, praticamente idêntico ao speedup real observado (2,38×). Isso confirma que a diferença de desempenho é explicada quase inteiramente por arquitetura (IPC) e clock, não por trabalho computacional distinto.
+
+**Análise de Proporção — Cache-miss Rate não é Portável entre Fabricantes**
+
+| Métrica (taxa) | CPU 1 (AMD) | CPU 2 (Intel) |
+| :--- | :--- | :--- |
+| Cache-miss rate (misses/references) | 5,15% | 31,57% |
+| Branch-miss rate (misses/branches) | 0,57% | 0,42% |
+| L1-dcache-miss por instrução | 0,0814% | 0,0746% |
+
+À primeira vista, a taxa de cache-miss da CPU 2 parece 6× pior que a da CPU 1. Essa diferença **não reflete o comportamento real do algoritmo** — é um artefato de como o `perf` mapeia os nomes genéricos `cache-references`/`cache-misses` para os contadores físicos de PMU de cada fabricante. AMD e Intel não implementam os mesmos registradores de hardware nem organizam a hierarquia de cache da mesma forma, então o perf escolhe, por baixo dos panos, eventos fisicamente diferentes em cada arquitetura para responder por esse mesmo nome genérico. Isso fica evidente no volume absoluto: a CPU 2 registrou 291× menos `cache-references` (147.740 vs. 42.957.759) — sinal de que o evento capturado ali provavelmente corresponde a um nível de cache mais profundo (perto do LLC) do que na CPU 1, não porque a CPU 2 acessa a memória 291× menos.
+
+A métrica confiável para comparar as duas CPUs é o **L1-dcache-load-misses relativo às instruções executadas** — um evento com definição mais padronizada entre arquiteturas — que se mantém baixo e consistente em ambas (~0,08%), confirmando que o padrão real de acesso à memória do algoritmo independe do hardware.
+
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
@@ -137,6 +164,23 @@ Cache: O erro de L1 é mínimo. O mais importante é o registro de apenas 3.732 
 Localidade Espacial (Acesso Sequencial): A taxa de falha no Cache L1 é mínima, de apenas ~0,05% (20 milhões de misses em quase 40 bilhões de acessos). O processador aproveita os dados carregados nos blocos do cache (cache lines) sem desperdício.
 
 Localidade Temporal (Reuso de Dados): Houve apenas ~7.800 falhas no Último Nível (LL misses) durante todas as 2001 chamadas de evolve. Isso comprova que as matrizes do jogo cabem perfeitamente no cache do processador e são reutilizadas iterativamente, praticamente eliminando a necessidade de buscar dados na lenta Memória RAM.
+
+**Análise de Proporção — Validação Cruzada perf vs. Valgrind**
+
+| Verificação cruzada | CPU 1 | CPU 2 |
+| :--- | :--- | :--- |
+| Divergência instructions (perf) × Ir (Callgrind) | 0,29% | 0,11% |
+| Divergência L1-dcache-load-misses (perf) × D1 miss (Cachegrind) | 13,3% | 3,7% |
+| Taxa de miss L1 (Cachegrind) | 0,0504% | 0,0503% |
+| Misses no último nível por geração (LL ÷ 2001 chamadas) | 3,91 | 3,91 |
+
+A contagem de instruções diverge menos de 0,3% entre `perf` e Callgrind em ambas as CPUs — validação forte, já que uma ferramenta mede por amostragem de hardware e a outra por simulação determinística de cada instrução executada.
+
+Já a divergência nos misses de cache (13,3% na CPU 1; 3,7% na CPU 2) tem uma causa **diferente** da discrepância discutida no item 3: ali o problema era portabilidade de um evento genérico entre fabricantes; aqui, é a distinção entre **medir hardware real** e **simular um modelo idealizado**. O `perf` lê contadores físicos da CPU, que refletem todo o comportamento real do silício — incluindo o *prefetcher* de hardware, que antecipa e pré-carrega dados de acessos sequenciais (como a varredura da matriz do Game of Life), reduzindo misses reais. O Cachegrind, por sua vez, não usa hardware algum: ele simula, em software, um modelo de cache simplificado (tipicamente LRU puro, sem os mecanismos proprietários de prefetching de cada fabricante). A divergência não é igual nas duas CPUs porque o Cachegrind tenta calibrar automaticamente sua simulação com base na geometria de cache detectada via CPUID — e o quão bem esse modelo genérico se aproxima do comportamento real varia conforme as peculiaridades de cada microarquitetura (AMD Zen vs. Intel Tiger Lake implementam prefetching e associatividade de forma distinta).
+
+Nenhum dos dois valores é "o errado" — são dois métodos válidos medindo fenômenos diferentes (silício real vs. modelo idealizado). O que valida a conclusão de alta localidade de memória não é a concordância exata entre os números, mas a concordância na **ordem de grandeza**: ambas as ferramentas, por caminhos independentes, apontam taxas de miss muito baixas.
+
+A taxa de miss em L1 do Cachegrind, por sua vez, é praticamente **idêntica** entre as CPUs (0,0504% vs. 0,0503%) — evidência de que, como o Cachegrind simula um cache genérico (não o cache real de cada CPU), o padrão de acesso à memória capturado ali é determinado pela estrutura do código-fonte, não pelo hardware onde roda.
 
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
@@ -153,6 +197,10 @@ A classificação é confirmada por:
 Syscalls de Inicialização: As chamadas mais frequentes (execve, mmap, mprotect) ocorrem apenas durante o carregamento do binário e bibliotecas, sem chamadas de I/O (leitura/escrita) durante o processamento.
 
 Tempo em Kernel Irrelevante: O tempo despendido em modo kernel é inferior a 1 milissegundo. O programa processa a lógica do jogo de forma isolada, sem interrupções ou necessidade de serviços do sistema operacional após o início da execução.
+
+**Análise de Proporção — Tempo em Kernel como Fração do Total**
+
+Normalizando o tempo em modo kernel pelo wall-clock total de cada execução: CPU 1 gasta 0,0172% do tempo em kernel (982 µs de 5,71 s); CPU 2 gasta 0,0279% (670 µs de 2,40 s). Embora o valor absoluto seja menor na CPU 2, a fração relativa é proporcionalmente maior — natural, já que o tempo de inicialização do processo (onde essas syscalls ocorrem) é praticamente fixo, independente da duração da carga de trabalho, então quanto mais rápida a execução, maior o peso relativo da inicialização no total.
 
 # Diagnóstico e análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 
