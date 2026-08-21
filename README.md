@@ -3,7 +3,7 @@
 ## Discentes
 
 - [Camila De Araújo Bastos](https://github.com/camilaab)
-- [Caick Wendell Lops dos Santos](https://github.com/caickkk)
+- [Caick Wendell Lopes dos Santos](https://github.com/caickkk)
 # Descrição do algoritmo
 
 O código implementa uma versão serial do **Conway's Game of Life (Jogo da Vida)**, um autômato celular criado pelo matemático John Horton Conway. O algoritmo simula a evolução de uma grade bidimensional de células (vivas ou mortas) ao longo de sucessivas gerações, baseando-se no estado da vizinhança imediata (as 8 células ao redor) de cada posição.
