@@ -48,23 +48,25 @@ O `gprof` exige uma compilação específica com instrumentação de código par
   
 # Execução e Parâmetros de Linha de Comando
 
-O código fonte foi estruturado para receber quatro parâmetros numéricos via linha de comando: a largura da placa, a altura da placa, o número máximo de iterações e a frequência de salvamento das iterações (parâmetro XX). 
+O código fonte foi estruturado de forma a manter quatro parâmetros numéricos fixos: a largura da placa, a altura da placa, o número máximo de iterações e a frequência de salvamento das iterações (parâmetro XX). 
 
 O formato de execução padrão segue a estrutura:
-`./gol [largura] [altura] [max_iter] [print_freq]`
+`./gol `
 
-* **Exemplo de execução:** `./gol 1000 1000 500 50`
+* **Exemplo de execução:** `./gol `
 
 Para satisfazer os critérios do experimento, os parâmetros de entrada (dimensões da matriz e número de iterações) devem ser grandes o suficiente para que o programa processe um volume de dados adequado, garantindo que o tempo de execução alcance pelo menos 2 segundos em *wall-clock time* utilizando a compilação base.
 
 Durante a coleta de métricas, a execução do binário foi encapsulada pelas ferramentas de profiling exigidas. Utilizando o exemplo de parâmetros acima, os comandos executados foram:
 
-* **Medição de tempo total e recursos:** `/usr/bin/time -v ./gol 1000 1000 500 50`
-* **Contagem de eventos de hardware:** `perf stat ./gol 1000 1000 500 50`
-* **Gravação do overhead por função:** `perf record -g ./gol 1000 1000 500 50`
-* **Simulação de instruções de CPU:** `valgrind --tool=callgrind ./gol 1000 1000 500 50`
-* **Simulação de acessos e misses de memória L1/L2:** `valgrind --tool=cachegrind ./gol 1000 1000 500 50`
-* **Rastreamento de chamadas de sistema:** `strace -c ./gol 1000 1000 500 50`
+* **Medição de tempo total e recursos:** `/usr/bin/time -v ./gol`
+* **Contagem de eventos de hardware:** `perf stat ./gol`
+* **Gravação do overhead por função:** `perf record -g ./gol`
+* **Leitura do relatório de overhead do perf:** `perf report --stdio`
+* **Simulação de instruções de CPU:** `valgrind --tool=callgrind ./gol`
+* **Simulação de acessos e misses de memória L1/L2:** `valgrind --tool=cachegrind ./gol`
+* **Anotação dos resultados do Cachegrind:** `cg_annotate cachegrind.out.<PID>`
+* **Rastreamento de chamadas de sistema:** `strace -c ./gol`
   
 # Tabelas de resultados do time, gprof, perf, Valgrind e strace
 
