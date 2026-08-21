@@ -83,47 +83,48 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 ## 1. Medição de Tempo (`/usr/bin/time`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Wall-clock time | 1:04.45 (64.45 s) | 	0:02.40 (2.40 s) |
-| User time | 64.42 s | 	2.40 s |
-| System time | 0.01 s | 	0.00 s |
-| Maximum RSS (uso de memória) | 9528 KB | 2220 KB |
-| Page faults | 2035 (Minor)|  157 (Minor) / 0 (Major) |
-| Context switches | 696 (3 vol / 693 invol) | 	26 (1 vol / 25 invol) |
+| Wall-clock time | 0:05.71 (5.71 s) |      0:02.40 (2.40 s) |
+| User time | 5.70 s |      2.40 s |
+| System time | 0.00 s |      0.00 s |
+| Maximum RSS (uso de memória) | 2056 KB | 2220 KB |
+| Page faults | 157 (Minor) / 0 (Major) |  157 (Minor) / 0 (Major) |
+| Context switches | 48 (1 vol / 47 invol) |      26 (1 vol / 25 invol) |
 
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
 | Função hotspot (maior self time) | `evolve` |  `evolve` |
-| Tempo gasto na função hotspot (Self time) | 64.45 s | 	2.39 s |
-| Percentual de impacto no tempo total | 100.00% | 	100.00% |
+| Tempo gasto na função hotspot (Self time) | 5.62 s |      2.39 s |
+| Percentual de impacto no tempo total | 100.00% |      100.00% |
 
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Cycles | | 10.089.609.249 |
-| Instructions | | 	27.897.569.960 |
-| IPC (Instruções por Ciclo) | | 2,77 |
-| Cache-references | | 147.740 |
-| Cache-misses | | 	46.645 |
-| Branches | | 2.734.621.544 |
-| Branch-misses | | 11.582.149 |
-| L1-dcache-load-misses | | 20.816.599 |
-| LLC-load-misses | | 3.732 |
+| Cycles | 21.684.196.173 | 10.089.609.249 |
+| Instructions | 27.947.432.505 |      27.897.569.960 |
+| IPC (Instruções por Ciclo) | 1,29 | 2,77 |
+| Cache-references | 42.957.759 | 147.740 |
+| Cache-misses | 2.211.458 |      46.645 |
+| Branches | 2.745.341.904 | 2.734.621.544 |
+| Branch-misses | 15.732.391 | 11.582.149 |
+| L1-dcache-load-misses | 22.761.356 | 20.816.599 |
+| LLC-load-misses | Não suportado | 3.732 |
 
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| Número exato de instruções (Callgrind) | | 27.868.099.001 (total) |
-| Chamadas por função (Callgrind) | |	evolve: 2001 chamadas / game: 1 chamada |
-| Acessos de memória L1 e L2 (Cachegrind) | | L1: 39.876.906.692 |
-| Misses de memória L1 e L2 (Cachegrind) | | L1 miss: 20.077.762 / LL miss: 7.815|
+| Número exato de instruções (Callgrind) | 27.867.724.398 (total) | 27.868.099.001 (total) |
+| Chamadas por função (Callgrind) | evolve: 2001 chamadas / game: 1 chamada |    evolve: 2001 chamadas / game: 1 chamada |
+| Acessos de memória L1 e L2 (Cachegrind) | L1: 39.850.628.064 | L1: 39.876.906.692 |
+| Misses de memória L1 e L2 (Cachegrind) | L1 miss: 20.089.847 / LL miss: 7.819 | L1 miss: 20.077.762 / LL miss: 7.815|
 
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
-| 1ª Syscall mais frequente | | execve (57,91%) |
-| 2ª Syscall mais frequente | | mmap (16,12%) |
-| 3ª Syscall mais frequente | | mprotect (6,27%) |
-| Tempo total despendido em modo kernel | | 	0,000670 s (670 µs) |
+| 1ª Syscall mais frequente | execve (65,38%) | execve (57,91%) |
+| 2ª Syscall mais frequente | mmap (11,81%) | mmap (16,12%) |
+| 3ª Syscall mais frequente | mprotect (4,18%) | mprotect (6,27%) |
+| Tempo total despendido em modo kernel | 0,000982 s (982 µs) |      0,000670 s (670 µs) |
+
 # Diagnóstico e análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 ## Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
