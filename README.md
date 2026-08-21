@@ -88,21 +88,35 @@ Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois a
 * **Sistema Operacional:** Ubuntu 26.04 
 * **Kernel Linux:** 7.0.0-29-generic
 
-## 1. Medição de Tempo (`/usr/bin/time`)
-| Métrica | CPU 1 | CPU 2 |
-| :--- | :--- | :--- |
-| Wall-clock time | 0:05.71 (5.71 s) |      0:02.40 (2.40 s) |
-| User time | 5.70 s |      2.40 s |
-| System time | 0.00 s |      0.00 s |
-| Maximum RSS (uso de memória) | 2056 KB | 2220 KB |
-| Page faults | 157 (Minor) / 0 (Major) |  157 (Minor) / 0 (Major) |
-| Context switches | 48 (1 vol / 47 invol) |      26 (1 vol / 25 invol) |
+## Medição de Tempo (`/usr/bin/time`)
 
-O tempo gasto processando cálculos (User time) é praticamente igual ao tempo total de execução (Wall-clock time). Na CPU 1 (5.70s de 5.71s) e na CPU 2 (2.40s de 2.40s), o processador foi utilizado em quase 100% do tempo.
+---
 
-**Análise de Proporção — Speedup entre CPUs**
+### Dados coletados
 
-A CPU 2 executa a carga completa **2,38× mais rápido** que a CPU 1 (5,71 s ÷ 2,40 s), com a mesma proporção refletida no user time (5,70 s ÷ 2,40 s = 2,38×). Esse ganho será decomposto na seção de `perf stat` em seus dois componentes reais: eficiência por ciclo (IPC) e frequência de clock.
+| **Dado** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
+| Wall-clock time | 5,71 s | 2,40 s |
+| User time | 5,70 s | 2,40 s |
+| System time | 0,00 s | 0,00 s |
+| Maximum RSS | 2056 KB | 2220 KB |
+| Page faults (minor/major) | 157 / 0 | 157 / 0 |
+| Context switches (vol/invol) | 1 / 47 | 1 / 25 |
+
+### Métricas
+
+| **Métrica** | **Fórmula** | **CPU 1** | **CPU 2** | **O que faz / para que serve** |
+|---|---|---:|---:|---|
+| Speedup (tempo real) | `t1_wall / t2_wall` | — | **2,38x** | Compara o tempo total de execução entre as duas CPUs. |
+| CPU utilization | `(user + sys) / wall × 100` | 99,82% | 100% | Mede a fração do tempo total em que a CPU esteve efetivamente ocupada processando, em vez de esperando por I/O, bloqueios ou sincronização. |
+| Context switches/s | `switches / wall` | 8,41/s | 10,83/s | Mede a frequência de trocas de contexto do escalonador durante a execução. |
+| Overhead de memória (RSS) | `RSS2 − RSS1` | Referência | +164 KB | Mede a diferença de pico de uso de memória residente entre as execuções. |
+
+### Análise: CPU-bound ou I/O-bound?
+
+A relação entre o tempo de CPU (`user + system`) e o tempo total decorrido (`wall-clock`) é praticamente **1:1** nas duas execuções (**99,82%** e **100%**).
+
+O `system time` é **0,00 s** em ambas as execuções, ou seja, não há tempo relevante gasto esperando por chamadas de sistema, disco ou rede. Isso caracteriza a aplicação como **CPU-bound**: praticamente todo o tempo de execução é consumido pelo processamento na CPU, sem gargalos significativos de entrada/saída (I/O). Essa conclusão também é reforçada pelos dados do `strace` (Seção 5), onde o tempo gasto em modo kernel é irrisório em comparação ao `wall-clock`.
 
 ## 2. Profiling com `gprof`
 | Métrica | CPU 1 | CPU 2 |
