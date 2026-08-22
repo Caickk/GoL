@@ -329,18 +329,13 @@ Normalizando o tempo em modo kernel pelo wall-clock total de cada execução: CP
 
 # Diagnóstico e análise crítica sobre qual ferramenta foi mais útil para o diagnóstico
 
-Cada ferramenta respondeu a uma pergunta diferente; nenhuma isolada bastaria.
+Cada ferramenta respondeu a uma pergunta diferente; nenhuma isolada seria suficiente.
 
-/usr/bin/time deu o panorama inicial — confirmou CPU-bound (User ≈ Wall-clock, System ≈ 0) e descartou problemas de memória e I/O. Indispensável como ponto de partida, mas não diz onde no código o tempo é gasto.
+- **`/usr/bin/time`** deu o panorama inicial: confirmou o comportamento CPU-bound (User ≈ Wall-clock, System ≈ 0) e descartou gargalos de memória e I/O — mas não indica onde, no código, o tempo é gasto.
+- **`gprof`** respondeu "onde otimizar": isolou `evolve` como responsável por 100% do tempo de CPU nas duas máquinas. Limitações: exige recompilar com `-pg` (overhead que pode distorcer tempos de funções pequenas) e não explica o custo em termos de hardware.
+- **`perf stat`** foi a mais útil para explicar "por quê": sem alterar o binário, revelou que a diferença entre as CPUs vem do IPC (1,29 vs. 2,77), não do volume de instruções, e confirmou taxas mínimas de branch-miss e cache-miss em L1. Também expôs que métricas genéricas de cache não são portáveis entre fabricantes. O `perf record -g` complementou com o call graph, sem o overhead pesado do Valgrind.
+- **Valgrind** (Callgrind/Cachegrind) foi a mais precisa e determinística, validando de forma independente os resultados do `perf` (divergência < 0,3%) — mas com overhead de execução altíssimo, inadequado para medir tempo real.
+- **`strace`** foi a menos útil aqui: só confirmou a ausência de syscalls relevantes, uma confirmação negativa que não aponta onde otimizar.
 
-gprof respondeu com mais clareza "onde otimizar": isolou evolve como responsável por 100% do tempo de CPU nas duas máquinas. Limitações: exige recompilar com -pg (overhead que pode distorcer tempos absolutos de funções pequenas) e não explica por que a função custa o que custa em hardware.
-
-perf stat foi a mais útil para explicar "por quê", sem alterar o binário nem introduzir overhead relevante. Foi a única a revelar a causa real da diferença entre as CPUs — não o volume de trabalho (instruções quase idênticas), mas o IPC (1,29 vs. 2,77) — e a confirmar taxas mínimas de branch-miss e cache-miss em L1. Também expôs uma armadilha: métricas genéricas de cache não são portáveis entre vendors. perf record -g complementou com o call graph sem o overhead pesado do Valgrind.
-
-Valgrind (Callgrind/Cachegrind) foi a mais precisa e determinística: seus números validaram de forma independente os resultados do perf (divergência < 0,3%). Melhor opção para contagens exatas e reprodutíveis, mas com overhead de execução altíssimo, inadequada para medir tempo real.
-
-strace foi a menos útil para diagnóstico de desempenho aqui: confirmou ausência de syscalls relevantes na simulação — uma confirmação negativa, que diz o que não é o gargalo, sem apontar onde otimizar o cálculo.
-
-Conclusão: a combinação mais eficiente foi gprof + perf stat — o primeiro localizou o hotspot (evolve) de forma direta e barata, o segundo explicou o comportamento de hardware por trás desse custo (CPU-bound, alta localidade de cache, poucos branch-misses, e a real causa da diferença entre as CPUs testadas: IPC, não volume de instruções). O Valgrind agregou valor como validação cruzada determinística, e o strace serviu só para descartar gargalo em I/O/sistema. Nenhuma ferramenta isolada permitiria concluir, ao mesmo tempo, onde, por quê e com que confiabilidade o programa se comporta como se comporta.
-
+**Conclusão:** a combinação mais eficiente foi `gprof` + `perf stat` — o primeiro localizou o hotspot de forma direta e barata; o segundo explicou o comportamento de hardware por trás desse custo (CPU-bound, alta localidade de cache, poucos branch-misses, e a real causa da diferença entre as CPUs: IPC, não volume de instruções). O Valgrind agregou validação cruzada determinística, e o `strace` serviu apenas para descartar gargalo em I/O/sistema. Nenhuma ferramenta isolada permitiria concluir, ao mesmo tempo, onde, por quê e com que confiabilidade o programa se comporta como se comporta.
 ## Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
