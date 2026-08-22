@@ -118,20 +118,52 @@ A relação entre o tempo de CPU (`user + system`) e o tempo total decorrido (`w
 
 O `system time` é **0,00 s** em ambas as execuções, ou seja, não há tempo relevante gasto esperando por chamadas de sistema, disco ou rede. Isso caracteriza a aplicação como **CPU-bound**: praticamente todo o tempo de execução é consumido pelo processamento na CPU, sem gargalos significativos de entrada/saída (I/O). Essa conclusão também é reforçada pelos dados do `strace` (Seção 5), onde o tempo gasto em modo kernel é irrisório em comparação ao `wall-clock`.
 
-## 2. Profiling com `gprof`
-| Métrica | CPU 1 | CPU 2 |
-| :--- | :--- | :--- |
-| Função hotspot (maior self time) | `evolve` |  `evolve` |
-| Tempo gasto na função hotspot (Self time) | 5.62 s |      2.39 s |
-| Percentual de impacto no tempo total | 100.00% |      100.00% |
+## Profiling com `gprof`
 
-Função Hotspot: A função evolve é o hotspot absoluto do programa.
+---
 
-Percentual de Impacto: Ela é responsável por 100.00% do tempo total de execução em ambas as CPUs.
+### Dados coletados, Flat Profile
 
-**Análise de Proporção — Overhead de Instrumentação**
+| **Dado** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
+| Hotspot | `evolve` | `evolve` |
+| Self time do hotspot | 5,62 s | 2,39 s |
+| % do tempo total | 100,00% | 100,00% |
+| Chamadas de `evolve` | 2001 | 2001 |
+| Chamadas de `game` | 1 | 1 |
 
-O self time do gprof não cobre 100% do wall-clock medido pelo `/usr/bin/time`: na CPU 1, `evolve` responde por 98,42% do tempo total (5,62 s de 5,71 s); na CPU 2, por 99,58% (2,39 s de 2,40 s). A diferença — 0,09 s na CPU 1 e 0,01 s na CPU 2 — corresponde a overhead de inicialização e instrumentação não atribuído a nenhuma função específica pelo profiler, sendo proporcionalmente maior na CPU 1 por seu tempo total de execução ser maior.
+### Dados coletados, Call Graph
+
+| **Função** | **Chamadas** | **Self CPU 1** | **Self CPU 2** | **Children CPU 1** | **Children CPU 2** | **Quem chamou** |
+|---|---:|---:|---:|---:|---:|---|
+| `evolve` | 2001 | 5,62 s | 2,39 s | 0,00 s | 0,00 s | `game` |
+| `game` | 1 | 0,00 s | 0,00 s | 5,62 s | 2,39 s | `main` |
+| `main` | — | 0,00 s | 0,00 s | 5,62 s | 2,39 s | — |
+
+### Métricas
+
+| **Métrica** | **Fórmula** | **CPU 1** | **CPU 2** | **O que faz / para que serve** |
+|---|---|---:|---:|---|
+| Speedup do hotspot | `self1 / self2` | — | **2,35x** | Compara o tempo gasto na função crítica entre as duas execuções. |
+| Overhead fora do hotspot | `wall − self` | 0,09 s | 0,01 s | Mede quanto do tempo total não está concentrado na função hotspot, incluindo inicialização, chamadas externas e overhead de medição. |
+
+### Análise, hotspot, call graph e estrutura do código
+
+A função **hotspot** identificada é `evolve`, com `self time` de **5,62 s** na CPU 1 e **2,39 s** na CPU 2, representando quase **100,00%** do tempo total de execução em ambas as CPUs.
+
+O **call graph** confirma essa estrutura de forma hierárquica, `main` chama `game` uma única vez, `game` chama `evolve` **2001 vezes** dentro de um laço. Todo o tempo computado em `game` é 100% propagado de `evolve`, pela coluna `children`, enquanto nenhum tempo relevante é atribuído diretamente a `main`.
+
+Isso mostra uma cadeia de chamada linear e simples, sem recursão, sem ciclos e sem múltiplos caminhos de chamada, típica de um programa estruturado em três camadas, inicialização em `main`, orquestração do laço de simulação em `game` e núcleo de cálculo em `evolve`. Como não existem múltiplas funções disputando tempo de CPU no **flat profile**, `evolve` concentra praticamente todo o processamento, enquanto `game` aparece somente como função chamadora, com uma única chamada e sem `self time` relevante.
+
+Esse resultado mostra que a estrutura do código é dominada por um único núcleo computacional. O programa não distribui sua carga de processamento entre várias rotinas, sendo essencialmente um laço de simulação executado **2001 vezes**, com custo de inicialização e controle desprezível. Esse tipo de `flat profile` é característico de aplicações de simulação iterativa, como o **Game of Life**, nas quais uma função central concentra a maior parte do trabalho e as demais funções atuam principalmente na organização da execução.
+
+### Análise de proporção, overhead de instrumentação
+
+O `self time` apresentado pelo `gprof` não corresponde a 100% do `wall-clock` medido pelo `/usr/bin/time`.
+
+Na **CPU 1**, `evolve` responde por **98,42%** do tempo total, considerando **5,62 s de 5,71 s**. Na **CPU 2**, a função responde por **99,58%**, considerando **2,39 s de 2,40 s**.
+
+A diferença corresponde a **0,09 s na CPU 1** e **0,01 s na CPU 2**, representando o tempo associado à inicialização, instrumentação e outras atividades que não são atribuídas diretamente a uma função específica pelo profiler. Dessa forma, os resultados do `gprof` reforçam a conclusão obtida anteriormente, o desempenho da aplicação é determinado quase completamente pela função `evolve`, tornando essa função o principal ponto de interesse para otimizações e paralelização.
 
 ## 3. Profiling de Hardware (`perf stat`)
 | Métrica | CPU 1 | CPU 2 |
