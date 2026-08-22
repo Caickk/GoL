@@ -214,10 +214,6 @@ O `perf report` confirma `evolve` como o principal gargalo da aplicação, conce
 Ao contrário do `gprof`, que utiliza instrumentação por software e pode introduzir algum overhead durante a execução, o `perf` utiliza contadores de desempenho da própria CPU, reduzindo possíveis distorções na medição do tempo. A correlação do speedup também é consistente entre as ferramentas, o `gprof` registrou aproximadamente **2,35x**, enquanto o `perf` apresentou **2,15x**. Essa pequena diferença é esperada, pois as ferramentas utilizam métodos diferentes para realizar a coleta das métricas.
 
 
-## Profiling com `gprof`
-
----
-
 ## Valgrind — Callgrind / Cachegrind
 
 ---
