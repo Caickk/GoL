@@ -165,47 +165,88 @@ Na **CPU 1**, `evolve` responde por **98,42%** do tempo total, considerando **5,
 
 A diferença corresponde a **0,09 s na CPU 1** e **0,01 s na CPU 2**, representando o tempo associado à inicialização, instrumentação e outras atividades que não são atribuídas diretamente a uma função específica pelo profiler. Dessa forma, os resultados do `gprof` reforçam a conclusão obtida anteriormente, o desempenho da aplicação é determinado quase completamente pela função `evolve`, tornando essa função o principal ponto de interesse para otimizações e paralelização.
 
-## 3. Profiling de Hardware (`perf stat`)
-| Métrica | CPU 1 | CPU 2 |
-| :--- | :--- | :--- |
+
+# Profiling com `perf stat`
+
+## Dados Coletados
+
+| **Dado** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
 | Cycles | 21.684.196.173 | 10.089.609.249 |
-| Instructions | 27.947.432.505 |      27.897.569.960 |
-| IPC (Instruções por Ciclo) | 1,29 | 2,77 |
+| Instructions | 27.947.432.505 | 27.897.569.960 |
+| IPC | 1,29 | 2,77 |
 | Cache-references | 42.957.759 | 147.740 |
-| Cache-misses | 2.211.458 |      46.645 |
+| Cache-misses | 2.211.458 | 46.645 |
 | Branches | 2.745.341.904 | 2.734.621.544 |
 | Branch-misses | 15.732.391 | 11.582.149 |
 | L1-dcache-load-misses | 22.761.356 | 20.816.599 |
-| LLC-load-misses | Não suportado | 3.732 |
+| LLC-load-misses | não suportado | 3.732 |
 
-gprof (Instrumentação): Insere código no binário para rastrear funções. Gera overhead e altera o tempo real, mas é ideal para achar o gargalo lógico (a função evolve).
+### Dados Coletados, Overhead por Função
 
-perf (Amostragem): Lê contadores do hardware sem modificar o código. Fornece dados reais e exatos de como o processador lida com a execução.
+Obtidos com `perf record -g` e `perf report --stdio`.
 
-Avaliação do IPC (Instruções por Ciclo): Ambas processam ~27,9 bilhões de instruções, mas a CPU 2 (IPC 2,77) é muito mais eficiente que a CPU 1 (IPC 1,29). A CPU 2 consegue resolver mais do dobro de instruções no mesmo pulso de clock (melhor paralelismo interno do processador).
+| **Função** | **Children CPU 1** | **Self CPU 1** | **Children CPU 2** | **Self CPU 2** |
+|---|---:|---:|---:|---:|
+| `evolve` | 99,98% | 99,44% | 99,98% | 99,85% |
+| `game` | 99,99% | 0,00% | 99,99% | 0,01% |
+| `main` | 99,99% | 0,00% | 99,99% | 0,00% |
+| `_start / startup da libc` | 99,99% | 0,00% | 99,99% | 0,00% |
 
-Branches: A taxa de falha de predição (branch-misses) é de apenas ~0,5%. O processador quase nunca erra o caminho dos laços for e ifs.
+## Métricas Derivadas
 
-Cache: O erro de L1 é mínimo. O mais importante é o registro de apenas 3.732 LLC-load-misses na CPU 2, o que prova que os dados (as matrizes) cabem inteiramente no Cache L3. O processador não perde tempo buscando dados na Memória RAM, confirmando a alta localidade de dados e o comportamento estritamente CPU-bound.
+| **Métrica** | **Fórmula** | **CPU 1** | **CPU 2** | **O que faz / para que serve** |
+|---|---|---:|---:|---|
+| IPC | `instructions / cycles` | 1,29 | 2,77 | Mede quantas instruções são executadas, em média, por ciclo de clock. |
+| Speedup, ciclos | `cyc1 / cyc2` | — | **2,15x** | Compara o número de ciclos de clock consumidos, isolando o ganho de eficiência de hardware da frequência do processador. |
+| Taxa de cache-miss | `misses / refs × 100` | 5,15% | 31,58% | Mede a proporção de acessos à cache monitorada pelo evento genérico que resultaram em miss. |
+| MPKI, cache | `misses / instr × 1000` | 0,079 | 0,0017 | Mede o número de cache-misses a cada mil instruções executadas, normalizando pelo trabalho útil. |
+| Taxa de branch-misprediction | `branch-misses / branches × 100` | 0,57% | 0,42% | Mede a proporção de desvios condicionais previstos incorretamente pelo preditor de branch. |
+| MPKI, branch-misses | `branch-misses / instr × 1000` | 0,563 | 0,415 | Mede o número de mispredictions de desvio a cada mil instruções. |
+| Branches por instrução | `branches / instr` | 9,82% | 9,80% | Mede a densidade de instruções de desvio dentro do total de instruções executadas. |
 
-**Análise de Proporção — Decomposição do Speedup (IPC × Frequência)**
+## Análise de Execução e Arquitetura
 
-O ganho de 2,38× no tempo de execução não vem de menos trabalho: o volume de instruções é praticamente idêntico entre as CPUs (diferença de apenas 0,18%). Ele se decompõe em dois fatores multiplicativos:
-- **Ganho de IPC:** 2,77 ÷ 1,29 = **2,15×** mais instruções resolvidas por ciclo na CPU 2.
-- **Ganho de frequência efetiva:** calculando `ciclos ÷ user time`, a CPU 1 operou a ~3,80 GHz e a CPU 2 a ~4,20 GHz — um ganho de **1,11×**.
-- **Produto dos dois fatores:** 2,15 × 1,11 = **2,37×**, praticamente idêntico ao speedup real observado (2,38×). Isso confirma que a diferença de desempenho é explicada quase inteiramente por arquitetura (IPC) e clock, não por trabalho computacional distinto.
+### Overhead por Função, `perf report` vs `gprof`
 
-**Análise de Proporção — Cache-miss Rate não é Portável entre Fabricantes**
+O `perf report` confirma `evolve` como o principal gargalo da aplicação, concentrando mais de **99,4% do self time** na CPU 1 e **99,85%** na CPU 2.
 
-| Métrica (taxa) | CPU 1 (AMD) | CPU 2 (Intel) |
-| :--- | :--- | :--- |
-| Cache-miss rate (misses/references) | 5,15% | 31,57% |
-| Branch-miss rate (misses/branches) | 0,57% | 0,42% |
-| L1-dcache-miss por instrução | 0,0814% | 0,0746% |
+Ao contrário do `gprof`, que utiliza instrumentação por software e pode introduzir algum overhead durante a execução, o `perf` utiliza contadores de desempenho da própria CPU, reduzindo possíveis distorções na medição do tempo. A correlação do speedup também é consistente entre as ferramentas, o `gprof` registrou aproximadamente **2,35x**, enquanto o `perf` apresentou **2,15x**. Essa pequena diferença é esperada, pois as ferramentas utilizam métodos diferentes para realizar a coleta das métricas.
 
-À primeira vista, a taxa de cache-miss da CPU 2 parece 6× pior que a da CPU 1. Essa diferença **não reflete o comportamento real do algoritmo** — é um artefato de como o `perf` mapeia os nomes genéricos `cache-references`/`cache-misses` para os contadores físicos de PMU de cada fabricante. AMD e Intel não implementam os mesmos registradores de hardware nem organizam a hierarquia de cache da mesma forma, então o perf escolhe, por baixo dos panos, eventos fisicamente diferentes em cada arquitetura para responder por esse mesmo nome genérico. Isso fica evidente no volume absoluto: a CPU 2 registrou 291× menos `cache-references` (147.740 vs. 42.957.759) — sinal de que o evento capturado ali provavelmente corresponde a um nível de cache mais profundo (perto do LLC) do que na CPU 1, não porque a CPU 2 acessa a memória 291× menos.
+## Discrepâncias nas Métricas de Cache
 
-A métrica confiável para comparar as duas CPUs é o **L1-dcache-load-misses relativo às instruções executadas** — um evento com definição mais padronizada entre arquiteturas — que se mantém baixo e consistente em ambas (~0,08%), confirmando que o padrão real de acesso à memória do algoritmo independe do hardware.
+Ao avaliar a hierarquia de memória, observa-se uma diferença significativa entre as taxas genéricas de falha de cache das duas arquiteturas. A tabela abaixo apresenta essa diferença e a compara com uma métrica específica da cache L1.
+
+| **Métrica, taxa** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
+| Cache-miss rate, `perf` genérico, `misses / refs` | 5,15% | 31,57% |
+| L1-dcache-miss por instrução, específico | 0,0814% | 0,0746% |
+
+### Interpretação 
+
+À primeira vista, o `cache-miss rate` genérico indica que a CPU 2 apresenta uma taxa de falhas significativamente maior, **31,57%**, em comparação aos **5,15%** da CPU 1. Essa diferença, entretanto, não significa necessariamente que a CPU 2 apresenta pior localidade de memória ou que o algoritmo tenha um comportamento diferente nessa arquitetura.
+
+A principal razão está na natureza dos eventos genéricos utilizados pelo `perf`. Os eventos `cache-references` e `cache-misses` possuem uma semântica abstrata, criada para facilitar a coleta de informações em diferentes arquiteturas. Porém, o significado exato desses eventos pode variar de acordo com a implementação da PMU, Performance Monitoring Unit, de cada processador.
+
+O `perf` realiza o mapeamento desses eventos genéricos para contadores físicos disponíveis na CPU. Como consequência, arquiteturas diferentes podem estar contabilizando níveis diferentes da hierarquia de cache.
+
+Essa diferença fica evidente no número de `cache-references`. A CPU 2 registrou apenas **147.740 referências**, enquanto a CPU 1 registrou **42.957.759**, aproximadamente **291 vezes mais referências**. Isso indica que os eventos genéricos provavelmente estão sendo associados a diferentes níveis ou comportamentos da hierarquia de memória em cada arquitetura.
+
+Por esse motivo, comparar diretamente as taxas genéricas de `cache-misses` entre as duas CPUs pode levar a uma interpretação incorreta, pois as métricas podem não representar exatamente o mesmo fenômeno físico.
+
+### Comparação utilizando a L1 Data Cache
+
+Para reduzir essa ambiguidade, é mais adequado utilizar um evento com semântica específica, como `L1-dcache-load-misses`. Ao analisar as falhas de carregamento na cache L1 de dados e relacioná-las ao número de instruções executadas, os resultados tornam-se muito mais próximos entre as arquiteturas.
+
+A CPU 1 apresenta aproximadamente **0,0814%** de L1-dcache misses por instrução, enquanto a CPU 2 apresenta **0,0746%**. Os valores são bastante próximos, indicando que o comportamento de acesso à memória do algoritmo é semelhante nas duas plataformas.
+
+### Conclusão
+
+A diferença observada inicialmente nas taxas genéricas de cache não indica, por si só, uma degradação no desempenho de memória da CPU 2. Ela evidencia principalmente a limitação de utilizar eventos genéricos de PMU em comparações entre arquiteturas diferentes.
+
+Ao utilizar uma métrica mais específica, como `L1-dcache-load-misses`, os resultados apresentam maior convergência, aproximadamente **0,07% a 0,08%** de misses por instrução.
+
+Dessa forma, os dados indicam que o algoritmo apresenta **boa localidade de memória**, com baixa incidência de falhas na cache L1, e que seu comportamento de acesso aos dados permanece consistente entre as duas arquiteturas. Essa interpretação também é compatível com análises realizadas por ferramentas de simulação, como o **Cachegrind**, que permitem avaliar o comportamento da hierarquia de memória de forma independente das particularidades dos contadores físicos de cada processador.
 
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
@@ -231,8 +272,6 @@ Localidade Temporal (Reuso de Dados): Houve apenas ~7.800 falhas no Último Nív
 A contagem de instruções diverge menos de 0,3% entre `perf` e Callgrind em ambas as CPUs — validação forte, já que uma ferramenta mede por amostragem de hardware e a outra por simulação determinística de cada instrução executada.
 
 Já a divergência nos misses de cache (13,3% na CPU 1; 3,7% na CPU 2) tem uma causa **diferente** da discrepância discutida no item 3: ali o problema era portabilidade de um evento genérico entre fabricantes; aqui, é a distinção entre **medir hardware real** e **simular um modelo idealizado**. O `perf` lê contadores físicos da CPU, que refletem todo o comportamento real do silício — incluindo o *prefetcher* de hardware, que antecipa e pré-carrega dados de acessos sequenciais (como a varredura da matriz do Game of Life), reduzindo misses reais. O Cachegrind, por sua vez, não usa hardware algum: ele simula, em software, um modelo de cache simplificado (tipicamente LRU puro, sem os mecanismos proprietários de prefetching de cada fabricante). A divergência não é igual nas duas CPUs porque o Cachegrind tenta calibrar automaticamente sua simulação com base na geometria de cache detectada via CPUID — e o quão bem esse modelo genérico se aproxima do comportamento real varia conforme as peculiaridades de cada microarquitetura (AMD Zen vs. Intel Tiger Lake implementam prefetching e associatividade de forma distinta).
-
-Nenhum dos dois valores é "o errado" — são dois métodos válidos medindo fenômenos diferentes (silício real vs. modelo idealizado). O que valida a conclusão de alta localidade de memória não é a concordância exata entre os números, mas a concordância na **ordem de grandeza**: ambas as ferramentas, por caminhos independentes, apontam taxas de miss muito baixas.
 
 A taxa de miss em L1 do Cachegrind, por sua vez, é praticamente **idêntica** entre as CPUs (0,0504% vs. 0,0503%) — evidência de que, como o Cachegrind simula um cache genérico (não o cache real de cada CPU), o padrão de acesso à memória capturado ali é determinado pela estrutura do código-fonte, não pelo hardware onde roda.
 
