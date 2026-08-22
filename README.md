@@ -48,7 +48,7 @@ O `gprof` exige uma compilação específica com instrumentação de código par
   
 # Execução e Parâmetros de Linha de Comando
 
-O código fonte foi estruturado de forma a manter quatro parâmetros numéricos fixos: a largura da placa, a altura da placa, o número máximo de iterações e a frequência de salvamento das iterações (parâmetro XX). 
+O código fonte foi estruturado de forma a manter três parâmetros numéricos fixos: a largura da placa (200), a altura da placa (200), o número máximo de iterações (2000).
 
 O formato de execução padrão segue a estrutura:
 `./gol `
