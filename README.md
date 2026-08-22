@@ -213,40 +213,6 @@ O `perf report` confirma `evolve` como o principal gargalo da aplicação, conce
 
 Ao contrário do `gprof`, que utiliza instrumentação por software e pode introduzir algum overhead durante a execução, o `perf` utiliza contadores de desempenho da própria CPU, reduzindo possíveis distorções na medição do tempo. A correlação do speedup também é consistente entre as ferramentas, o `gprof` registrou aproximadamente **2,35x**, enquanto o `perf` apresentou **2,15x**. Essa pequena diferença é esperada, pois as ferramentas utilizam métodos diferentes para realizar a coleta das métricas.
 
-## Discrepâncias nas Métricas de Cache
-
-Ao avaliar a hierarquia de memória, observa-se uma diferença significativa entre as taxas genéricas de falha de cache das duas arquiteturas. A tabela abaixo apresenta essa diferença e a compara com uma métrica específica da cache L1.
-
-| **Métrica, taxa** | **CPU 1** | **CPU 2** |
-|---|---:|---:|
-| Cache-miss rate, `perf` genérico, `misses / refs` | 5,15% | 31,57% |
-| L1-dcache-miss por instrução, específico | 0,0814% | 0,0746% |
-
-### Interpretação 
-
-À primeira vista, o `cache-miss rate` genérico indica que a CPU 2 apresenta uma taxa de falhas significativamente maior, **31,57%**, em comparação aos **5,15%** da CPU 1. Essa diferença, entretanto, não significa necessariamente que a CPU 2 apresenta pior localidade de memória ou que o algoritmo tenha um comportamento diferente nessa arquitetura.
-
-A principal razão está na natureza dos eventos genéricos utilizados pelo `perf`. Os eventos `cache-references` e `cache-misses` possuem uma semântica abstrata, criada para facilitar a coleta de informações em diferentes arquiteturas. Porém, o significado exato desses eventos pode variar de acordo com a implementação da PMU, Performance Monitoring Unit, de cada processador.
-
-O `perf` realiza o mapeamento desses eventos genéricos para contadores físicos disponíveis na CPU. Como consequência, arquiteturas diferentes podem estar contabilizando níveis diferentes da hierarquia de cache.
-
-Essa diferença fica evidente no número de `cache-references`. A CPU 2 registrou apenas **147.740 referências**, enquanto a CPU 1 registrou **42.957.759**, aproximadamente **291 vezes mais referências**. Isso indica que os eventos genéricos provavelmente estão sendo associados a diferentes níveis ou comportamentos da hierarquia de memória em cada arquitetura.
-
-Por esse motivo, comparar diretamente as taxas genéricas de `cache-misses` entre as duas CPUs pode levar a uma interpretação incorreta, pois as métricas podem não representar exatamente o mesmo fenômeno físico.
-
-### Comparação utilizando a L1 Data Cache
-
-Para reduzir essa ambiguidade, é mais adequado utilizar um evento com semântica específica, como `L1-dcache-load-misses`. Ao analisar as falhas de carregamento na cache L1 de dados e relacioná-las ao número de instruções executadas, os resultados tornam-se muito mais próximos entre as arquiteturas.
-
-A CPU 1 apresenta aproximadamente **0,0814%** de L1-dcache misses por instrução, enquanto a CPU 2 apresenta **0,0746%**. Os valores são bastante próximos, indicando que o comportamento de acesso à memória do algoritmo é semelhante nas duas plataformas.
-
-### Conclusão
-
-A diferença observada inicialmente nas taxas genéricas de cache não indica, por si só, uma degradação no desempenho de memória da CPU 2. Ela evidencia principalmente a limitação de utilizar eventos genéricos de PMU em comparações entre arquiteturas diferentes.
-
-Ao utilizar uma métrica mais específica, como `L1-dcache-load-misses`, os resultados apresentam maior convergência, aproximadamente **0,07% a 0,08%** de misses por instrução.
-
-Dessa forma, os dados indicam que o algoritmo apresenta **boa localidade de memória**, com baixa incidência de falhas na cache L1, e que seu comportamento de acesso aos dados permanece consistente entre as duas arquiteturas. Essa interpretação também é compatível com análises realizadas por ferramentas de simulação, como o **Cachegrind**, que permitem avaliar o comportamento da hierarquia de memória de forma independente das particularidades dos contadores físicos de cada processador.
 
 ## 4. Profiling com Valgrind (Callgrind e Cachegrind)
 | Métrica | CPU 1 | CPU 2 |
