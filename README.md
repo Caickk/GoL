@@ -228,6 +228,9 @@ Ao contrário do `gprof`, que utiliza instrumentação por software e pode intro
 | L1 misses | 20.089.847 | 20.077.762 |
 | LL misses | 7.819 | 7.815 |
 
+> **Nota sobre escopo dos dados:** os valores de `Acessos L1`, `L1 misses` e `LL misses` acima refletem o total do programa (`PROGRAM TOTALS` do `cg_annotate`), incluindo overhead de inicialização do binário e da libc. Já a tabela de acessos/misses por tipo (`Dr`, `D1mr`, `DLmr`, `Dw`, `D1mw`, `DLmw`) logo abaixo reflete apenas as instruções atribuídas ao arquivo `gol.c` (escopo `File:function summary`). Por isso, somar as linhas da tabela abaixo não reproduz exatamente os totais acima — a diferença (~0,02% em L1 misses e ~37% em termos relativos, mas irrisória em valor absoluto, poucos milhares de eventos) corresponde a instruções executadas fora de `gol.c`, majoritariamente na inicialização do processo já caracterizada como irrelevante pelo `strace` (Seção 5).
+
+
 ### Dados coletados, `cg_annotate`
 
 Linhas mais custosas de `evolve`, em instruções `Ir`:
@@ -256,9 +259,9 @@ Linhas mais custosas de `evolve`, em instruções `Ir`:
 
 | **Métrica** | **Fórmula** | **CPU 1** | **CPU 2** | **O que faz / para que serve** |
 |---|---|---:|---:|---|
-| Taxa de L1-miss simulada | `L1miss / L1acc × 100` | 0,0504% | 0,0504% | Mede a proporção de acessos simulados à cache L1 que resultam em miss, com base no padrão de acesso à memória do programa. |
+| Taxa de L1-miss simulada | `L1miss / L1acc × 100` | 0,0504% | 0,0503% | Mede a proporção de acessos simulados à cache L1 que resultam em miss, com base no padrão de acesso à memória do programa. |
 | Taxa de LL-miss, local | `LLmiss / L1miss × 100` | 0,0389% | 0,0389% | Mede quantos dos misses de L1 se propagam até o último nível de cache. |
-| Instruções por chamada de `evolve` | `instr / 2001` | 13.927.398 | 13.927.586 | Mede a carga de trabalho média executada em cada chamada da função hotspot. |
+| Instruções por chamada de `evolve` | `instr / 2001` | 13.926.899 | 13.927.086 | Mede a carga de trabalho média executada em cada chamada da função hotspot. |
 
 ### Análise, localidade espacial e temporal
 
