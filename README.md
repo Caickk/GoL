@@ -214,33 +214,107 @@ O `perf report` confirma `evolve` como o principal gargalo da aplicação, conce
 Ao contrário do `gprof`, que utiliza instrumentação por software e pode introduzir algum overhead durante a execução, o `perf` utiliza contadores de desempenho da própria CPU, reduzindo possíveis distorções na medição do tempo. A correlação do speedup também é consistente entre as ferramentas, o `gprof` registrou aproximadamente **2,35x**, enquanto o `perf` apresentou **2,15x**. Essa pequena diferença é esperada, pois as ferramentas utilizam métodos diferentes para realizar a coleta das métricas.
 
 
-## 4. Profiling com Valgrind (Callgrind e Cachegrind)
-| Métrica | CPU 1 | CPU 2 |
-| :--- | :--- | :--- |
-| Número exato de instruções (Callgrind) | 27.867.724.398 (total) | 27.868.099.001 (total) |
-| Chamadas por função (Callgrind) | evolve: 2001 chamadas / game: 1 chamada |    evolve: 2001 chamadas / game: 1 chamada |
-| Acessos de memória L1 e L2 (Cachegrind) | L1: 39.850.628.064 | L1: 39.876.906.692 |
-| Misses de memória L1 e L2 (Cachegrind) | L1 miss: 20.089.847 / LL miss: 7.819 | L1 miss: 20.077.762 / LL miss: 7.815|
+## Profiling com `gprof`
 
-Localidade Espacial (Acesso Sequencial): A taxa de falha no Cache L1 é mínima, de apenas ~0,05% (20 milhões de misses em quase 40 bilhões de acessos). O processador aproveita os dados carregados nos blocos do cache (cache lines) sem desperdício.
+---
 
-Localidade Temporal (Reuso de Dados): Houve apenas ~7.800 falhas no Último Nível (LL misses) durante todas as 2001 chamadas de evolve. Isso comprova que as matrizes do jogo cabem perfeitamente no cache do processador e são reutilizadas iterativamente, praticamente eliminando a necessidade de buscar dados na lenta Memória RAM.
+## Valgrind — Callgrind / Cachegrind
 
-**Análise de Proporção — Validação Cruzada perf vs. Valgrind**
+---
 
-| Verificação cruzada | CPU 1 | CPU 2 |
-| :--- | :--- | :--- |
-| Divergência instructions (perf) × Ir (Callgrind) | 0,29% | 0,11% |
-| Divergência L1-dcache-load-misses (perf) × D1 miss (Cachegrind) | 13,3% | 3,7% |
+### Dados coletados
+
+| **Dado** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
+| Instruções totais (Callgrind) | 27.867.724.398 | 27.868.099.001 |
+| Chamadas: `evolve / game` | 2001 / 1 | 2001 / 1 |
+| Acessos L1 (Cachegrind) | 39.850.628.064 | 39.876.906.692 |
+| L1 misses | 20.089.847 | 20.077.762 |
+| LL misses | 7.819 | 7.815 |
+
+### Dados coletados, `cg_annotate`
+
+Linhas mais custosas de `evolve`, em instruções `Ir`:
+
+| **Linha do código** | **CPU 1 (AMD), Instruções (Ir)** | **% do total, CPU 1** | **CPU 2 (Intel), Instruções (Ir)** | **% do total, CPU 2** |
+|---|---:|---:|---:|---:|
+| `if (univ[(y1+h)%h][(x1+w)%w])` | 15.847.920.000 | 56,82% | 15.847.920.000 | 56,83% |
+| `for (x1 = x-1; x1 <= x+1; x1++)` | 5.522.760.000 | 19,80% | 5.522.760.000 | 19,80% |
+| `for (y1 = y-1; y1 <= y+1; y1++)` | 1.840.920.000 | 6,60% | 1.840.920.000 | 6,60% |
+| `univ[y][x] = new[y][x]` (cópia de volta) | 1.600.800.000 | 5,74% | 1.600.800.000 | 5,74% |
+| `new[y][x] = (n==3 \|\| (n==2 && univ[y][x]))` | 1.349.292.548 | 4,84% | 1.349.482.061 | 4,84% |
+| `if (univ[y][x]) n--` | 964.063.129 | 3,46% | 963.969.341 | 3,46% |
+
+### Dados coletados, acessos e misses de dados
+
+| **Métrica** | **CPU 1 (AMD), Valor** | **CPU 1, Taxa** | **CPU 2 (Intel), Valor** | **CPU 2, Taxa** |
+|---|---:|---:|---:|---:|
+| Data reads (Dr) | 11.418.080.214 | — | 11.426.053.615 | — |
+| D1 read misses (D1mr) | 10.111.099 | 0,0886% | 10.105.100 | 0,0884% |
+| LL read misses (DLmr) | 78 | 0,00068% (sobre D1mr) | 79 | 0,00078% (sobre D1mr) |
+| Data writes (Dw) | 561.190.640 | — | 561.190.640 | — |
+| D1 write misses (D1mw) | 9.975.480 | 1,777% | 9.969.474 | 1,7765% |
+| LL write misses (DLmw) | 4.824 | 0,0484% (sobre D1mw) | 4.825 | 0,0484% (sobre D1mw) |
+
+### Métricas
+
+| **Métrica** | **Fórmula** | **CPU 1** | **CPU 2** | **O que faz / para que serve** |
+|---|---|---:|---:|---|
+| Taxa de L1-miss simulada | `L1miss / L1acc × 100` | 0,0504% | 0,0504% | Mede a proporção de acessos simulados à cache L1 que resultam em miss, com base no padrão de acesso à memória do programa. |
+| Taxa de LL-miss, local | `LLmiss / L1miss × 100` | 0,0389% | 0,0389% | Mede quantos dos misses de L1 se propagam até o último nível de cache. |
+| Instruções por chamada de `evolve` | `instr / 2001` | 13.927.398 | 13.927.586 | Mede a carga de trabalho média executada em cada chamada da função hotspot. |
+
+### Análise, localidade espacial e temporal
+
+O `cg_annotate` mostra que **56,82%** de todas as instruções do programa estão concentradas em uma única linha, `if (univ[(y1+h)%h][(x1+w)%w])`, executada 9 vezes por célula, uma vez para cada vizinho da janela 3x3.
+
+O principal motivo é a operação de módulo (`%`), utilizada para tratar a borda toroidal da matriz. Essa operação é aritmeticamente equivalente a uma divisão inteira, sendo mais custosa em número de ciclos do que operações simples como soma, comparação ou acesso à memória.
+
+Ao mesmo tempo, as taxas de miss de cache são muito baixas, com **D1 read miss de apenas 0,0886%** e **LL miss praticamente nulo**, apenas 78 misses em 11,4 bilhões de leituras.
+
+Isso indica boa **localidade espacial**, pois a janela 3x3 acessa células vizinhas, que tendem a estar na mesma linha de cache ou em linhas adjacentes já carregadas, e boa **localidade temporal**, pois a mesma linha `y` da matriz é revisitada repetidamente pelos laços aninhados, mantendo os dados ativos na L1.
+
+A taxa de `write-miss` é um pouco maior, aproximadamente **1,78%**, o que é esperado, já que cada chamada de `evolve()` utiliza uma nova matriz `new[h][w]` na stack. Assim, as primeiras escritas nessa região podem resultar em misses, pois a memória ainda não está presente na cache.
+
+**Conclusão:** o algoritmo não apresenta um problema significativo de localidade de memória. O principal gargalo está na **computação redundante**, especialmente no cálculo repetido do módulo para tratar a borda toroidal.
+
+Esse resultado é coerente com o IPC relativamente baixo observado no `perf stat`, **1,29 na CPU 1**. Os stalls do pipeline não parecem ser causados principalmente por cache misses, que são raros, mas pela latência da própria operação de divisão/módulo e pelas dependências de dados envolvidas no cálculo dos índices.
+
+### Análise de proporção, validação cruzada `perf` × Valgrind
+
+| **Verificação cruzada** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
+| Divergência, instructions (`perf`) × `Ir` (Callgrind) | 0,29% | 0,11% |
+| Divergência, `L1-dcache-load-misses` (`perf`) × D1 miss (Cachegrind) | 13,3% | 3,7% |
 | Taxa de miss L1 (Cachegrind) | 0,0504% | 0,0503% |
-| Misses no último nível por geração (LL ÷ 2001 chamadas) | 3,91 | 3,91 |
+| Misses no último nível por geração (`LL ÷ 2001` chamadas) | 3,91 | 3,91 |
 
-A contagem de instruções diverge menos de 0,3% entre `perf` e Callgrind em ambas as CPUs — validação forte, já que uma ferramenta mede por amostragem de hardware e a outra por simulação determinística de cada instrução executada.
+A contagem de instruções diverge menos de **0,3%** entre `perf` e Callgrind nas duas CPUs, o que representa uma forte validação cruzada, considerando que uma ferramenta utiliza amostragem de hardware, enquanto a outra realiza uma simulação determinística das instruções executadas.
 
-Já a divergência nos misses de cache (13,3% na CPU 1; 3,7% na CPU 2) tem uma causa **diferente** da discrepância discutida no item 3: ali o problema era portabilidade de um evento genérico entre fabricantes; aqui, é a distinção entre **medir hardware real** e **simular um modelo idealizado**. O `perf` lê contadores físicos da CPU, que refletem todo o comportamento real — incluindo o *prefetcher* de hardware, que antecipa e pré-carrega dados de acessos sequenciais (como a varredura da matriz do Game of Life), reduzindo misses reais. O Cachegrind, por sua vez, não usa hardware algum: ele simula, em software, um modelo de cache simplificado (tipicamente LRU puro, sem os mecanismos proprietários de prefetching de cada fabricante). A divergência não é igual nas duas CPUs porque o Cachegrind tenta calibrar automaticamente sua simulação com base na geometria de cache detectada via CPUID — e o quão bem esse modelo genérico se aproxima do comportamento real varia conforme as peculiaridades de cada microarquitetura (AMD Zen vs. Intel Tiger Lake implementam prefetching e associatividade de forma distinta).
+Observa-se, entretanto, uma aparente inconsistência ao comparar as métricas de cache geradas pelo `perf stat` e pelo Cachegrind entre as duas arquiteturas avaliadas.
 
-A taxa de miss em L1 do Cachegrind, por sua vez, é praticamente **idêntica** entre as CPUs (0,0504% vs. 0,0503%) — evidência de que, como o Cachegrind simula um cache genérico (não o cache real de cada CPU), o padrão de acesso à memória capturado ali é determinado pela estrutura do código-fonte, não pelo hardware onde roda.
+### 1. Natureza determinística do Cachegrind
 
+O Cachegrind não coleta métricas diretamente do hardware real. Ele funciona como um simulador em nível de software, avaliando o comportamento de uma cache idealizada e genérica com base no padrão de acesso à memória determinado pelo código-fonte, neste caso, o algoritmo do Game of Life.
+
+Como as duas execuções processam o mesmo algoritmo, com o mesmo padrão de acesso à memória, a simulação naturalmente produz números muito próximos ou iguais. Isso evidencia que a carga de trabalho do software permaneceu inalterada.
+
+### 2. Ambiguidade dos eventos genéricos no `perf`
+
+A divergência observada pelo `perf stat` está relacionada à forma como a ferramenta mapeia eventos genéricos. A CPU 1 e a CPU 2 possuem microarquiteturas e PMUs, Performance Monitoring Units, diferentes.
+
+Quando um evento genérico, como `cache-references`, é solicitado, o driver de cada processador seleciona internamente o contador físico que melhor representa essa definição para aquela arquitetura específica. Em arquiteturas diferentes, essa métrica abstrata pode ser mapeada para níveis distintos da hierarquia de cache, por exemplo, L2 em uma máquina, L3 ou LLC em outra. Assim, embora o rótulo da medição, `cache-references`, permaneça igual para o usuário, o hardware efetivamente avaliado não é necessariamente equivalente. Por isso, essa métrica deve ser utilizada com cautela em comparações entre arquiteturas diferentes.
+
+### Comprovação empírica
+
+Para verificar se o desvio decorre dessa abstração da PMU, e não de um problema no hardware, pode-se avaliar um evento mais específico e arquiteturalmente delimitado, `L1-dcache-load-misses`.
+
+| **Ferramenta / Métrica** | **CPU 1** | **CPU 2** |
+|---|---:|---:|
+| `perf stat`, `L1-dcache-load-misses` | 22.761.356 | 20.816.599 |
+| Cachegrind, L1 misses | 20.089.847 | 20.077.762 |
+
+Os resultados mostram que, apesar da diferença entre as medições realizadas diretamente pelo `perf` e as simulações do Cachegrind, os valores permanecem na mesma ordem de grandeza. Isso reforça a conclusão de que o padrão de acesso à memória do algoritmo é semelhante nas duas arquiteturas, enquanto parte das diferenças observadas está relacionada à forma como cada ferramenta obtém e interpreta as métricas de hardware.
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
