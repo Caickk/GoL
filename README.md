@@ -214,7 +214,7 @@ O `perf report` confirma `evolve` como o principal gargalo da aplicação, conce
 Ao contrário do `gprof`, que utiliza instrumentação por software e pode introduzir algum overhead durante a execução, o `perf` utiliza contadores de desempenho da própria CPU, reduzindo possíveis distorções na medição do tempo. A correlação do speedup também é consistente entre as ferramentas, o `gprof` registrou aproximadamente **2,35x**, enquanto o `perf` apresentou **2,15x**. Essa pequena diferença é esperada, pois as ferramentas utilizam métodos diferentes para realizar a coleta das métricas.
 
 
-## Valgrind — Callgrind / Cachegrind
+## Profiling com Valgrind — Callgrind / Cachegrind
 
 ---
 
@@ -266,15 +266,11 @@ O `cg_annotate` mostra que **56,82%** de todas as instruções do programa estã
 
 O principal motivo é a operação de módulo (`%`), utilizada para tratar a borda toroidal da matriz. Essa operação é aritmeticamente equivalente a uma divisão inteira, sendo mais custosa em número de ciclos do que operações simples como soma, comparação ou acesso à memória.
 
-Ao mesmo tempo, as taxas de miss de cache são muito baixas, com **D1 read miss de apenas 0,0886%** e **LL miss praticamente nulo**, apenas 78 misses em 11,4 bilhões de leituras.
-
-Isso indica boa **localidade espacial**, pois a janela 3x3 acessa células vizinhas, que tendem a estar na mesma linha de cache ou em linhas adjacentes já carregadas, e boa **localidade temporal**, pois a mesma linha `y` da matriz é revisitada repetidamente pelos laços aninhados, mantendo os dados ativos na L1.
+Ao mesmo tempo, as taxas de miss de cache são muito baixas, com **D1 read miss de apenas 0,0886%** e **LL miss praticamente nulo**, apenas 78 misses em 11,4 bilhões de leituras. Isso indica boa **localidade espacial**, pois a janela 3x3 acessa células vizinhas, que tendem a estar na mesma linha de cache ou em linhas adjacentes já carregadas, e boa **localidade temporal**, pois a mesma linha `y` da matriz é revisitada repetidamente pelos laços aninhados, mantendo os dados ativos na L1.
 
 A taxa de `write-miss` é um pouco maior, aproximadamente **1,78%**, o que é esperado, já que cada chamada de `evolve()` utiliza uma nova matriz `new[h][w]` na stack. Assim, as primeiras escritas nessa região podem resultar em misses, pois a memória ainda não está presente na cache.
 
 **Conclusão:** o algoritmo não apresenta um problema significativo de localidade de memória. O principal gargalo está na **computação redundante**, especialmente no cálculo repetido do módulo para tratar a borda toroidal.
-
-Esse resultado é coerente com o IPC relativamente baixo observado no `perf stat`, **1,29 na CPU 1**. Os stalls do pipeline não parecem ser causados principalmente por cache misses, que são raros, mas pela latência da própria operação de divisão/módulo e pelas dependências de dados envolvidas no cálculo dos índices.
 
 ### Análise de proporção, validação cruzada `perf` × Valgrind
 
@@ -285,21 +281,17 @@ Esse resultado é coerente com o IPC relativamente baixo observado no `perf stat
 | Taxa de miss L1 (Cachegrind) | 0,0504% | 0,0503% |
 | Misses no último nível por geração (`LL ÷ 2001` chamadas) | 3,91 | 3,91 |
 
-A contagem de instruções diverge menos de **0,3%** entre `perf` e Callgrind nas duas CPUs, o que representa uma forte validação cruzada, considerando que uma ferramenta utiliza amostragem de hardware, enquanto a outra realiza uma simulação determinística das instruções executadas.
-
-Observa-se, entretanto, uma aparente inconsistência ao comparar as métricas de cache geradas pelo `perf stat` e pelo Cachegrind entre as duas arquiteturas avaliadas.
+A contagem de instruções diverge menos de **0,3%** entre `perf` e Callgrind nas duas CPUs, o que representa uma forte validação cruzada, considerando que uma ferramenta utiliza amostragem de hardware, enquanto a outra realiza uma simulação determinística das instruções executadas. Observa-se, entretanto, uma aparente inconsistência ao comparar as métricas de cache geradas pelo `perf stat` e pelo Cachegrind entre as duas arquiteturas avaliadas.
 
 ### 1. Natureza determinística do Cachegrind
 
-O Cachegrind não coleta métricas diretamente do hardware real. Ele funciona como um simulador em nível de software, avaliando o comportamento de uma cache idealizada e genérica com base no padrão de acesso à memória determinado pelo código-fonte, neste caso, o algoritmo do Game of Life.
-
-Como as duas execuções processam o mesmo algoritmo, com o mesmo padrão de acesso à memória, a simulação naturalmente produz números muito próximos ou iguais. Isso evidencia que a carga de trabalho do software permaneceu inalterada.
+O Cachegrind não coleta métricas diretamente do hardware real. Ele funciona como um simulador em nível de software, avaliando o comportamento de uma cache idealizada e genérica com base no padrão de acesso à memória determinado pelo código-fonte, neste caso, o algoritmo do Game of Life. Como as duas execuções processam o mesmo algoritmo, com o mesmo padrão de acesso à memória, a simulação naturalmente produz números muito próximos. Isso evidencia que a carga de trabalho do software permaneceu inalterada.
 
 ### 2. Ambiguidade dos eventos genéricos no `perf`
 
 A divergência observada pelo `perf stat` está relacionada à forma como a ferramenta mapeia eventos genéricos. A CPU 1 e a CPU 2 possuem microarquiteturas e PMUs, Performance Monitoring Units, diferentes.
 
-Quando um evento genérico, como `cache-references`, é solicitado, o driver de cada processador seleciona internamente o contador físico que melhor representa essa definição para aquela arquitetura específica. Em arquiteturas diferentes, essa métrica abstrata pode ser mapeada para níveis distintos da hierarquia de cache, por exemplo, L2 em uma máquina, L3 ou LLC em outra. Assim, embora o rótulo da medição, `cache-references`, permaneça igual para o usuário, o hardware efetivamente avaliado não é necessariamente equivalente. Por isso, essa métrica deve ser utilizada com cautela em comparações entre arquiteturas diferentes.
+Quando um evento genérico, como `cache-references`, é solicitado, o driver de cada processador seleciona internamente o contador físico que melhor representa essa definição para aquela arquitetura específica. Em arquiteturas diferentes, essa métrica abstrata pode ser mapeada para níveis distintos da hierarquia de cache, por exemplo, L2 em uma máquina, L3 ou LLC em outra. Assim, embora o rótulo da medição, `cache-references`, permaneça igual para o usuário, o hardware efetivamente avaliado não é necessariamente equivalente.
 
 ### Comprovação empírica
 
@@ -311,6 +303,7 @@ Para verificar se o desvio decorre dessa abstração da PMU, e não de um proble
 | Cachegrind, L1 misses | 20.089.847 | 20.077.762 |
 
 Os resultados mostram que, apesar da diferença entre as medições realizadas diretamente pelo `perf` e as simulações do Cachegrind, os valores permanecem na mesma ordem de grandeza. Isso reforça a conclusão de que o padrão de acesso à memória do algoritmo é semelhante nas duas arquiteturas, enquanto parte das diferenças observadas está relacionada à forma como cada ferramenta obtém e interpreta as métricas de hardware.
+
 ## 5. Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
