@@ -283,11 +283,11 @@ A taxa de `write-miss` é um pouco maior, aproximadamente **1,78%**, o que é es
 
 A contagem de instruções diverge menos de **0,3%** entre `perf` e Callgrind nas duas CPUs, o que representa uma forte validação cruzada, considerando que uma ferramenta utiliza amostragem de hardware, enquanto a outra realiza uma simulação determinística das instruções executadas. Observa-se, entretanto, uma aparente inconsistência ao comparar as métricas de cache geradas pelo `perf stat` e pelo Cachegrind entre as duas arquiteturas avaliadas.
 
-### 1. Natureza determinística do Cachegrind
+### Natureza determinística do Cachegrind
 
 O Cachegrind não coleta métricas diretamente do hardware real. Ele funciona como um simulador em nível de software, avaliando o comportamento de uma cache idealizada e genérica com base no padrão de acesso à memória determinado pelo código-fonte, neste caso, o algoritmo do Game of Life. Como as duas execuções processam o mesmo algoritmo, com o mesmo padrão de acesso à memória, a simulação naturalmente produz números muito próximos. Isso evidencia que a carga de trabalho do software permaneceu inalterada.
 
-### 2. Ambiguidade dos eventos genéricos no `perf`
+### Ambiguidade dos eventos genéricos no `perf`
 
 A divergência observada pelo `perf stat` está relacionada à forma como a ferramenta mapeia eventos genéricos. A CPU 1 e a CPU 2 possuem microarquiteturas e PMUs, Performance Monitoring Units, diferentes.
 
@@ -304,7 +304,7 @@ Para verificar se o desvio decorre dessa abstração da PMU, e não de um proble
 
 Os resultados mostram que, apesar da diferença entre as medições realizadas diretamente pelo `perf` e as simulações do Cachegrind, os valores permanecem na mesma ordem de grandeza. Isso reforça a conclusão de que o padrão de acesso à memória do algoritmo é semelhante nas duas arquiteturas, enquanto parte das diferenças observadas está relacionada à forma como cada ferramenta obtém e interpreta as métricas de hardware.
 
-## 5. Rastreamento com `strace`
+## Rastreamento com `strace`
 | Métrica | CPU 1 | CPU 2 |
 | :--- | :--- | :--- |
 | 1ª Syscall mais frequente | execve (65,38%) | execve (57,91%) |
