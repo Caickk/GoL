@@ -42,9 +42,9 @@ def game(w, h, max_iter):
 
 def main():
     # Dimensões e iterações fixas
-    w = 200
-    h = 200
-    max_iter = 2000
+    w = 500
+    h = 500
+    max_iter = 5000
     
     # Captura o tempo EXATAMENTE ANTES do processamento iniciar
     start = time.perf_counter()
