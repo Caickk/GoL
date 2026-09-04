@@ -3,6 +3,21 @@
 #include <unistd.h>
 #include <time.h>
 
+// Função para gerar o arquivo PBM
+void save_pbm(void *u, int w, int h, int iter)
+{
+   int (*univ)[w] = u;
+   char filename[64];
+   
+   // Formata o nome do arquivo para gol_nn.pbm (ex: gol_0, gol_10, gol_20)
+   sprintf(filename, "gol_%d.pbm", iter);
+   
+   FILE *f = fopen(filename, "w");
+   if (!f) {
+      perror("Erro ao criar o arquivo PBM");
+      return;
+   }
+}
 // Função principal que calcula a próxima geração do Game of Life.
 // Por ser executada a cada iteração, este é o "hotspot" do programa.
 void evolve(void *u, int w, int h)
@@ -71,8 +86,13 @@ void game(int w, int h, int max_iter)
       }
    }
 
+   
    // Substituição do while(1) por um laço iterativo
+   const int save_interval = 500; // Salva a cada 500 iterações
    for (int iter = 0; iter <= max_iter; iter++) {
+      if (iter % save_interval == 0) {
+         save_pbm(univ, w, h, iter);
+      }
       evolve(univ, w, h);
    }
 }
