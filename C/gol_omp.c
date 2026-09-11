@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-
 #include <omp.h>
+
 // Função para gerar o arquivo PBM (Completada para gravar de fato o PBM)
 void save_pbm(void *u, int w, int h, int iter)
 {
@@ -91,10 +91,16 @@ void game(int w, int h, int max_iter)
 {
    unsigned univ[h][w];
    
-// Inicialização determinística: preenche apenas a diagonal principal
+   // Inicialização determinística: Uma cruz perfeita cruzando a matriz ao meio
+   // OpenMP adicionado aqui também para acelerar a inicialização!
+   #pragma omp parallel for
    for (int y = 0; y < h; y++) {
       for (int x = 0; x < w; x++) {
-         univ[y][x] = (x == y) ? 1 : 0;
+         if (x == w / 2 || y == h / 2) {
+            univ[y][x] = 1;
+         } else {
+            univ[y][x] = 0;
+         }
       }
    }
 
