@@ -1,4 +1,3 @@
-import random
 import time
 from concurrent.futures import ThreadPoolExecutor
 
@@ -55,8 +54,8 @@ def evolve_mt(univ, w, h, executor, num_threads):
         f.result()
 
 def game(w, h, max_iter, num_threads):
-    # Inicialização aleatória com ~10% de chance de célula viva, igual à versão serial
-    univ = [[1 if random.random() < 0.1 else 0 for _ in range(w)] for _ in range(h)]
+    # Inicialização determinística: Uma cruz perfeita cruzando a matriz ao meio
+    univ = [[1 if (x == w // 2 or y == h // 2) else 0 for x in range(w)] for y in range(h)]
 
     # Inicializa o executor fora do laço para não recriar threads a cada geração
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
