@@ -1,4 +1,3 @@
-import random
 import time
 
 def evolve(univ, w, h):
@@ -33,8 +32,9 @@ def evolve(univ, w, h):
             univ[y][x] = new[y][x]
 
 def game(w, h, max_iter):
-    # Inicialização aleatória (aprox. 10% de chance de estar viva)
-    univ = [[1 if random.random() < 0.1 else 0 for _ in range(w)] for _ in range(h)]
+    # Inicializa o tabuleiro: Uma cruz perfeita cruzando a matriz ao meio
+    # Usa w // 2 e h // 2 para encontrar a linha e coluna centrais
+    univ = [[1 if (x == w // 2 or y == h // 2) else 0 for x in range(w)] for y in range(h)]
 
     # Laço iterativo simulando o jogo
     for _ in range(max_iter + 1):
