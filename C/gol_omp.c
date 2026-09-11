@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
+
+#include <omp.h>
+// Função para gerar o arquivo PBM (Completada para gravar de fato o PBM)
+void save_pbm(void *u, int w, int h, int iter)
+{
+   unsigned (*univ)[w] = u;
+   char filename[64];
+   
+   // Formata o nome do arquivo para gol_nn.pbm (ex: gol_0, gol_10, gol_20)
+   sprintf(filename, "gol_%d.pbm", iter);
+   
+   FILE *f = fopen(filename, "w");
+   if (!f) {
+      perror("Erro ao criar o arquivo PBM");
+      return;
+   }
+   
+   // Escreve o cabeçalho do formato PBM (P1 = ASCII)
+   fprintf(f, "P1\n%d %d\n", w, h);
+   
+   // Escreve os dados da matriz
+   for (int y = 0; y < h; y++) {
+      for (int x = 0; x < w; x++) {
+         fprintf(f, "%d ", univ[y][x] ? 1 : 0);
+      }
+      fprintf(f, "\n");
+   }
+   
+   fclose(f);
+}
+
+// Função principal que calcula a próxima geração do Game of Life.
+void evolve(void *u, int w, int h)
+{
+   unsigned (*univ)[w] = u;
+   unsigned new[h][w];
+
+   // Diretiva OpenMP: divide as iterações do eixo Y (linhas) entre as threads
+   #pragma omp parallel for
+   for (int y = 0; y < h; y++) {
+      for (int x = 0; x < w; x++) {
+         
+         int n = 0;
+         
+         for (int y1 = y - 1; y1 <= y + 1; y1++) {
+            for (int x1 = x - 1; x1 <= x + 1; x1++) {
+               if (univ[(y1 + h) % h][(x1 + w) % w]) {
+                  n++;
+               }
+            }
+         }
+
+         if (univ[y][x]) n--;
+         
+         new[y][x] = (n == 3 || (n == 2 && univ[y][x]));
+      }
+   }
+
+   // Diretiva OpenMP: paraleliza também a cópia dos dados de volta para a original
+   #pragma omp parallel for
+   for (int y = 0; y < h; y++) {
+      for (int x = 0; x < w; x++) {
+         univ[y][x] = new[y][x];
+      }
+   }
+}
+
+// Função para utilizar a cláusula de redução
+int count_alive(void *u, int w, int h) 
+{
+   unsigned (*univ)[w] = u;
+   int total_alive = 0;
+   
+   // Cada thread acumula as células localmente e, no final, soma tudo em total_alive
+   #pragma omp parallel for reduction(+:total_alive)
+   for (int y = 0; y < h; y++) {
+      for (int x = 0; x < w; x++) {
+         total_alive += univ[y][x];
+      }
+   }
+   
+   return total_alive;
+}
+
+// A função game recebe largura e altura da matriz, o total de iterações 
+void game(int w, int h, int max_iter)
+{
+   unsigned univ[h][w];
+   
+// Inicialização determinística: preenche apenas a diagonal principal
+   for (int y = 0; y < h; y++) {
+      for (int x = 0; x < w; x++) {
+         univ[y][x] = (x == y) ? 1 : 0;
+      }
+   }
+
+   const int save_interval = 500; // Salva a cada 500 iterações
+   for (int iter = 0; iter <= max_iter; iter++) {
+      if (iter % save_interval == 0) {
+         save_pbm(univ, w, h, iter);
+      }
+      evolve(univ, w, h);
+   }
+   
+   // Chama a função de redução e imprime a validação do estado final da matriz
+   int final_alive = count_alive(univ, w, h);
+   printf("Total de celulas vivas ao final: %d\n", final_alive);
+}
+
+int main(void)
+{
+   int w = 500;
+   int h = 500;
+   int max_iter = 5000;
+
+   // Semente removida para manter a carga de trabalho de CPU totalmente idêntica
+   // em todas as execuções rastreadas pelo Profiler.
+
+   struct timespec start, end;
+
+   clock_gettime(CLOCK_MONOTONIC, &start);
+
+   game(w, h, max_iter);
+
+   clock_gettime(CLOCK_MONOTONIC, &end);
+
+   double time_taken = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+
+   printf("Tempo interno de execucao: %f segundos\n", time_taken);
+   
+   return 0;
+}
