@@ -1,0 +1,919 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 89K of event 'cpu/cycles/P'
+# Event count (approx.): 91931692817
+#
+# Children      Self  Command  Shared Object         Symbol                            
+# ........  ........  .......  ....................  ..................................
+#
+   100.00%     0.00%  gol      gol                   [.] _start
+            |
+            ---_start
+               __libc_start_main_impl (inlined)
+               call_init (inlined)
+               __libc_start_call_main
+               main
+               game
+               |          
+               |--98.77%--evolve
+               |          
+                --0.81%--__memmove_evex_unaligned_erms
+
+   100.00%     0.00%  gol      libc.so.6             [.] __libc_start_main_impl (inlined)
+            |
+            ---__libc_start_main_impl (inlined)
+               call_init (inlined)
+               __libc_start_call_main
+               main
+               game
+               |          
+               |--98.77%--evolve
+               |          
+                --0.81%--__memmove_evex_unaligned_erms
+
+   100.00%     0.00%  gol      libc.so.6             [.] call_init (inlined)
+            |
+            ---call_init (inlined)
+               __libc_start_call_main
+               main
+               game
+               |          
+               |--98.77%--evolve
+               |          
+                --0.81%--__memmove_evex_unaligned_erms
+
+   100.00%     0.00%  gol      libc.so.6             [.] __libc_start_call_main
+            |
+            ---__libc_start_call_main
+               main
+               game
+               |          
+               |--98.77%--evolve
+               |          
+                --0.81%--__memmove_evex_unaligned_erms
+
+   100.00%     0.00%  gol      gol                   [.] main
+            |
+            ---main
+               game
+               |          
+               |--98.77%--evolve
+               |          
+                --0.81%--__memmove_evex_unaligned_erms
+
+   100.00%     0.00%  gol      gol                   [.] game
+            |          
+             --100.00%--game
+                       |          
+                       |--98.77%--evolve
+                       |          
+                        --0.81%--__memmove_evex_unaligned_erms
+
+    98.77%    98.49%  gol      gol                   [.] evolve
+            |          
+             --98.49%--_start
+                       __libc_start_main_impl (inlined)
+                       call_init (inlined)
+                       __libc_start_call_main
+                       main
+                       game
+                       |          
+                        --98.49%--evolve
+
+     0.84%     0.82%  gol      libc.so.6             [.] __memmove_evex_unaligned_erms
+            |          
+             --0.82%--_start
+                       __libc_start_main_impl (inlined)
+                       call_init (inlined)
+                       __libc_start_call_main
+                       main
+                       game
+                       |          
+                        --0.80%--__memmove_evex_unaligned_erms
+
+     0.40%     0.01%  gol      gol                   [.] save_pbm
+     0.39%     0.00%  gol      libc.so.6             [.] ___fprintf_chk (inlined)
+     0.33%     0.06%  gol      libc.so.6             [.] __vfprintf_internal
+     0.24%     0.00%  gol      [unknown]             [.] 0xffffffff9d200f0b
+     0.19%     0.10%  gol      libc.so.6             [.] __printf_buffer
+     0.15%     0.00%  gol      [unknown]             [.] 0xffffffff9e91f894
+     0.14%     0.00%  gol      [unknown]             [.] 0xffffffff9d5edf28
+     0.12%     0.00%  gol      [unknown]             [.] 0xffffffff9d776a14
+     0.12%     0.00%  gol      [unknown]             [.] 0xffffffff9d775b4c
+     0.09%     0.00%  gol      [unknown]             [.] 0xffffffff9d78f716
+     0.08%     0.07%  gol      libc.so.6             [.] __printf_buffer_write
+     0.07%     0.00%  gol      [unknown]             [.] 0xffffffff9d7747c0
+     0.06%     0.00%  gol      [unknown]             [.] 0xffffffff9d64e3ae
+     0.06%     0.00%  gol      [unknown]             [.] 0xffffffff9d64dfa0
+     0.06%     0.00%  gol      [unknown]             [.] 0xffffffff9d64dc11
+     0.05%     0.00%  gol      [unknown]             [.] 0xffffffff9e91f899
+     0.05%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a515e
+     0.05%     0.00%  gol      [unknown]             [.] 0xffffffff9d77350b
+     0.04%     0.00%  gol      [unknown]             [.] 0xffffffff9d7951a5
+     0.04%     0.00%  gol      [unknown]             [.] 0xffffffff9d794fd5
+     0.04%     0.02%  gol      libc.so.6             [.] __printf_buffer_to_file_done
+     0.04%     0.00%  gol      [unknown]             [.] 0xffffffff9d794d4e
+     0.04%     0.00%  gol      [unknown]             [.] 0xffffffff9d774552
+     0.04%     0.00%  gol      [unknown]             [.] 0xffffffff9d772330
+     0.04%     0.00%  gol      [unknown]             [.] 0xffffffff9d77304e
+     0.03%     0.00%  gol      [unknown]             [.] 0xffffffff9e91f8a4
+     0.03%     0.00%  gol      [unknown]             [k] 0xffffffff9d20012b
+     0.03%     0.00%  gol      [unknown]             [k] 0xffffffff9e917b65
+     0.03%     0.02%  gol      libc.so.6             [.] _itoa_word
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9d78f7e5
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9d200ef0
+     0.02%     0.00%  gol      libc.so.6             [.] __printf_buffer_flush_to_file (inlined)
+     0.02%     0.02%  gol      libc.so.6             [.] __fprintf_chk
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e2523e2
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e22b8ce
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e233ea9
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e233de3
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e232a36
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9d78f597
+     0.02%     0.02%  gol      libc.so.6             [.] __strchrnul_evex
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9d200e67
+     0.02%     0.00%  gol      libc.so.6             [.] __syscall_cancel
+     0.02%     0.01%  gol      libc.so.6             [.] __printf_buffer_to_file_init
+     0.02%     0.00%  gol      libc.so.6             [.] __internal_syscall_cancel (inlined)
+     0.02%     0.02%  gol      [unknown]             [k] 0xffffffff9e234c8c
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e2371f0
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9e234c8f
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9d77bd8d
+     0.02%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b95ad
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9e91bfe1
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d5a1b20
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d7253c3
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d777602
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9e920b29
+     0.01%     0.00%  gol      libc.so.6             [.] memcpy@@GLIBC_2.14@plt
+     0.01%     0.01%  gol      [unknown]             [k] 0xffffffff9d201268
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9e93217e
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d59d9e5
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d71ec76
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d71e9f9
+     0.01%     0.01%  gol      libc.so.6             [.] __printf_buffer_done
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_new_file_write (inlined)
+     0.01%     0.00%  gol      libc.so.6             [.] __libc_write (inlined)
+     0.01%     0.00%  gol      libc.so.6             [.] __strchrnul_ifunc@plt
+     0.01%     0.01%  gol      [unknown]             [k] 0xffffffff9d701ba7
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d701bab
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a9125
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d779400
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_new_do_write (inlined)
+     0.01%     0.00%  gol      libc.so.6             [.] new_do_write (inlined)
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d546e2f
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9dae5739
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d776a3d
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9e920c10
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d67a742
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9dae5691
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d78eede
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a5189
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b960a
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d59d5f4
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d774752
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6dbe41
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9dae509b
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9dbffbaf
+     0.01%     0.01%  gol      gol                   [.] memcpy@plt
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffffc1203e02
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffffc1326fab
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_new_file_overflow (inlined)
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d788c5a
+     0.01%     0.00%  gol      gol                   [.] __fprintf_chk@plt
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa2fe
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d961b4a
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9e932947
+     0.01%     0.01%  gol      [unknown]             [k] 0xffffffff9e91ba3e
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9e91ba41
+     0.01%     0.01%  gol      [unknown]             [k] 0xffffffff9d6b919b
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b91a2
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d788993
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d787042
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d65dc42
+     0.01%     0.00%  gol      libc.so.6             [.] __printf_buffer_to_file_switch
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_new_file_xsputn (inlined)
+     0.01%     0.00%  gol      [unknown]             [k] 0xffffffff9d5afa20
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_new_fopen (inlined)
+     0.01%     0.00%  gol      libc.so.6             [.] __fopen_internal (inlined)
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_new_file_fopen (inlined)
+     0.01%     0.00%  gol      libc.so.6             [.] _IO_file_open
+     0.01%     0.00%  gol      libc.so.6             [.] __libc_open64 (inlined)
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d548b4c
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9dae05bf
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9dae007a
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9db0012f
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9daffec3
+     0.01%     0.00%  gol      libc.so.6             [.] __profil_counter
+     0.01%     0.01%  gol      [unknown]             [k] 0xffffffff9e932943
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d59df4a
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6f4b8f
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b0b90
+     0.01%     0.00%  gol      [unknown]             [k] 0xffffffff9e934b20
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b96d2
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b91e8
+     0.01%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a51a9
+     0.01%     0.00%  gol      libc.so.6             [.] __find_specmb (inlined)
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d78be3e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5afa23
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d78f6a2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77bd7c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b95ff
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9daf989f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dade345
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db16038
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59d74c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d78be89
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d60943d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a8a59
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e2371c6
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e9047cb
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d774dfa
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e9047d4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b83a2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c335c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc13266b2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39b977
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6db83a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc1211c90
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1211c92
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65bd3b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91bfe6
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d200bb7
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e9202e3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbff61d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d982d3b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9fe7ce
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9fe443
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a8898
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77894b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a89ba
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d775b7e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b74e5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d60943b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d64e3a0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d95d975
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d54f301
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d55d625
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b9670
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91d179
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e2371c4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa64e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5481ce
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1326b1f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e399958
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e3994a2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc13a2cbd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39b8b3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39aa22
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d64e769
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d64e604
+     0.00%     0.00%  gol      libc.so.6             [.] _IO_new_fclose (inlined)
+     0.00%     0.00%  gol      libc.so.6             [.] __close_nocancel
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d548318
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dadd66e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dae7380
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dae6a5d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbfe449
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc133ec
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d98131f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9811e5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d99406b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc17c18
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d61721b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9fdf7b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9fcc0a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9fc7f2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7734aa
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d772f95
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d776a1c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6a87bd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a87c1
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1a6b4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d99c775
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91f88c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e9135d0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e9135d3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d779946
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65c001
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59dea9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59dd42
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b758b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77696a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6aa56f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa573
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7be3b1
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7be3b5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d9393
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d9396
+     0.00%     0.00%  gol      libc.so.6             [.] _mcount
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6db7e2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d55d330
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8489
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77898c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b83aa
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b83b1
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e91d060
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91d062
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7747c5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a5130
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d69f658
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59d5a2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b5884
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8ff1
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5fa5c9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5fa5cb
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d778966
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d688fa6
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6aa2ec
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa2f2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc0264040
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d71de90
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d724b8e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d779372
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1203da6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d69c7fb
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7a0d71
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc1353542
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1353545
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e92cc10
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbff5e6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e92cc15
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39a917
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6f7026
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6f7029
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da4def6
+     0.00%     0.00%  gol      libc.so.6             [.] __restore_rt
+     0.00%     0.00%  gol      libc.so.6             [.] memcpy (inlined)
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7747b1
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d746822
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d200080
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc18efd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1233589
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7be390
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7be397
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbff606
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db14502
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc18e95
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d98762f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9da337cd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da7e8eb
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da7b0d8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da395b7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da37f02
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da35eed
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da34c82
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da34b2e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da337d7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d200ef3
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d795166
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d795169
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d773000
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d773004
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9da2ea97
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d99c2ad
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d99ad0a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d999000
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da36cf7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da2ea9f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5b6894
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b689c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d64e2f6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d64e30b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d547337
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d54733d
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d772efd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d772f00
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d772647
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dedde90
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7756c7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77590a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7756ca
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b8259
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8ac9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8286
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e92945f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e929464
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e9047fe
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d794ddc
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d79345c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e900c00
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d95d8c5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d95d8c8
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d78f5a4
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6a8907
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a890a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6f7038
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6f703a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e9208e0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e9208e1
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9ddac7fa
+     0.00%     0.00%  gol      libc.so.6             [.] _IO_doallocbuf
+     0.00%     0.00%  gol      libc.so.6             [.] __fstat64
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d548b1f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9daee3d5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9daee36e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9daee1b5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dd2417e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dda651e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dda6490
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dda62cc
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9ddac803
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6e0c5f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6e0c61
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d779940
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d78f505
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d78f50c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d65ac17
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d788b4a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65cbef
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65ac1b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d2011a8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d2011a9
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d75f674
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e920977
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d75f675
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e927c00
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e927c05
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d795e37
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d795e3e
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dbb3d8c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9daf9778
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dadfb1c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dadd809
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbff517
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbb425b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbb3d90
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b95dd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b95e0
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d98a6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d98aa
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77890c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77890f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d701b8a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d701b8b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d9a9f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d9aa9
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d772615
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d772617
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9da4def1
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dabc730
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6aa558
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa55f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6fa64d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a516b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6fa654
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77996c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a5107
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d744e2d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d744e34
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6a8845
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a8846
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77587d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d775881
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6db7d9
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d948b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d9492
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9deddc6a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9deddc6c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d9237
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d9239
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d2016b0
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77c126
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77699e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77c129
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d95d982
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d95d985
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6db825
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6db82d
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d777df9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d777dfc
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77932a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77932d
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5b6f6b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b6f76
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db56846
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d99c24c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d99bd33
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc0e48b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db5684b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d795ded
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d795df4
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6c334b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c3352
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5edd19
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5edd1c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d9960
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d9963
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d64e2d6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d64e2d9
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77c9a0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77c9a7
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d778167
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77816a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d661379
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59e1c8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d66137e
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d9168
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d916c
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d77476f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d774787
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d688eda
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d688ede
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e932949
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5b6981
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b6fb4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b6983
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7769a5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7769ac
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d78930c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d789312
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d773014
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d773018
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77994e
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d65ab00
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65ab01
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d779971
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d779978
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d794ec0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d794ec5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d9b9a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d9b30
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d609282
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a50f8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d609284
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d795da2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d795ec9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d795da6
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d777e0f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d778979
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d777e13
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b8ed2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8ed6
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dbb5d2f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc15fff
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1155f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc113ed
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc0dff7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc0dd8a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbb5d33
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6a3db4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a3db7
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7a0c70
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7a0c75
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6d98dc
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6d98e3
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b91b7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b91ba
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e2371c9
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b2ebf
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a87c6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c0463
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b2ec4
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d75f670
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d75f671
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b8204
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b83c6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b82ff
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8209
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d200083
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e932215
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e932216
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dfc7693
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7734ec
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9903ba
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e8e0117
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dfc7697
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5edf2a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e9209dd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e9209ea
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d95d919
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d95d91d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c2c46
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b0863
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b023a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e91d174
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91d040
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dc0fe91
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1a670
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc16af9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc166db
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc10879
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc0fe99
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5b91fa
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b43ef
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b91fe
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e932a23
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d775b5c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e932a2a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6f700e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6f7015
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6ab29e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6ab2a2
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d795000
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d795001
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d95d907
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d95d90b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d795313
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7747a5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7952d3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e25241b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6db7ea
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91f89c
+     0.00%     0.00%  gol      libc.so.6             [.] fputc
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b82cd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8321
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6ab2a8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6ab2ac
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dbef016
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1a58a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dbef019
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5edefd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5edf04
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b8384
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8388
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d69c743
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d69c749
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d778828
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d77882b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e916b0a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d65d7a0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59d966
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65d7a5
+     0.00%     0.00%  gol      [unknown]             [.] 0x0000000017a06bd0
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d990b50
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc17475
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d990b55
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e91d0d6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91d0d7
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d777e33
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d777e36
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b8e6e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8e71
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d66e151
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d772fdf
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d671829
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6712b9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d671178
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d66e154
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc123c0e0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc123c27e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc123c0e3
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db5cca6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dae5127
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db5e0aa
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db5ccaa
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e8db262
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d20102b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91ccd4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5a7ae0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d89dbc8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d89db50
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1224d40
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc128ad52
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e8db264
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6db7c2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6db7c8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d60943f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e245cf7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc027d374
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc027d28b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc027d180
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc027b7f8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e34a013
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e333fc0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e333e9c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d753d23
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e2557b5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e253115
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e24bdee
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e24bc28
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e246252
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e245e23
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e245cfa
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc0264a1f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e03cf3b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e0120b8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e010e09
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc0264a21
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d69bef0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d789331
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d69bef5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7a0ca3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c2e62
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aaf1f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7a1292
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7a0e9a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7a0ca6
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5b43f6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b43fe
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6aa2e4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa2e7
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e36972c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e399477
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e369730
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39b804
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e399983
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc1231ae9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1231aeb
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc123c23d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc123c240
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d200258
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6ab2bf
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6ab2c0
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc0f1b7c0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc0f1b7c5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7431f4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7431f8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1353707
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39a74f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e91d092
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91d099
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6c2f1c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c2f20
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db1920d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dae564b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db1920f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d5b75f0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d5b75f5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dabc8d9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dabc8dc
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d778152
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d778155
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6a50ff
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a5102
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7951be
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7951e0
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e90100b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d794f92
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d793211
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e90101b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6a3dc6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6a3dcb
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dabc929
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dabc92d
+     0.00%     0.00%  gol      libc.so.6             [.] __printf_buffer_init (inlined)
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d64dc63
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d64dc64
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d60ee00
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d60ee03
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e39a95e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1327896
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc13233ba
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d60ed10
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d60ed15
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6e665b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6e665d
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc122ea97
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc123349a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc122ea99
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9fdef1
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e91bff1
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e9209cb
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e927c27
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e927715
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d69fad7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c23f5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b864b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8475
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6de7f3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6dcf15
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6caee3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7760fa
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6b8a12
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b904d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b8a16
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d742f5c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d743193
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d742f62
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6c2e05
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c2e0b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6b9732
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d78bdd0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d78bdd5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d982f7d
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d982f81
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e932a31
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59de54
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d65d51b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e932a35
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db11b1e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db1441e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db14057
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db11b24
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d788a7b
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d788a85
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db56eb9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db14430
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db3bad5
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1afdc
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc16acb
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1677e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc13a8c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc100f4
+     0.00%     0.00%  gol      gol                   [.] fprintf (inlined)
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e90eabc
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc178b6
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc16d21
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc0f192
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc0edc2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc3b3e3
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d991ed0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e90dc90
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9da4db33
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc17460
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc3acaf
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da4db36
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9da4db44
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da4db49
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d59d5d4
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d59d5d8
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d6aa7e0
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c2c51
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c26a7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c131e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c0f52
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6c0c5a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6aa7e5
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9da7e8ca
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da7e6e0
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e202d0f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d71ec81
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e202d14
+     0.00%     0.00%  gol      libc.so.6             [.] __printf_buffer_pad (inlined)
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffffc1232684
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffffc1232687
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e91109f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d982f8f
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9801e8
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e9110a1
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db5336c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dc1633c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db55a1e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9db5587a
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da4da80
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d61734e
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9f89fc
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9f8552
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d985040
+     0.00%     0.00%  gol      libc.so.6             [.] ___sprintf_chk (inlined)
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9857f2
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d985045
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_start_user
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_start
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_start_final (inlined)
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_sysdep_start
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] dl_main
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] rtld_timer_accum (inlined)
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] rtld_timer_stop (inlined)
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d7014c7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d6171a9
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9ec236
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d7014c9
+     0.00%     0.00%  gol      libc.so.6             [.] __strnlen_ifunc
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_relocate_object
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_protect_relro (inlined)
+     0.00%     0.00%  gol      libc.so.6             [.] strnlen_ifunc_selector (inlined)
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d547863
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9daf1a0e
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9daf16fb
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9daefc4a
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9daefb60
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dab6e42
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_map_object_deps
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_catch_exception
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] set_catch (inlined)
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] openaux
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_map_new_object
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _dl_load_cache_lookup
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9857c7
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9d9f7dbd
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9da15489
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dab7378
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9dab6e46
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dab6d09
+     0.00%     0.00%  gol      [unknown]             [k] 0x0000724c1f8f818b
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9daef7fc
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9db994ea
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e912200
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9f8ae7
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9e932831
+     0.00%     0.00%  gol      ld-linux-x86-64.so.2  [.] _start
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9f81a2
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9f7f15
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d99aa5f
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d999409
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d999314
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9991cd
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d9986b2
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9d997f88
+     0.00%     0.00%  gol      [unknown]             [k] 0xffffffff9dab6d0c
+     0.00%     0.00%  gol      [unknown]             [.] 0xffffffff9e932835
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

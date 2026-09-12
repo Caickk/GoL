@@ -1,0 +1,204 @@
+--------------------------------------------------------------------------------
+-- Metadata
+--------------------------------------------------------------------------------
+Invocation:       /usr/bin/cg_annotate cachegrind.out.10626
+Command:          ./gol
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Threshold:        0.1%
+Annotation:       on
+
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+Ir______________________ 
+
+162,290,664,271 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+-- File:function summary
+--------------------------------------------------------------------------------
+  Ir____________________________  file:function
+
+< 160,199,386,047 (98.7%, 98.7%)  /home/caick/Documentos/gol_parte2/GoL/C/gol.c:
+  160,188,037,918 (98.7%)           evolve
+
+<     640,612,470  (0.4%, 99.1%)  ./string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S:
+      640,612,037  (0.4%)           __memcpy_avx_unaligned_erms
+
+<     396,003,283  (0.2%, 99.4%)  ./stdio-common/./stdio-common/vfprintf-internal.c:
+      261,252,707  (0.2%)           __printf_buffer
+
+<     253,488,622  (0.2%, 99.5%)  ./stdio-common/./stdio-common/vfprintf-process-arg.c:__printf_buffer
+
+<     244,758,905  (0.2%, 99.7%)  ./stdio-common/./stdio-common/Xprintf_buffer_write.c:__printf_buffer_write
+
+--------------------------------------------------------------------------------
+-- Function:file summary
+--------------------------------------------------------------------------------
+  Ir____________________________  function:file
+
+> 160,188,037,918 (98.7%, 98.7%)  evolve:/home/caick/Documentos/gol_parte2/GoL/C/gol.c
+
+>     640,612,037  (0.4%, 99.1%)  __memcpy_avx_unaligned_erms:./string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+
+>     550,491,712  (0.3%, 99.4%)  __printf_buffer:
+      261,252,707  (0.2%)           ./stdio-common/./stdio-common/vfprintf-internal.c
+      253,488,622  (0.2%)           ./stdio-common/./stdio-common/vfprintf-process-arg.c
+
+>     261,259,178  (0.2%, 99.6%)  __printf_buffer_write:
+      244,758,905  (0.2%)           ./stdio-common/./stdio-common/Xprintf_buffer_write.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./stdio-common/./stdio-common/Xprintf_buffer_write.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./stdio-common/./stdio-common/Xprintf_buffer_write.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./stdio-common/./stdio-common/vfprintf-internal.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./stdio-common/./stdio-common/vfprintf-internal.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./stdio-common/./stdio-common/vfprintf-process-arg.c
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./stdio-common/./stdio-common/vfprintf-process-arg.c
+
+--------------------------------------------------------------------------------
+-- Annotated source file: ./string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- ./string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /home/caick/Documentos/gol_parte2/GoL/C/gol.c
+--------------------------------------------------------------------------------
+Ir____________________ 
+
+             .          #include <stdio.h>
+             .          #include <stdlib.h>
+             .          #include <unistd.h>
+             .          #include <time.h>
+             .          
+             .          // Função para gerar o arquivo PBM
+             .          void save_pbm(void *u, int w, int h, int iter)
+           187  (0.0%)  {
+        16,533  (0.0%)     int (*univ)[w] = u;
+             .             char filename[64];
+             .             
+             .             // Formata o nome do arquivo para gol_nn.pbm (ex: gol_0, gol_500, gol_1000)
+             .             sprintf(filename, "gol_%d.pbm", iter);
+             .             
+            44  (0.0%)     FILE *f = fopen(filename, "w");
+            22  (0.0%)     if (!f) {
+             .                perror("Erro ao criar o arquivo PBM");
+             .                return;
+             .             }
+             .          
+             .             // Cabeçalho e dados PBM no formato P1 (ASCII monocromático)
+             .             fprintf(f, "P1\n%d %d\n", w, h);
+        22,022  (0.0%)     for (int y = 0; y < h; y++) {
+     8,250,033  (0.0%)        for (int x = 0; x < w; x++) {
+             .                   fprintf(f, "%d ", univ[y][x]);
+             .                }
+             .                fprintf(f, "\n");
+             .             }
+            22  (0.0%)     fclose(f);
+           121  (0.0%)  }
+             .          
+             .          // Função principal que calcula a próxima geração do Game of Life.
+             .          void evolve(void *u, int w, int h)
+        80,016  (0.0%)  {
+         5,001  (0.0%)     unsigned (*univ)[w] = u;
+     4,970,994  (0.0%)     unsigned new[h][w];
+             .          
+    17,523,504  (0.0%)     for (int y = 0; y < h; y++) {
+ 6,256,321,014  (3.9%)        for (int x = 0; x < w; x++) {
+ 2,500,500,000  (1.5%)           int n = 0;
+             .                   
+11,252,250,000  (6.9%)           for (int y1 = y - 1; y1 <= y + 1; y1++) {
+33,756,750,000 (20.8%)              for (int x1 = x - 1; x1 <= x + 1; x1++) {
+71,264,250,000 (43.9%)                 if (univ[(y1 + h) % h][(x1 + w) % w]) {
+22,504,500,000 (13.9%)                    n++;
+             .                         }
+             .                      }
+             .                   }
+             .          
+ 6,268,753,500  (3.9%)           if (univ[y][x]) n--;
+             .                   
+ 6,339,534,370  (3.9%)           new[y][x] = (n == 3 || (n == 2 && univ[y][x]));
+             .                }
+             .             }
+             .          
+    10,002,000  (0.0%)     for (int y = 0; y < h; y++) {
+        15,003  (0.0%)        for (int x = 0; x < w; x++) {
+    12,527,505  (0.0%)           univ[y][x] = new[y][x];
+             .                }
+             .             }
+        55,011  (0.0%)  }
+             .          
+             .          // A função game recebe largura, altura da matriz e o total de iterações 
+             .          void game(int w, int h, int max_iter)
+            15  (0.0%)  {
+           995  (0.0%)     unsigned univ[h][w];
+             .             
+             .             // Inicializa o tabuleiro: Uma cruz perfeita cruzando a matriz ao meio
+         1,502  (0.0%)     for (int y = 0; y < h; y++) {
+       750,502  (0.0%)        for (int x = 0; x < w; x++) {
+             .                   // Ativa a célula se ela estiver na linha do meio OU na coluna do meio
+     1,499,006  (0.0%)           if (x == w / 2 || y == h / 2) {
+       752,000  (0.0%)              univ[y][x] = 1;
+             .                   } else {
+             1  (0.0%)              univ[y][x] = 0;
+             .                   }
+             .                }
+             .             }
+             .             
+             .             const int save_interval = 500; // Salva a cada 500 iterações
+        15,006  (0.0%)     for (int iter = 0; iter <= max_iter; iter++) {
+        10,002  (0.0%)        if (iter % save_interval == 0) {
+            66  (0.0%)           save_pbm(univ, w, h, iter);
+             .                }
+        20,004  (0.0%)        evolve(univ, w, h);
+             .             }
+        10,013  (0.0%)  }
+             .          
+             .          int main(void)
+             5  (0.0%)  {
+             .             int w = 500;
+             .             int h = 500;
+             .             int max_iter = 5000;
+             .          
+             .             struct timespec start, end;
+             .          
+             .             // Captura o tempo EXATAMENTE ANTES do processamento iniciar
+             5  (0.0%)     clock_gettime(CLOCK_MONOTONIC, &start);
+             .          
+             4  (0.0%)     game(w, h, max_iter);
+             .          
+             .             // Captura o tempo EXATAMENTE APÓS o processamento terminar
+             3  (0.0%)     clock_gettime(CLOCK_MONOTONIC, &end);
+             .          
+            10  (0.0%)     double time_taken = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1000000000.0;
+             .          
+             .             printf("Tempo interno de execucao: %f segundos\n", time_taken);
+             .             
+             .             return 0;
+             6  (0.0%)  }
+
+--------------------------------------------------------------------------------
+-- Annotation summary
+--------------------------------------------------------------------------------
+Ir_____________________ 
+
+160,199,386,047 (98.7%)    annotated: files known & above threshold & readable, line numbers known
+              0            annotated: files known & above threshold & readable, line numbers unknown
+              0          unannotated: files known & above threshold & two or more non-identical
+  1,534,863,280  (0.9%)  unannotated: files known & above threshold & unreadable 
+    523,844,709  (0.3%)  unannotated: files known & below threshold
+     32,570,235  (0.0%)  unannotated: files unknown
+
