@@ -145,7 +145,7 @@ def main():
     w = 500
     h = 500
     max_iter = 5000
-    n_tasks = os.cpu_count() or 1       
+    n_tasks = int(os.environ.get("GOL_WORKERS", 4))
 
     print(f"Executando com {n_tasks} tarefas (blocos de colunas), "
           f"grade {w}x{h}, {max_iter} gerações...")

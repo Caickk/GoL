@@ -1,4 +1,5 @@
 import time
+import os
 from concurrent.futures import ThreadPoolExecutor
 
 def save_pbm(univ, w, h, iter_count):
@@ -75,13 +76,13 @@ def game(w, h, max_iter, num_threads):
                 save_pbm(univ, w, h, iter_count)
                 
             evolve_mt(univ, w, h, executor, num_threads)
-            
+
 def main():
     # Dimensões e iterações mantidas conforme a versão original
     w = 500
     h = 500
     max_iter = 5000
-    num_threads = 4 # Você pode ajustar este número com base nos núcleos lógicos da máquina
+    num_threads = int(os.environ.get("GOL_WORKERS", 4))
     
     start = time.perf_counter()
 
