@@ -1,0 +1,549 @@
+Tempo interno de execucao (Multithread): 1352.315504 segundos
+         5149856 function calls (5028791 primitive calls) in 1352.334 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+    40008    0.087    0.000 2140.246    0.053 _base.py:422(result)
+    16245    0.220    0.000 2139.251    0.132 threading.py:337(wait)
+40008/2248  184.996    0.005 1414.936    0.629 {method 'get' of '_queue.SimpleQueue' objects}
+     21/1    0.002    0.000 1352.334 1352.334 {built-in method builtins.exec}
+        1    0.000    0.000 1352.334 1352.334 gol_multithread.py:1(<module>)
+        1    0.000    0.000 1352.316 1352.316 gol_multithread.py:80(main)
+        1    0.011    0.011 1352.315 1352.315 gol_multithread.py:67(game)
+        1    0.004    0.004 1352.251 1352.251 _base.py:666(__exit__)
+        1    0.000    0.000 1352.248 1352.248 thread.py:254(shutdown)
+        4    0.000    0.000 1352.248  338.062 threading.py:1097(join)
+        4    0.000    0.000 1352.248  338.062 {method 'join' of '_thread._ThreadHandle' objects}
+      4/1    0.005    0.001 1352.248 1352.248 threading.py:1030(_bootstrap)
+      4/1    1.719    0.430 1352.248 1352.248 threading.py:1065(_bootstrap_inner)
+      4/1    0.000    0.000 1352.248 1352.248 {method 'run' of '_contextvars.Context' objects}
+      4/1    0.000    0.000 1352.248 1352.248 threading.py:1013(run)
+      4/1    0.005    0.001 1352.248 1352.248 thread.py:97(_worker)
+     5001   15.671    0.003 1349.976    0.270 gol_multithread.py:40(evolve_mt)
+40008/25781    0.093    0.000  716.346    0.028 thread.py:81(run)
+40008/25781    0.138    0.000  715.276    0.028 thread.py:71(run)
+20004/5777 1091.601    0.055   58.538    0.010 gol_multithread.py:15(process_chunk)
+72519/32516   30.115    0.000   30.333    0.001 {method 'acquire' of '_thread.lock' objects}
+    20004   25.737    0.001   25.737    0.001 gol_multithread.py:34(copy_chunk)
+40008/39999    0.172    0.000    1.134    0.000 _base.py:531(set_result)
+    40008    0.123    0.000    1.047    0.000 thread.py:199(submit)
+200049/200016    0.110    0.000    0.952    0.000 threading.py:313(__enter__)
+    40008    0.020    0.000    0.695    0.000 thread.py:219(_adjust_thread_count)
+    40008    0.032    0.000    0.578    0.000 threading.py:482(acquire)
+       11    0.004    0.000    0.574    0.052 gol_multithread.py:5(save_pbm)
+     5928    0.262    0.000    0.567    0.000 {method 'join' of 'str' objects}
+40008/40000    0.056    0.000    0.442    0.000 threading.py:529(release)
+40013/40009    0.035    0.000    0.380    0.000 threading.py:438(notify_all)
+  2755500    0.305    0.000    0.305    0.000 gol_multithread.py:11(<genexpr>)
+80021/80018    0.096    0.000    0.180    0.000 threading.py:408(notify)
+    40008    0.070    0.000    0.157    0.000 _base.py:491(set_running_or_notify_cancel)
+    40008    0.030    0.000    0.150    0.000 _base.py:322(__init__)
+   200049    0.091    0.000    0.124    0.000 threading.py:316(__exit__)
+    40014    0.077    0.000    0.120    0.000 threading.py:290(__init__)
+        4    0.000    0.000    0.092    0.023 threading.py:975(start)
+        4    0.000    0.000    0.092    0.023 threading.py:651(wait)
+   120084    0.052    0.000    0.052    0.000 {method '__enter__' of '_thread.RLock' objects}
+    40021    0.026    0.000    0.043    0.000 threading.py:328(_is_owned)
+    40013    0.042    0.000    0.042    0.000 {method 'put' of '_queue.SimpleQueue' objects}
+    40012    0.037    0.000    0.037    0.000 {method 'get_nowait' of '_queue.SimpleQueue' objects}
+160042/160024    0.030    0.000    0.030    0.000 {method '__enter__' of '_thread.lock' objects}
+    16237    0.029    0.000    0.029    0.000 {method '_acquire_restore' of '_thread.RLock' objects}
+120125/120111    0.021    0.000    0.026    0.000 {built-in method builtins.hasattr}
+        4    0.000    0.000    0.025    0.006 __init__.py:1(<module>)
+   120084    0.024    0.000    0.024    0.000 {method '__exit__' of '_thread.RLock' objects}
+   160042    0.024    0.000    0.024    0.000 {method '__exit__' of '_thread.lock' objects}
+    16249    0.023    0.000    0.023    0.000 {method 'release' of '_thread.lock' objects}
+    40011    0.022    0.000    0.022    0.000 threading.py:126(RLock)
+     21/2    0.000    0.000    0.019    0.009 <frozen importlib._bootstrap>:1360(_find_and_load)
+     21/2    0.000    0.000    0.019    0.009 <frozen importlib._bootstrap>:1308(_find_and_load_unlocked)
+     21/3    0.000    0.000    0.018    0.006 <frozen importlib._bootstrap>:914(_load_unlocked)
+     15/3    0.000    0.000    0.018    0.006 <frozen importlib._bootstrap_external>:753(exec_module)
+    16237    0.017    0.000    0.017    0.000 {method '_release_save' of '_thread.RLock' objects}
+    56245    0.016    0.000    0.016    0.000 {method '_is_owned' of '_thread.RLock' objects}
+     46/5    0.000    0.000    0.014    0.003 <frozen importlib._bootstrap>:483(_call_with_frames_removed)
+41011/40927    0.014    0.000    0.014    0.000 {built-in method builtins.len}
+        1    0.000    0.000    0.012    0.012 _base.py:1(<module>)
+    41257    0.009    0.000    0.009    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.009    0.009 traceback.py:1(<module>)
+    16266    0.008    0.000    0.008    0.000 {built-in method _thread.allocate_lock}
+    40008    0.008    0.000    0.008    0.000 _base.py:331(_invoke_callbacks)
+    16245    0.006    0.000    0.006    0.000 {method 'remove' of 'collections.deque' objects}
+       15    0.000    0.000    0.006    0.000 <frozen importlib._bootstrap_external>:826(get_code)
+    40008    0.006    0.000    0.006    0.000 thread.py:56(resolve_task)
+    40008    0.005    0.000    0.005    0.000 _base.py:392(__get_result)
+    40008    0.005    0.000    0.005    0.000 thread.py:77(__init__)
+      6/4    0.000    0.000    0.005    0.001 <frozen importlib._bootstrap>:1409(_handle_fromlist)
+        1    0.000    0.000    0.005    0.005 __init__.py:50(__getattr__)
+        1    0.000    0.000    0.005    0.005 _colorize.py:1(<module>)
+        5    0.000    0.000    0.005    0.001 dataclasses.py:1431(wrap)
+        5    0.000    0.000    0.005    0.001 dataclasses.py:986(_process_class)
+       15    0.000    0.000    0.004    0.000 <frozen importlib._bootstrap_external>:947(get_data)
+    16245    0.004    0.000    0.004    0.000 {method 'append' of 'collections.deque' objects}
+       15    0.004    0.000    0.004    0.000 {method 'read' of '_io.BufferedReader' objects}
+       92    0.001    0.000    0.004    0.000 {built-in method builtins.__build_class__}
+     5511    0.003    0.000    0.003    0.000 {method 'write' of '_io.TextIOWrapper' objects}
+        6    0.000    0.000    0.003    0.000 __init__.py:287(compile)
+        6    0.000    0.000    0.003    0.000 __init__.py:330(_compile)
+        5    0.000    0.000    0.003    0.001 dataclasses.py:478(add_fns_to_class)
+        6    0.000    0.000    0.003    0.000 _compiler.py:757(compile)
+       21    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap>:1243(_find_spec)
+       15    0.000    0.000    0.002    0.000 <frozen importlib._bootstrap_external>:509(_compile_bytecode)
+       15    0.002    0.000    0.002    0.000 {built-in method marshal.loads}
+        6    0.000    0.000    0.001    0.000 _parser.py:963(parse)
+     27/6    0.000    0.000    0.001    0.000 _parser.py:452(_parse_sub)
+     39/6    0.001    0.000    0.001    0.000 _parser.py:512(_parse)
+        1    0.000    0.000    0.001    0.001 textwrap.py:1(<module>)
+        1    0.000    0.000    0.001    0.001 textwrap.py:17(TextWrapper)
+       17    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1284(find_spec)
+       17    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1255(_get_spec)
+       47    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap_external>:1357(find_spec)
+        4    0.000    0.000    0.001    0.000 inspect.py:3320(signature)
+        6    0.000    0.000    0.001    0.000 _compiler.py:590(_code)
+        4    0.000    0.000    0.001    0.000 inspect.py:3033(from_callable)
+     12/4    0.000    0.000    0.001    0.000 inspect.py:2413(_signature_from_callable)
+        1    0.000    0.000    0.001    0.001 thread.py:1(<module>)
+     79/6    0.000    0.000    0.001    0.000 _compiler.py:39(_compile)
+       11    0.001    0.000    0.001    0.000 {built-in method _io.open}
+        1    0.000    0.000    0.001    0.001 __init__.py:477(StrFormatStyle)
+        4    0.000    0.000    0.001    0.000 inspect.py:2307(_signature_from_function)
+        1    0.000    0.000    0.001    0.001 queue.py:1(<module>)
+       21    0.000    0.000    0.001    0.000 <frozen importlib._bootstrap>:809(module_from_spec)
+        1    0.000    0.000    0.001    0.001 __init__.py:444(PercentStyle)
+        1    0.000    0.000    0.001    0.001 warnings.py:1(<module>)
+     69/9    0.000    0.000    0.000    0.000 annotationlib.py:907(get_annotations)
+       26    0.000    0.000    0.000    0.000 {method '__exit__' of '_io._IOBase' objects}
+        8    0.000    0.000    0.000    0.000 dataclasses.py:541(__annotate__)
+       33    0.000    0.000    0.000    0.000 _compiler.py:248(_optimize_charset)
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:419(__enter__)
+     16/8    0.000    0.000    0.000    0.000 annotationlib.py:1127(_get_and_call_annotate)
+      8/4    0.000    0.000    0.000    0.000 annotationlib.py:697(call_annotate_function)
+      291    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:131(_path_join)
+       99    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:145(_path_stat)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.__import__}
+       19    0.000    0.000    0.000    0.000 <frozen abc>:105(__new__)
+        1    0.000    0.000    0.000    0.000 contextlib.py:1(<module>)
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:736(_init_module_attrs)
+       99    0.000    0.000    0.000    0.000 {built-in method posix.stat}
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:304(acquire)
+       45    0.000    0.000    0.000    0.000 {built-in method __new__ of type object at 0xa99760}
+       30    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:239(cache_from_source)
+        4    0.000    0.000    0.000    0.000 inspect.py:3256(__str__)
+        2    0.000    0.000    0.000    0.000 __init__.py:361(namedtuple)
+        1    0.000    0.000    0.000    0.000 threading.py:1(<module>)
+        4    0.000    0.000    0.000    0.000 inspect.py:3259(format)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1051(create_module)
+      549    0.000    0.000    0.000    0.000 _parser.py:261(get)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:1(<module>)
+  549/545    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        2    0.000    0.000    0.000    0.000 {built-in method _imp.create_dynamic}
+       32    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:635(cached)
+      455    0.000    0.000    0.000    0.000 _parser.py:168(__getitem__)
+        4    0.000    0.000    0.000    0.000 {built-in method _thread.start_joinable_thread}
+       17    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:369(_get_cached)
+       15    0.000    0.000    0.000    0.000 {built-in method _io.open_code}
+     1329    0.000    0.000    0.000    0.000 {built-in method builtins.isinstance}
+       41    0.000    0.000    0.000    0.000 dataclasses.py:825(_get_field)
+    73/45    0.000    0.000    0.000    0.000 annotationlib.py:1144(_get_dunder_annotations)
+       16    0.000    0.000    0.000    0.000 _colorize.py:115(__annotate__)
+        5    0.000    0.000    0.000    0.000 dataclasses.py:670(_init_fn)
+       37    0.000    0.000    0.000    0.000 inspect.py:2771(_format)
+       33    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:164(_path_isfile)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:162(__enter__)
+       17    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1352(_get_spec)
+       61    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1233(_path_importer_cache)
+    82/21    0.000    0.000    0.000    0.000 _parser.py:178(getwidth)
+       21    0.000    0.000    0.000    0.000 __init__.py:101(find_spec)
+       35    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:155(_path_is_mode_type)
+       41    0.000    0.000    0.000    0.000 inspect.py:2681(__init__)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.eval}
+        6    0.000    0.000    0.000    0.000 _compiler.py:525(_compile_info)
+       30    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:137(_path_split)
+       12    0.000    0.000    0.000    0.000 inspect.py:1910(_signature_get_user_defined_method)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:124(setdefault)
+      616    0.000    0.000    0.000    0.000 _parser.py:240(__next)
+       17    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:560(spec_from_file_location)
+        5    0.000    0.000    0.000    0.000 threading.py:880(__init__)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:429(_get_module_lock)
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:423(__exit__)
+       11    0.000    0.000    0.000    0.000 _parser.py:98(closegroup)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:452(__getitem__)
+       30    0.000    0.000    0.000    0.000 dataclasses.py:446(add_fn)
+        1    0.000    0.000    0.000    0.000 heapq.py:1(<module>)
+        8    0.000    0.000    0.000    0.000 inspect.py:2973(__init__)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:372(release)
+      612    0.000    0.000    0.000    0.000 {method 'rstrip' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 dataclasses.py:728(_frozen_get_del_attr)
+        5    0.000    0.000    0.000    0.000 threading.py:630(set)
+        4    0.000    0.000    0.000    0.000 inspect.py:2031(_signature_bound_method)
+       43    0.000    0.000    0.000    0.000 _parser.py:312(_class_escape)
+       41    0.000    0.000    0.000    0.000 inspect.py:1339(formatannotation)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:992(create_module)
+      268    0.000    0.000    0.000    0.000 _parser.py:256(match)
+        1    0.000    0.000    0.000    0.000 thread.py:161(__init__)
+       33    0.000    0.000    0.000    0.000 _compiler.py:221(_compile_charset)
+      322    0.000    0.000    0.000    0.000 {method 'get' of 'dict' objects}
+      171    0.000    0.000    0.000    0.000 _parser.py:164(__len__)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1220(_path_hooks)
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.create_builtin}
+       50    0.000    0.000    0.000    0.000 {built-in method builtins.max}
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:985(find_spec)
+        7    0.000    0.000    0.000    0.000 _compiler.py:400(_mk_bitmap)
+       96    0.000    0.000    0.000    0.000 {built-in method builtins.setattr}
+       32    0.000    0.000    0.000    0.000 _compiler.py:412(_simple)
+      100    0.000    0.000    0.000    0.000 {method 'format' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 <frozen abc>:146(update_abstractmethods)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:591(_field_init)
+        4    0.000    0.000    0.000    0.000 inspect.py:3051(replace)
+       35    0.000    0.000    0.000    0.000 dataclasses.py:922(_set_new_attribute)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:966(path_stats)
+        8    0.000    0.000    0.000    0.000 inspect.py:1725(getattr_static)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:424(_classify_pyc)
+        6    0.000    0.000    0.000    0.000 enum.py:1594(__and__)
+       19    0.000    0.000    0.000    0.000 {built-in method _abc._abc_init}
+      292    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:494(_verbose_message)
+        1    0.000    0.000    0.000    0.000 threading.py:1393(__init__)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1059(exec_module)
+      103    0.000    0.000    0.000    0.000 _parser.py:293(tell)
+       47    0.000    0.000    0.000    0.000 enum.py:677(__call__)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:457(_validate_timestamp_pyc)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1408(_fill_cache)
+       45    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:89(_unpack_uint32)
+       94    0.000    0.000    0.000    0.000 _parser.py:176(append)
+        8    0.000    0.000    0.000    0.000 _colorize.py:127(__post_init__)
+       14    0.000    0.000    0.000    0.000 {built-in method posix.getcwd}
+        1    0.000    0.000    0.000    0.000 _colorize.py:242(no_colors)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:391(field)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:404(__convert_to_ast_getitem)
+       21    0.000    0.000    0.000    0.000 _parser.py:449(_uniq)
+       20    0.000    0.000    0.000    0.000 inspect.py:663(unwrap)
+        2    0.000    0.000    0.000    0.000 {built-in method _imp.exec_dynamic}
+        8    0.000    0.000    0.000    0.000 inspect.py:1686(_check_class)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:74(__new__)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1000(exec_module)
+        2    0.000    0.000    0.000    0.000 {built-in method posix.listdir}
+        4    0.000    0.000    0.000    0.000 _colorize.py:140(no_colors)
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:448(cb)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1449(path_hook_for_FileFinder)
+       18    0.000    0.000    0.000    0.000 {built-in method builtins.locals}
+        4    0.000    0.000    0.000    0.000 annotationlib.py:361(__convert_to_ast)
+       23    0.000    0.000    0.000    0.000 _parser.py:372(_escape)
+       76    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1229(__exit__)
+        5    0.000    0.000    0.000    0.000 dataclasses.py:943(_hash_add)
+       17    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1131(find_spec)
+        4    0.000    0.000    0.000    0.000 {built-in method _imp.exec_builtin}
+       76    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1225(__enter__)
+      118    0.000    0.000    0.000    0.000 {method 'rpartition' of 'str' objects}
+        5    0.000    0.000    0.000    0.000 dataclasses.py:415(_fields_in_init_order)
+        4    0.000    0.000    0.000    0.000 threading.py:1057(_set_os_name)
+       60    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:139(<genexpr>)
+       26    0.000    0.000    0.000    0.000 {method '__enter__' of '_io._IOBase' objects}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:665(spec_from_loader)
+      162    0.000    0.000    0.000    0.000 {built-in method builtins.min}
+       12    0.000    0.000    0.000    0.000 inspect.py:1712(_shadowed_dict)
+        5    0.000    0.000    0.000    0.000 threading.py:602(__init__)
+       46    0.000    0.000    0.000    0.000 dataclasses.py:733(<genexpr>)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:82(remove)
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:232(__init__)
+       80    0.000    0.000    0.000    0.000 {method 'update' of 'dict' objects}
+      7/5    0.000    0.000    0.000    0.000 _compiler.py:450(_get_literal_prefix)
+       11    0.000    0.000    0.000    0.000 _parser.py:86(opengroup)
+        5    0.000    0.000    0.000    0.000 reprlib.py:12(decorating_function)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1331(__init__)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:79(__init__)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:401(_check_name_wrapper)
+       19    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:190(_path_abspath)
+        1    0.000    0.000    0.000    0.000 __init__.py:1278(__init__)
+        1    0.000    0.000    0.000    0.000 __init__.py:2130(getLogger)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:662(__missing__)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:579(_field_assign)
+       82    0.000    0.000    0.000    0.000 {built-in method builtins.repr}
+        4    0.000    0.000    0.000    0.000 {built-in method _thread.set_name}
+        4    0.000    0.000    0.000    0.000 annotationlib.py:430(__make_new)
+       60    0.000    0.000    0.000    0.000 {built-in method _thread.get_ident}
+       45    0.000    0.000    0.000    0.000 inspect.py:3028(<genexpr>)
+       18    0.000    0.000    0.000    0.000 enum.py:1576(_get_value)
+        1    0.000    0.000    0.000    0.000 __init__.py:931(__init__)
+        8    0.000    0.000    0.000    0.000 threading.py:325(_acquire_restore)
+       93    0.000    0.000    0.000    0.000 {method 'find' of 'bytearray' objects}
+      119    0.000    0.000    0.000    0.000 {built-in method _imp.acquire_lock}
+        4    0.000    0.000    0.000    0.000 annotationlib.py:853(_build_closure)
+      119    0.000    0.000    0.000    0.000 {built-in method _imp.release_lock}
+        4    0.000    0.000    0.000    0.000 _weakrefset.py:15(_remove)
+        1    0.000    0.000    0.000    0.000 __init__.py:601(__init__)
+       19    0.000    0.000    0.000    0.000 {method 'extend' of 'list' objects}
+        4    0.000    0.000    0.000    0.000 threading.py:1088(_delete)
+       81    0.000    0.000    0.000    0.000 _parser.py:113(__init__)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:48(_new_module)
+        1    0.000    0.000    0.000    0.000 threading.py:471(__init__)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:651(_init_param)
+        1    0.000    0.000    0.000    0.000 <frozen _collections_abc>:792(get)
+       21    0.000    0.000    0.000    0.000 {built-in method _imp.is_builtin}
+       22    0.000    0.000    0.000    0.000 {built-in method fromkeys}
+        4    0.000    0.000    0.000    0.000 <frozen _collections_abc>:473(__new__)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:673(transmogrify)
+       61    0.000    0.000    0.000    0.000 {method 'add' of 'set' objects}
+       34    0.000    0.000    0.000    0.000 _parser.py:172(__setitem__)
+        1    0.000    0.000    0.000    0.000 __init__.py:1362(getLogger)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:173(__exit__)
+        1    0.000    0.000    0.000    0.000 __init__.py:1463(Logger)
+       38    0.000    0.000    0.000    0.000 _parser.py:83(groups)
+        1    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:466(_lock_unlock_module)
+        4    0.000    0.000    0.000    0.000 inspect.py:2057(_signature_is_builtin)
+        1    0.000    0.000    0.000    0.000 <frozen os>:704(__getitem__)
+        2    0.000    0.000    0.000    0.000 <frozen zipimport>:67(__init__)
+      108    0.000    0.000    0.000    0.000 {built-in method builtins.ord}
+       83    0.000    0.000    0.000    0.000 {method 'startswith' of 'str' objects}
+        2    0.000    0.000    0.000    0.000 _compiler.py:405(_bytes_to_codes)
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:648(parent)
+       47    0.000    0.000    0.000    0.000 enum.py:1146(__new__)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:652(__init__)
+       19    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:185(_path_isabs)
+       17    0.000    0.000    0.000    0.000 {built-in method _imp.find_frozen}
+        8    0.000    0.000    0.000    0.000 threading.py:1470(current_thread)
+       51    0.000    0.000    0.000    0.000 {method 'isidentifier' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:869(Thread)
+        6    0.000    0.000    0.000    0.000 {built-in method _sre.compile}
+        1    0.000    0.000    0.000    0.000 __init__.py:458(validate)
+        6    0.000    0.000    0.000    0.000 _weakrefset.py:45(add)
+        5    0.000    0.000    0.000    0.000 dataclasses.py:424(_tuple_str)
+        8    0.000    0.000    0.000    0.000 annotationlib.py:335(__init__)
+        1    0.000    0.000    0.000    0.000 _colorize.py:210(Theme)
+      119    0.000    0.000    0.000    0.000 inspect.py:2746(kind)
+        4    0.000    0.000    0.000    0.000 inspect.py:2404(_descriptor_get)
+        2    0.000    0.000    0.000    0.000 <string>:2(__init__)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:756(_is_initvar)
+        4    0.000    0.000    0.000    0.000 threading.py:1050(_set_ident)
+        6    0.000    0.000    0.000    0.000 _parser.py:231(__init__)
+        4    0.000    0.000    0.000    0.000 weakref.py:334(__setitem__)
+        1    0.000    0.000    0.000    0.000 _colorize.py:115(ThemeSection)
+       45    0.000    0.000    0.000    0.000 {built-in method from_bytes}
+       27    0.000    0.000    0.000    0.000 {method 'pop' of 'dict' objects}
+        1    0.000    0.000    0.000    0.000 weakref.py:104(__init__)
+       51    0.000    0.000    0.000    0.000 {method '__contains__' of 'frozenset' objects}
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:504(_requires_builtin_wrapper)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:294(__init__)
+        1    0.000    0.000    0.000    0.000 thread.py:157(prepare_context)
+        5    0.000    0.000    0.000    0.000 dataclasses.py:536(_make_annotate_function)
+       48    0.000    0.000    0.000    0.000 {built-in method posix.fspath}
+        2    0.000    0.000    0.000    0.000 __init__.py:1478(__init__)
+        5    0.000    0.000    0.000    0.000 threading.py:1054(_set_native_id)
+        4    0.000    0.000    0.000    0.000 thread.py:54(create_context)
+        1    0.000    0.000    0.000    0.000 traceback.py:277(FrameSummary)
+        1    0.000    0.000    0.000    0.000 queue.py:40(Queue)
+        4    0.000    0.000    0.000    0.000 _compiler.py:481(_get_charset_prefix)
+        1    0.000    0.000    0.000    0.000 _base.py:319(Future)
+       78    0.000    0.000    0.000    0.000 inspect.py:2734(name)
+        1    0.000    0.000    0.000    0.000 __init__.py:1847(LoggerAdapter)
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:602(__init__)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:169(_path_isdir)
+        1    0.000    0.000    0.000    0.000 contextlib.py:17(AbstractContextManager)
+        1    0.000    0.000    0.000    0.000 {method 'search' of 're.Pattern' objects}
+        1    0.000    0.000    0.000    0.000 __init__.py:958(createLock)
+        4    0.000    0.000    0.000    0.000 inspect.py:2071(_signature_is_functionlike)
+        1    0.000    0.000    0.000    0.000 <string>:1(__create_fn__)
+       47    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:71(_relax_case)
+       46    0.000    0.000    0.000    0.000 dataclasses.py:1169(<genexpr>)
+       41    0.000    0.000    0.000    0.000 dataclasses.py:762(_is_kw_only)
+        1    0.000    0.000    0.000    0.000 thread.py:150(ThreadPoolExecutor)
+        1    0.000    0.000    0.000    0.000 traceback.py:1003(TracebackException)
+        1    0.000    0.000    0.000    0.000 __init__.py:922(Handler)
+        4    0.000    0.000    0.000    0.000 {built-in method posix.register_at_fork}
+        1    0.000    0.000    0.000    0.000 __init__.py:1111(StreamHandler)
+       32    0.000    0.000    0.000    0.000 {method 'rfind' of 'str' objects}
+       25    0.000    0.000    0.000    0.000 {method 'pop' of 'list' objects}
+        8    0.000    0.000    0.000    0.000 threading.py:322(_release_save)
+       12    0.000    0.000    0.000    0.000 _compiler.py:587(isstring)
+       22    0.000    0.000    0.000    0.000 {method 'remove' of 'list' objects}
+        5    0.000    0.000    0.000    0.000 threading.py:1308(_make_invoke_excepthook)
+        7    0.000    0.000    0.000    0.000 {method 'translate' of 'bytearray' objects}
+       11    0.000    0.000    0.000    0.000 <frozen codecs>:189(__init__)
+       22    0.000    0.000    0.000    0.000 {built-in method _weakref._remove_dead_weakref}
+       12    0.000    0.000    0.000    0.000 inspect.py:267(isfunction)
+        3    0.000    0.000    0.000    0.000 enum.py:187(__get__)
+       33    0.000    0.000    0.000    0.000 dataclasses.py:419(<genexpr>)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:424(__get_ast)
+        1    0.000    0.000    0.000    0.000 __init__.py:1836(__init__)
+        1    0.000    0.000    0.000    0.000 <frozen os>:786(encode)
+        4    0.000    0.000    0.000    0.000 annotationlib.py:683(create_unique_name)
+        5    0.000    0.000    0.000    0.000 {method 'replace' of 'str' objects}
+       40    0.000    0.000    0.000    0.000 {built-in method _sre.unicode_tolower}
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:415(__init__)
+        1    0.000    0.000    0.000    0.000 traceback.py:433(StackSummary)
+       33    0.000    0.000    0.000    0.000 dataclasses.py:1233(<genexpr>)
+       31    0.000    0.000    0.000    0.000 {built-in method _sre.unicode_iscased}
+       19    0.000    0.000    0.000    0.000 {method 'endswith' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 __init__.py:1410(_fixupParents)
+        1    0.000    0.000    0.000    0.000 contextlib.py:472(_BaseExitStack)
+        1    0.000    0.000    0.000    0.000 __init__.py:1338(Manager)
+       12    0.000    0.000    0.000    0.000 inspect.py:184(isclass)
+        2    0.000    0.000    0.000    0.000 _weakrefset.py:12(__init__)
+        4    0.000    0.000    0.000    0.000 dataclasses.py:336(__set_name__)
+        1    0.000    0.000    0.000    0.000 __init__.py:305(escape)
+        5    0.000    0.000    0.000    0.000 {built-in method _thread.get_native_id}
+       22    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:158(__init__)
+       10    0.000    0.000    0.000    0.000 {built-in method sys.intern}
+        8    0.000    0.000    0.000    0.000 {built-in method time.monotonic}
+        1    0.000    0.000    0.000    0.000 __init__.py:554(Formatter)
+        1    0.000    0.000    0.000    0.000 contextlib.py:41(AbstractAsyncContextManager)
+       15    0.000    0.000    0.000    0.000 _compiler.py:33(_combine_flags)
+        1    0.000    0.000    0.000    0.000 _colorize.py:157(Argparse)
+       15    0.000    0.000    0.000    0.000 {built-in method _imp._fix_co_filename}
+        1    0.000    0.000    0.000    0.000 _colorize.py:174(Syntax)
+        1    0.000    0.000    0.000    0.000 __init__.py:265(_register_at_fork_reinit_lock)
+        1    0.000    0.000    0.000    0.000 __init__.py:1343(__init__)
+        6    0.000    0.000    0.000    0.000 _parser.py:947(fix_flags)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:917(__init__)
+        1    0.000    0.000    0.000    0.000 inspect.py:1693(_shadowed_dict_from_weakref_mro_tuple)
+        1    0.000    0.000    0.000    0.000 thread.py:47(WorkerContext)
+       18    0.000    0.000    0.000    0.000 dataclasses.py:420(<genexpr>)
+        1    0.000    0.000    0.000    0.000 __init__.py:899(_addHandlerRef)
+        1    0.000    0.000    0.000    0.000 <frozen os>:790(decode)
+        1    0.000    0.000    0.000    0.000 weakref.py:235(update)
+        8    0.000    0.000    0.000    0.000 threading.py:1188(daemon)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:596(catch_warnings)
+       20    0.000    0.000    0.000    0.000 {built-in method builtins.id}
+       20    0.000    0.000    0.000    0.000 {built-in method sys.getrecursionlimit}
+        4    0.000    0.000    0.000    0.000 inspect.py:196(ismethoddescriptor)
+        8    0.000    0.000    0.000    0.000 {method 'values' of 'mappingproxy' objects}
+       21    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:656(has_location)
+        1    0.000    0.000    0.000    0.000 _compiler.py:421(_generate_overlap_table)
+        1    0.000    0.000    0.000    0.000 threading.py:146(_RLock)
+        2    0.000    0.000    0.000    0.000 _parser.py:295(seek)
+        5    0.000    0.000    0.000    0.000 dataclasses.py:1414(dataclass)
+        1    0.000    0.000    0.000    0.000 __init__.py:64(Template)
+        1    0.000    0.000    0.000    0.000 _colorize.py:189(Traceback)
+       10    0.000    0.000    0.000    0.000 {method 'items' of 'mappingproxy' objects}
+       10    0.000    0.000    0.000    0.000 __init__.py:435(<genexpr>)
+        1    0.000    0.000    0.000    0.000 _colorize.py:16(ANSIColors)
+       11    0.000    0.000    0.000    0.000 _compiler.py:442(_get_iscased)
+       13    0.000    0.000    0.000    0.000 {method 'items' of 'dict' objects}
+       18    0.000    0.000    0.000    0.000 __init__.py:108(<lambda>)
+        1    0.000    0.000    0.000    0.000 threading.py:685(Barrier)
+        1    0.000    0.000    0.000    0.000 _base.py:563(Executor)
+        1    0.000    0.000    0.000    0.000 thread.py:49(prepare)
+        1    0.000    0.000    0.000    0.000 _base.py:68(_AsCompletedWaiter)
+        4    0.000    0.000    0.000    0.000 __init__.py:205(_checkLevel)
+        1    0.000    0.000    0.000    0.000 queue.py:315(_PySimpleQueue)
+       16    0.000    0.000    0.000    0.000 {built-in method builtins.callable}
+        1    0.000    0.000    0.000    0.000 contextlib.py:631(AsyncExitStack)
+       18    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1337(<genexpr>)
+        5    0.000    0.000    0.000    0.000 reprlib.py:9(recursive_repr)
+        1    0.000    0.000    0.000    0.000 weakref.py:309(__init__)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:942(get_filename)
+        1    0.000    0.000    0.000    0.000 {built-in method builtins.print}
+        3    0.000    0.000    0.000    0.000 enum.py:1324(value)
+       10    0.000    0.000    0.000    0.000 {method 'values' of 'dict' objects}
+        6    0.000    0.000    0.000    0.000 _parser.py:77(__init__)
+        4    0.000    0.000    0.000    0.000 dataclasses.py:705(<genexpr>)
+        5    0.000    0.000    0.000    0.000 {method 'get' of 'mappingproxy' objects}
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:67(_GlobalContext)
+       24    0.000    0.000    0.000    0.000 inspect.py:2738(default)
+        1    0.000    0.000    0.000    0.000 __init__.py:1190(FileHandler)
+        1    0.000    0.000    0.000    0.000 _colorize.py:201(Unittest)
+        4    0.000    0.000    0.000    0.000 inspect.py:432(isbuiltin)
+        4    0.000    0.000    0.000    0.000 weakref.py:311(remove)
+        2    0.000    0.000    0.000    0.000 {method 'tolist' of 'memoryview' objects}
+        1    0.000    0.000    0.000    0.000 _colorize.py:174(__annotate__)
+        2    0.000    0.000    0.000    0.000 {method 'cast' of 'memoryview' objects}
+        1    0.000    0.000    0.000    0.000 {method 'translate' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:546(BoundedSemaphore)
+        1    0.000    0.000    0.000    0.000 traceback.py:980(_ExceptionPrintContext)
+        1    0.000    0.000    0.000    0.000 threading.py:278(Condition)
+        1    0.000    0.000    0.000    0.000 __init__.py:511(StringTemplateStyle)
+       15    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:750(create_module)
+        1    0.000    0.000    0.000    0.000 __init__.py:2266(NullHandler)
+        1    0.000    0.000    0.000    0.000 contextlib.py:105(_GeneratorContextManagerBase)
+        1    0.000    0.000    0.000    0.000 contextlib.py:802(chdir)
+        1    0.000    0.000    0.000    0.000 thread.py:76(_WorkItem)
+        1    0.000    0.000    0.000    0.000 _base.py:105(_AllCompletedWaiter)
+        4    0.000    0.000    0.000    0.000 thread.py:64(initialize)
+        4    0.000    0.000    0.000    0.000 {method 'setter' of 'property' objects}
+        5    0.000    0.000    0.000    0.000 dataclasses.py:437(__init__)
+        6    0.000    0.000    0.000    0.000 {method 'insert' of 'list' objects}
+        3    0.000    0.000    0.000    0.000 __init__.py:820(__init__)
+        1    0.000    0.000    0.000    0.000 _colorize.py:157(__annotate__)
+        1    0.000    0.000    0.000    0.000 threading.py:1535(_register_atexit)
+        1    0.000    0.000    0.000    0.000 __init__.py:286(LogRecord)
+        1    0.000    0.000    0.000    0.000 _base.py:53(_Waiter)
+        5    0.000    0.000    0.000    0.000 {method 'keys' of 'dict' objects}
+        4    0.000    0.000    0.000    0.000 {method 'discard' of 'set' objects}
+        1    0.000    0.000    0.000    0.000 _colorize.py:189(__annotate__)
+        1    0.000    0.000    0.000    0.000 __init__.py:203(Formatter)
+        8    0.000    0.000    0.000    0.000 threading.py:615(is_set)
+        1    0.000    0.000    0.000    0.000 {built-in method _thread._make_thread_handle}
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:681(deprecated)
+        1    0.000    0.000    0.000    0.000 __init__.py:736(BufferingFormatter)
+        1    0.000    0.000    0.000    0.000 threading.py:591(Event)
+        5    0.000    0.000    0.000    0.000 dataclasses.py:359(__init__)
+        1    0.000    0.000    0.000    0.000 threading.py:459(Semaphore)
+        1    0.000    0.000    0.000    0.000 __init__.py:815(Filterer)
+        4    0.000    0.000    0.000    0.000 thread.py:60(__init__)
+        1    0.000    0.000    0.000    0.000 queue.py:280(PriorityQueue)
+        4    0.000    0.000    0.000    0.000 thread.py:68(finalize)
+        1    0.000    0.000    0.000    0.000 __init__.py:1272(_StderrHandler)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:52(_Context)
+        1    0.000    0.000    0.000    0.000 __init__.py:55(_TemplatePattern)
+        2    0.000    0.000    0.000    0.000 {built-in method time.perf_counter}
+        1    0.000    0.000    0.000    0.000 contextlib.py:775(nullcontext)
+        1    0.000    0.000    0.000    0.000 __init__.py:1358(disable)
+        1    0.000    0.000    0.000    0.000 <frozen posixpath>:53(normcase)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.delattr}
+        1    0.000    0.000    0.000    0.000 __init__.py:451(__init__)
+        8    0.000    0.000    0.000    0.000 inspect.py:3047(return_annotation)
+        1    0.000    0.000    0.000    0.000 _base.py:90(_FirstCompletedWaiter)
+        1    0.000    0.000    0.000    0.000 _colorize.py:201(__annotate__)
+        1    0.000    0.000    0.000    0.000 _colorize.py:210(__annotate__)
+        8    0.000    0.000    0.000    0.000 inspect.py:3043(parameters)
+        1    0.000    0.000    0.000    0.000 _base.py:135(_AcquireFutures)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:571(WarningMessage)
+        1    0.000    0.000    0.000    0.000 threading.py:1409(_DeleteDummyThreadOnDel)
+        1    0.000    0.000    0.000    0.000 warnings.py:79(_Lock)
+        1    0.000    0.000    0.000    0.000 _colorize.py:346(set_theme)
+        1    0.000    0.000    0.000    0.000 __init__.py:778(Filter)
+        1    0.000    0.000    0.000    0.000 __init__.py:1830(RootLogger)
+        1    0.000    0.000    0.000    0.000 threading.py:1438(_DummyThread)
+        2    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap_external>:1040(__init__)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:344(_OptionError)
+        1    0.000    0.000    0.000    0.000 contextlib.py:393(_RedirectStream)
+        1    0.000    0.000    0.000    0.000 contextlib.py:557(ExitStack)
+        1    0.000    0.000    0.000    0.000 contextlib.py:367(aclosing)
+        1    0.000    0.000    0.000    0.000 threading.py:1361(Timer)
+        1    0.000    0.000    0.000    0.000 contextlib.py:89(AsyncContextDecorator)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:24(_set_module)
+        1    0.000    0.000    0.000    0.000 contextlib.py:342(closing)
+        1    0.000    0.000    0.000    0.000 contextlib.py:66(ContextDecorator)
+        1    0.000    0.000    0.000    0.000 __init__.py:1296(PlaceHolder)
+        1    0.000    0.000    0.000    0.000 traceback.py:97(_Sentinel)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:68(__init__)
+        1    0.000    0.000    0.000    0.000 contextlib.py:202(_AsyncGeneratorContextManager)
+        1    0.000    0.000    0.000    0.000 {method 'split' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 {method 'decode' of 'bytes' objects}
+        1    0.000    0.000    0.000    0.000 threading.py:1391(_MainThread)
+        1    0.000    0.000    0.000    0.000 contextlib.py:129(_GeneratorContextManager)
+        1    0.000    0.000    0.000    0.000 contextlib.py:433(suppress)
+        1    0.000    0.000    0.000    0.000 _py_warnings.py:350(_processoptions)
+        1    0.000    0.000    0.000    0.000 {method 'encode' of 'str' objects}
+        1    0.000    0.000    0.000    0.000 _base.py:39(Error)
+        1    0.000    0.000    0.000    0.000 {built-in method atexit.register}
+        1    0.000    0.000    0.000    0.000 contextlib.py:411(redirect_stdout)
+        1    0.000    0.000    0.000    0.000 queue.py:299(LifoQueue)
+        1    0.000    0.000    0.000    0.000 __init__.py:1302(__init__)
+        1    0.000    0.000    0.000    0.000 queue.py:31(Full)
+        4    0.000    0.000    0.000    0.000 <frozen importlib._bootstrap>:1017(is_package)
+        2    0.000    0.000    0.000    0.000 {built-in method sys._getframemodulename}
+        1    0.000    0.000    0.000    0.000 {built-in method time.time_ns}
+        2    0.000    0.000    0.000    0.000 <frozen abc>:7(abstractmethod)
+        1    0.000    0.000    0.000    0.000 _base.py:671(BrokenExecutor)
+        1    0.000    0.000    0.000    0.000 thread.py:144(BrokenThreadPool)
+        1    0.000    0.000    0.000    0.000 _base.py:43(CancelledError)
+        1    0.000    0.000    0.000    0.000 queue.py:36(ShutDown)
+        1    0.000    0.000    0.000    0.000 threading.py:848(BrokenBarrierError)
+        1    0.000    0.000    0.000    0.000 contextlib.py:427(redirect_stderr)
+        1    0.000    0.000    0.000    0.000 <string>:1(<module>)
+        1    0.000    0.000    0.000    0.000 {built-in method _thread._get_main_thread_ident}
+        1    0.000    0.000    0.000    0.000 _base.py:49(InvalidStateError)
+        1    0.000    0.000    0.000    0.000 _base.py:663(__enter__)
+
+

@@ -1,0 +1,20 @@
+# started on Sat Sep 12 18:01:53 2026
+
+
+ Performance counter stats for 'python3 gol_multithread.py':
+
+ 4.371.887.773.926      cycles                                                                
+17.299.980.965.456      instructions                                                          
+     2.813.176.736      cache-references                                                      
+       278.556.566      cache-misses                                                          
+ 2.951.038.077.448      branches                                                              
+     2.510.967.578      branch-misses                                                         
+     2.725.252.792      L1-dcache-load-misses                                                 
+        12.221.586      LLC-load-misses                                                       
+
+    1132,100590463 seconds time elapsed
+
+    1131,547569000 seconds user
+      10,062310000 seconds sys
+
+
