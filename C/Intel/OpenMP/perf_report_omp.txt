@@ -1,0 +1,794 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 102K of event 'cpu/cycles/P'
+# Event count (approx.): 96007356994
+#
+# Children      Self  Command  Shared Object         Symbol                             
+# ........  ........  .......  ....................  ...................................
+#
+    94.70%    94.61%  gol_omp  gol_omp               [.] evolve._omp_fn.0
+            |          
+             --94.69%--evolve._omp_fn.0
+
+     2.81%     0.00%  gol_omp  libc.so.6             [.] __clone3 (inlined)
+            |
+            ---__clone3 (inlined)
+               |          
+                --2.81%--start_thread
+                          |          
+                          |--1.55%--0x789950212a82
+                          |          
+                           --1.09%--0x78995020fb6c
+                                     |          
+                                      --0.99%--0x789950212c72
+
+     2.81%     0.00%  gol_omp  libc.so.6             [.] start_thread
+            |
+            ---start_thread
+               |          
+               |--1.55%--0x789950212a82
+               |          
+                --1.09%--0x78995020fb6c
+                          |          
+                           --0.99%--0x789950212c72
+
+     1.56%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a82
+            |
+            ---0x789950212a82
+
+     1.55%     1.55%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a80
+            |          
+             --1.55%--__clone3 (inlined)
+                       start_thread
+                       0x789950212a82
+
+     1.52%     0.00%  gol_omp  [unknown]             [.] 0x00000000000007d0
+            |
+            ---0x7d0
+               |          
+                --1.51%--evolve._omp_fn.1
+
+     1.51%     1.51%  gol_omp  gol_omp               [.] evolve._omp_fn.1
+            |          
+            |--0.72%--0x100000001
+            |          0x7d0
+            |          evolve._omp_fn.1
+            |          
+             --0.71%--0x100000000
+                       0x7d0
+                       evolve._omp_fn.1
+
+     1.34%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212c72
+            |
+            ---0x789950212c72
+
+     1.33%     1.33%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026c70
+            |          
+             --0.98%--__clone3 (inlined)
+                       start_thread
+                       0x78995020fb6c
+                       0x789950212c72
+
+     1.09%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fb6c
+            |
+            ---0x78995020fb6c
+               |          
+                --0.99%--0x789950212c72
+
+     0.73%     0.00%  gol_omp  [unknown]             [k] 0x0000000100000001
+            |
+            ---0x100000001
+               |          
+                --0.73%--0x7d0
+                          |          
+                           --0.72%--evolve._omp_fn.1
+
+     0.72%     0.00%  gol_omp  [unknown]             [.] 0x0000000100000000
+            |
+            ---0x100000000
+               |          
+                --0.72%--0x7d0
+                          |          
+                           --0.71%--evolve._omp_fn.1
+
+     0.61%     0.00%  gol_omp  [unknown]             [.] 0000000000000000
+            |
+            ---0
+               |          
+                --0.52%--save_pbm
+                          |          
+                           --0.51%--___fprintf_chk (inlined)
+
+     0.54%     0.00%  gol_omp  gol_omp               [.] save_pbm
+            |          
+             --0.54%--save_pbm
+                       |          
+                        --0.53%--___fprintf_chk (inlined)
+
+     0.53%     0.00%  gol_omp  libc.so.6             [.] ___fprintf_chk (inlined)
+            |
+            ---___fprintf_chk (inlined)
+
+     0.49%     0.14%  gol_omp  libc.so.6             [.] __vfprintf_internal
+     0.43%     0.00%  gol_omp  gol_omp               [.] _start
+     0.43%     0.00%  gol_omp  libc.so.6             [.] __libc_start_main_impl (inlined)
+     0.43%     0.00%  gol_omp  libc.so.6             [.] call_init (inlined)
+     0.43%     0.00%  gol_omp  gol_omp               [.] main
+     0.43%     0.00%  gol_omp  gol_omp               [.] game
+     0.43%     0.03%  gol_omp  gol_omp               [.] evolve
+     0.37%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00007899502114c1
+     0.26%     0.15%  gol_omp  libc.so.6             [.] __printf_buffer
+     0.09%     0.08%  gol_omp  libc.so.6             [.] __printf_buffer_write
+     0.08%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200f0b
+     0.07%     0.07%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a82
+     0.07%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a86
+     0.06%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91f894
+     0.06%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5edf28
+     0.05%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d776a14
+     0.05%     0.05%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a8d
+     0.05%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a80
+     0.05%     0.05%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026c72
+     0.05%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212c76
+     0.05%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d775b4c
+     0.04%     0.03%  gol_omp  libc.so.6             [.] __printf_buffer_to_file_done
+     0.04%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d78f716
+     0.04%     0.04%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026c7d
+     0.04%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212c70
+     0.04%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7747c0
+     0.03%     0.03%  gol_omp  libc.so.6             [.] __strchrnul_evex
+     0.03%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d20012b
+     0.03%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e917b65
+     0.03%     0.00%  gol_omp  libc.so.6             [.] __printf_buffer_flush_to_file (inlined)
+     0.03%     0.00%  gol_omp  libgomp.so.1.0.0      [.] GOMP_parallel
+     0.03%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a515e
+     0.02%     0.02%  gol_omp  libc.so.6             [.] __memmove_evex_unaligned_erms
+     0.02%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64e3ae
+     0.02%     0.02%  gol_omp  libc.so.6             [.] _itoa_word
+     0.02%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91f899
+     0.02%     0.02%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a86
+     0.02%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a8b
+     0.02%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64dfa0
+     0.02%     0.00%  gol_omp  libc.so.6             [.] __syscall_cancel_arch (inlined)
+     0.02%     0.01%  gol_omp  libc.so.6             [.] __printf_buffer_done
+     0.02%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64dc11
+     0.02%     0.02%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026c76
+     0.02%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212c7b
+     0.02%     0.00%  gol_omp  libc.so.6             [.] _IO_new_do_write (inlined)
+     0.02%     0.00%  gol_omp  libc.so.6             [.] new_do_write (inlined)
+     0.02%     0.00%  gol_omp  libc.so.6             [.] _IO_new_file_write (inlined)
+     0.02%     0.00%  gol_omp  libc.so.6             [.] __libc_write (inlined)
+     0.01%     0.00%  gol_omp  libc.so.6             [.] memcpy@@GLIBC_2.14@plt
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d546e2f
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae5739
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae5691
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d772330
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d77304e
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d77350b
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7951a5
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d794fd5
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d794d4e
+     0.01%     0.01%  gol_omp  libc.so.6             [.] __fprintf_chk
+     0.01%     0.01%  gol_omp  [unknown]             [k] 0xffffffff9d201268
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d774552
+     0.01%     0.00%  gol_omp  libc.so.6             [.] __libc_cleanup_push_defer (inlined)
+     0.01%     0.01%  gol_omp  libc.so.6             [.] __printf_buffer_to_file_init
+     0.01%     0.00%  gol_omp  libc.so.6             [.] __strchrnul_ifunc@plt
+     0.01%     0.01%  gol_omp  libc.so.6             [.] __GI___libc_cleanup_pop_restore
+     0.01%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212d59
+     0.01%     0.00%  gol_omp  libc.so.6             [.] _IO_new_file_overflow (inlined)
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae509b
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbffbaf
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e2523e2
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e22b8ce
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e233ea9
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e233de3
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e232a36
+     0.01%     0.01%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026b4a
+     0.01%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212b4f
+     0.01%     0.00%  gol_omp  libc.so.6             [.] __find_specmb (inlined)
+     0.01%     0.00%  gol_omp  libc.so.6             [.] _IO_new_file_xsputn (inlined)
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d54858e
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d79b220
+     0.01%     0.01%  gol_omp  [unknown]             [k] 0xffffffff9e234c8c
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e2371f0
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e234c8f
+     0.01%     0.01%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a8b
+     0.01%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a8f
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbff61d
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d79ab98
+     0.01%     0.00%  gol_omp  libc.so.6             [.] __printf_buffer_to_file_switch
+     0.01%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e934b20
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200ef0
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a5189
+     0.01%     0.00%  gol_omp  libc.so.6             [.] __libc_cleanup_pop_restore (inlined)
+     0.01%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212b09
+     0.01%     0.01%  gol_omp  [unknown]             [k] 0xffffffff9d60943b
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d60943d
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d961b4a
+     0.01%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b95ad
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] omp_get_num_threads
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0x0000000000000001
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d776a3d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d78eede
+     0.00%     0.00%  gol_omp  libc.so.6             [.] memcpy (inlined)
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d982d3b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d79e284
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a51a9
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c335c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d78be89
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023b5f
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fb67
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0x00007fff9f21b580
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d95d975
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b95ff
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b96d2
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026c7b
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212c7f
+     0.00%     0.00%  gol_omp  libc.so.6             [.] _IO_new_fopen (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __fopen_internal (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] _IO_new_file_fopen (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] _IO_file_open
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __libc_open64 (inlined)
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d548b4c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae05bf
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae007a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db0012f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9daffec3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9daf989f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dade345
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db16038
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1a6b4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200080
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026dea
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212def
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a8898
+     0.00%     0.00%  gol_omp  gol_omp               [.] __fprintf_chk@plt
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __printf_buffer_pad (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __GI___libc_cleanup_push_defer
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc18e95
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da7b0d8
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da395b7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d54f301
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d55d625
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91f8a4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e93217e
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932a31
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d775b5c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e932a35
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b9670
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6f4b8f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c2e62
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b91e8
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e91ba3e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91ba41
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200bb7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e9202e3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d548318
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023b6c
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fb70
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026de4
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212de7
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026d1d
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212d22
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c2c51
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c26a7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c131e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c0f52
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c0b51
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d777602
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a9125
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200e67
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d61721b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9fe7ce
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9fe443
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9fdf7b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9fcc0a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5475fa
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99c775
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7734aa
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023b39
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fb3d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d201953
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200126
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026b07
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae5127
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5e0aa
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5cce5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5c81d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5c417
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db6243c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5ec12
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6f2557
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6e9fb1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db07031
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a923a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d79e2a9
+     0.00%     0.00%  gol_omp  libc.so.6             [.] _IO_new_fclose (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __close_nocancel
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dadd66e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae7380
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dae6a5d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbfe449
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc133ec
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d98131f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9811e5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99406b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc17c18
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc18efd
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1633c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db55a1e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5587a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db53371
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da4def6
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dbffb08
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __printf_buffer_init (inlined)
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d987661
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d980c71
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da7b5d2
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d798a21
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7989b3
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d7a0cac
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7a0cb1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5b0b90
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b919b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b91a2
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e920977
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e9008c5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d775b31
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d77599e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a50f8
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932947
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbff606
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db14502
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db14430
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db3bad5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d745e1e
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6d986f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b960a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b9185
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b918c
+     0.00%     0.00%  gol_omp  gol_omp               [.] fprintf (inlined)
+     0.00%     0.00%  gol_omp  gol_omp               [.] game._omp_fn.0
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_start_user
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026c7f
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212c81
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023b54
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fb59
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dab71bf
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9fc80c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dabd7de
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dab71c7
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d736f1c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91bfe1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5a1b20
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7253c3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d71ec76
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d71e9f9
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc026402c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d736f20
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023f4e
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020ff52
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6aa8a0
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a8f
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a91
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b7686
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffffc08be955
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e72f1ce
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e72f059
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e72d89e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e7297e3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e72877b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f9a65
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f9728
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f9581
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f9241
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f90a6
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f8f61
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f8bd8
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e6f5b8f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e60e50a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e60dc17
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e603007
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc0e5c5b5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc0e5bde6
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc0e5bbe2
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc0e5b976
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc0e543db
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc0990a8a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc09909e7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc098b09c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc09ac612
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc08be956
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d201956
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000024405
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995021040c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d99c110
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99c115
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6a8a59
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d69c7fb
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d64ded5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64ded7
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d64dea4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64dea5
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d774c74
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d78f738
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d774c77
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d701ba7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d701bab
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932b40
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d77455a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e932b45
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d200f93
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200f94
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9daba011
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99c2ad
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99accb
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9990c3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d998d08
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d997ac1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9c5cd0
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e91d07c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91d179
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91d084
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d547600
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d73cd10
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7747b1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d73cd15
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b7915
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b7918
+     0.00%     0.00%  gol_omp  gol_omp               [.] omp_get_thread_num@plt
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] omp_get_thread_num
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5475ee
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000024417
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995021041a
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026d57
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000000000001c453
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950208457
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e2371c6
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e2371c9
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d797a66
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d797a69
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023e7e
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fe85
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5b43a1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d75f67d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5b43a3
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9de371d5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91bfe6
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de2a89d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e307cf1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e2fcdc3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e3089df
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e30768f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de2d29f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de371d8
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e90d857
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da337cd
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9fc7f2
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da7e8eb
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d98762f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d982f8f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da37f02
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9801e8
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da35eed
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da34c82
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e910e74
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da34b2e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e90ffab
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da337d7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e90d85b
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000000000001c463
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020846a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9db53406
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99c24c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99bd33
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc0e48b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db568b7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d980ae5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc0e3ac
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc779f4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5340d
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d64dd1f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64dd22
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d79aadd
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d79aae3
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e920956
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e92095e
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00000000000243f2
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00007899502103f6
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932c88
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d772fdf
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d671829
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6712b9
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d671080
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e932c8a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d201959
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dc0ff17
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1afdc
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc16af9
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc166db
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc10879
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc0ff1f
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023b5c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9db3ba70
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc178b6
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc16d4a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc155c3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc119bd
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1175f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbfcdef
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db3ba75
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d546b5e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e917ba0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d546b62
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200133
+     0.00%     0.00%  gol_omp  libc.so.6             [.] _IO_file_overflow@@GLIBC_2.2.5
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000026a49
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950212a4d
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d701b8b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d701b8c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffffc122590f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d20102b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91ccd4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5a7ae0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d89dbc8
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d89db50
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc1224d40
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc128ad52
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc128a2ee
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffffc1225914
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dab6d5b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d982c9a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1ae63
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1ab6d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db54a15
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db52b7d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db5296a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d994394
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d991bb4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dab7378
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dab6d61
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d993358
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da37dc3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d99335c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d20016e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200171
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e2431b0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc17618
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de1ccec
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de1ca6f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de30d59
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de2ff69
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de2b790
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de38e0d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de38d47
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de38839
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9de30911
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e30966e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e308075
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e33f8f4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e33f675
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e33aa12
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e334497
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d753b7e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d753ac8
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e25564e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e24f728
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e24e6d3
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e2431b5
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dbffb05
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000023c89
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fc90
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dedcd53
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d982c77
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dedcd57
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000000000024402
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x0000789950210405
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dabc933
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dabc937
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dabbc60
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dabc83d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dabbc65
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d73aaae
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d73aab4
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d775b0d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d775c43
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e9007d3
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b83d6
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b83dc
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d797e92
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d797e94
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6d929a
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6d92a0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbffb0c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da35107
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9da35108
+     0.00%     0.00%  gol_omp  gol_omp               [.] count_alive._omp_fn.0
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6e666d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6aae62
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6e666f
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d2011a2
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d2011a4
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b966b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6f4b80
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b9755
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d78f505
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d78f50c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5c54db
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5c54e2
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x000078995020fb5f
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b91b7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b91ba
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6aaf1f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7a1292
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7a0e9a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5c54bf
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5c54c6
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932943
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d2016b0
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e91d174
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e9008c9
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91d040
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e917a7e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e917a86
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e9047d4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d775b7e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d774dfa
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e9047d7
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d790a09
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7747a5
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d79529f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d790a0f
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b832b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b83c6
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d54f308
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d54f30a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5edd1f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5edd21
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5b439c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d742636
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7458d1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d74263a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6d9389
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6d9391
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d744e2d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d744e34
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6aaea0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6aaea2
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6aaeda
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6aaedd
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6d92a7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6d92aa
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6d92ca
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6d92cf
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b959e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b95a5
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d64dc16
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64dc1e
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6db852
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d774752
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5b0b8b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91d170
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b915f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b9161
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b840c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b840e
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6c303c
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6c2e49
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d5afa20
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d78be3e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5afa23
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6ab314
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b8ff1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b8b26
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6ab317
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6ab342
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b904d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b899d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6ab347
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6d9868
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b82c9
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b82cd
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b8384
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b8388
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d76d936
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d76d938
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d64dbfb
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d64dc04
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b95b4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b95bc
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b838d
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b8394
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6d9873
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932c62
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7458f4
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d7441e2
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e932c67
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e932949
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6aa56f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6aa573
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d20100b
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e91c444
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5a206f
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d6b8d99
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6b8d9c
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e932176
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc1aff0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dbef258
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc7750f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dc75eac
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6f2542
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e932179
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9dab7347
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00007899502101bb
+     0.00%     0.00%  gol_omp  libc.so.6             [.] __pthread_create_2_1 (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] internal_signal_restore_set (inlined)
+     0.00%     0.00%  gol_omp  libc.so.6             [.] create_thread
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d548999
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d642f06
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d642e97
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d642736
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d641093
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d63ef9e
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9dab734f
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_start
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_start_final (inlined)
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_sysdep_start
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] dl_main
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] rtld_timer_accum (inlined)
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] rtld_timer_stop (inlined)
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e8e9c34
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d6172c7
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d9eb7c1
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e8e9c38
+     0.00%     0.00%  gol_omp  libc.so.6             [.] _int_malloc
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_init
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] call_init.part.0
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00007899501f959c
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00007899502124bf
+     0.00%     0.00%  gol_omp  libgomp.so.1.0.0      [.] 0x00007899501facb5
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_relocate_object_no_relro
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_relocate_object
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_protect_relro (inlined)
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d200b90
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d547863
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9daf1a0e
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9daf16fb
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9daefc4a
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9daefb60
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9db18db0
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_map_object_deps
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_catch_exception
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] set_catch (inlined)
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] openaux
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_map_new_object
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _dl_load_cache_lookup
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] __close_nocancel (inlined)
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9db18db5
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d9e08ba
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9e25c9ea
+     0.00%     0.00%  gol_omp  ld-linux-x86-64.so.2  [.] _start
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9d5edd36
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0x00007d3ec4cf818b
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9daef7fc
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9db998c5
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9db98cc4
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9db989f3
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d9c2a6d
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d9c2949
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da05178
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da28d92
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da2747e
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da260a8
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9da2420f
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9daef93b
+     0.00%     0.00%  gol_omp  [unknown]             [k] 0xffffffff9d9e08c0
+     0.00%     0.00%  gol_omp  [unknown]             [.] 0xffffffff9e25c9f0
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#
