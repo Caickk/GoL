@@ -2,8 +2,17 @@ import multiprocessing as mp
 import os
 import time
 
+def save_pbm(univ, w, h, iter_count):
+    filename = f"gol_{iter_count}.pbm"
+    try:
+        with open(filename, "w") as f:
+            f.write(f"P1\n{w} {h}\n")
+            for row in univ:
+                f.write("".join(f"{cell} " for cell in row) + "\n")
+    except IOError as e:
+        print(f"Erro ao criar o arquivo PBM: {e}")
+
 def _split_columns(w, n_tasks):
-    """Divide as w colunas do tabuleiro em n_tasks blocos contíguos [x_start, x_end)."""
     base = w // n_tasks
     extra = w % n_tasks
     blocks = []
@@ -16,30 +25,29 @@ def _split_columns(w, n_tasks):
 
 def _worker(task_id, n_tasks, local_w, h, max_iter,
             init_cols, left_conn, right_conn, result_conn):
-    """
-    Executa a simulação completa para o bloco de colunas [x_start, x_end)
-    deste worker, por max_iter+1 gerações.
-    """
     cur = init_cols
     nxt = [[0] * local_w for _ in range(h)]
+    save_interval = 500
 
     for _gen in range(max_iter + 1):
+        # Sincroniza e envia dados para o processo principal salvar o PBM
+        if _gen % save_interval == 0 and result_conn is not None:
+            result_conn.send(cur)
+            result_conn.recv() # Aguarda ACK do processo pai para continuar
 
         if n_tasks == 1:
             left_ghost = [cur[y][local_w - 1] for y in range(h)]
             right_ghost = [cur[y][0] for y in range(h)]
         else:
-            # --- Comunicação com a tarefa vizinha ---
             left_col = [cur[y][0] for y in range(h)]
             right_col = [cur[y][local_w - 1] for y in range(h)]
 
             left_conn.send(left_col)
             right_conn.send(right_col)
 
-            left_ghost = left_conn.recv()    # última coluna da tarefa à esquerda
-            right_ghost = right_conn.recv()  # primeira coluna da tarefa à direita
+            left_ghost = left_conn.recv()
+            right_ghost = right_conn.recv()
 
-        # --- Atualização independente do bloco de colunas ---
         for y in range(h):
             for x in range(local_w):
                 n = 0
@@ -59,29 +67,21 @@ def _worker(task_id, n_tasks, local_w, h, max_iter,
                     n -= 1
                 nxt[y][x] = 1 if (n == 3 or (n == 2 and cur[y][x])) else 0
 
-        cur, nxt = nxt, cur  # ping-pong local de buffers
+        cur, nxt = nxt, cur
 
     if result_conn is not None:
-        result_conn.send(cur)
         result_conn.close()
     if left_conn is not None:
         left_conn.close()
     if right_conn is not None:
         right_conn.close()
 
-def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=False):
-    """
-    Monta a topologia em anel (necessária pois o tabuleiro é periódico),
-    distribui os blocos de colunas e executa a simulação em paralelo.
-    """
+def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=True):
     if n_tasks is None:
         n_tasks = os.cpu_count() or 1
-    n_tasks = max(1, min(n_tasks, w))  # não faz sentido ter mais tarefas que colunas
+    n_tasks = max(1, min(n_tasks, w))
 
     col_blocks = _split_columns(w, n_tasks)
-
-    # --- INICIALIZAÇÃO DETERMINÍSTICA: CRUZ CENTRAL ---
-    # Gera a matriz base com a Cruz Perfeita (1 na coluna ou linha do meio)
     full_init = [[1 if (x == w // 2 or y == h // 2) else 0 for x in range(w)] for y in range(h)]
     
     init_blocks = []
@@ -89,7 +89,6 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=False):
         block = [[full_init[y][x] for x in range(x_start, x_end)] for y in range(h)]
         init_blocks.append(block)
 
-    # --- Topologia em anel: uma Pipe por aresta (tarefa i <-> tarefa i+1) ---
     right_ends = [None] * n_tasks   
     left_ends = [None] * n_tasks    
 
@@ -103,7 +102,7 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=False):
     result_child_conns = [None] * n_tasks
     if gather_result:
         for i in range(n_tasks):
-            p_conn, c_conn = mp.Pipe(duplex=False)
+            p_conn, c_conn = mp.Pipe(duplex=True) # Alterado para True para permitir ACK
             result_parent_conns[i] = p_conn
             result_child_conns[i] = c_conn
 
@@ -124,32 +123,37 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=False):
         if result_child_conns[i] is not None:
             result_child_conns[i].close()
 
-    final_board = None
-    if gather_result:
-        final_board = [[0] * w for _ in range(h)]
-        for i, (x_start, x_end) in enumerate(col_blocks):
-            block = result_parent_conns[i].recv()
-            for y in range(h):
-                for j, x in enumerate(range(x_start, x_end)):
-                    final_board[y][x] = block[y][j]
+    save_interval = 500
+    for _gen in range(max_iter + 1):
+        if _gen % save_interval == 0 and gather_result:
+            final_board = [[0] * w for _ in range(h)]
+            for i, (x_start, x_end) in enumerate(col_blocks):
+                block = result_parent_conns[i].recv()
+                for y in range(h):
+                    for j, x in enumerate(range(x_start, x_end)):
+                        final_board[y][x] = block[y][j]
+                result_parent_conns[i].send(True) # Libera o worker
+            
+            save_pbm(final_board, w, h, _gen)
 
     for proc in processes:
         proc.join()
 
-    return final_board
+    return None
 
 def main():
     w = 500
     h = 500
     max_iter = 5000
-    n_tasks = os.cpu_count() or 1       # Troque n_tasks para 1, 2, 4, 8 para testar o speedup
+    n_tasks = os.cpu_count() or 1       
 
     print(f"Executando com {n_tasks} tarefas (blocos de colunas), "
           f"grade {w}x{h}, {max_iter} gerações...")
 
     start = time.perf_counter()
 
-    run_parallel_columns(w, h, max_iter, n_tasks=n_tasks, gather_result=False)
+    # gather_result forçado para True para habilitar a captura e salvamento
+    run_parallel_columns(w, h, max_iter, n_tasks=n_tasks, gather_result=True)
 
     end = time.perf_counter()
     time_taken = end - start
