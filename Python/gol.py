@@ -1,5 +1,5 @@
 import time
-
+import os
 # def save_pbm(univ, w, h, iter_count):
 #     filename = f"gol_{iter_count}.pbm"
 #     try:
