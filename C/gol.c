@@ -62,6 +62,20 @@ void evolve(void *u, int w, int h)
    }
 }
 
+int count_alive(void *u, int w, int h)
+{
+    unsigned (*univ)[w] = u;
+    int total_alive = 0;
+    // Reducao com particao por colunas
+    #pragma omp parallel for reduction(+:total_alive)
+    for (int x = 0; x < w; x++) {
+        for (int y = 0; y < h; y++) {
+            total_alive += univ[y][x];
+        }
+    }
+    return total_alive;
+}
+
 // A função game recebe largura, altura da matriz e o total de iterações 
 void game(int w, int h, int max_iter)
 {
@@ -86,6 +100,8 @@ void game(int w, int h, int max_iter)
       // }
       evolve(univ, w, h);
    }
+   int final_alive = count_alive(univ, w, h);
+   printf("Total de celulas vivas ao final: %d\n", final_alive);
 }
 
 int main(void)
