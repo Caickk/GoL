@@ -142,10 +142,12 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=True):
     return None
 
 def main():
-    w = 500
-    h = 500
-    max_iter = 5000
-    n_tasks = int(os.environ.get("GOL_WORKERS", 4))
+
+    w = int(os.environ.get("GOL_W", 500))
+    h = int(os.environ.get("GOL_H", 500))
+    max_iter = int(os.environ.get("GOL_ITER", 5000))
+    n_tasks = int(os.environ.get("GOL_WORKERS", 4))  
+    
 
     print(f"Executando com {n_tasks} tarefas (blocos de colunas), "
           f"grade {w}x{h}, {max_iter} gerações...")

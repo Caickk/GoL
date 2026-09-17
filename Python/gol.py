@@ -55,10 +55,10 @@ def game(w, h, max_iter):
         evolve(univ, w, h)
 
 def main():
-    # Dimensões e iterações fixas
-    w = 500
-    h = 500
-    max_iter = 5000
+
+    w = int(os.environ.get("GOL_W", 500))
+    h = int(os.environ.get("GOL_H", 500))
+    max_iter = int(os.environ.get("GOL_ITER", 5000))
     
     # Captura o tempo EXATAMENTE ANTES do processamento iniciar
     start = time.perf_counter()
