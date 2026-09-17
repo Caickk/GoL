@@ -24,20 +24,20 @@ RULE = bytes(1 if i in (3, 19, 20) else 0 for i in range(256))
 TO_ASCII = bytes((0x30 + i) if i < 2 else 0x30 for i in range(256))
 
 
-def save_pbm(buf, off, w, h, gen):
-    filename = f"gol_{gen}.pbm"
-    try:
-        with open(filename, "wb") as f:
-            f.write(b"P1\n%d %d\n" % (w, h))
-            line = bytearray(2 * w + 1)
-            line[1::2] = b" " * w
-            line[2 * w] = 0x0A
-            for y in range(h):
-                base = off + y * w
-                line[0:2 * w:2] = bytes(buf[base:base + w]).translate(TO_ASCII)
-                f.write(line)
-    except IOError as e:
-        print(f"Erro ao criar o arquivo PBM: {e}")
+# def save_pbm(buf, off, w, h, gen):
+#     filename = f"gol_{gen}.pbm"
+#     try:
+#         with open(filename, "wb") as f:
+#             f.write(b"P1\n%d %d\n" % (w, h))
+#             line = bytearray(2 * w + 1)
+#             line[1::2] = b" " * w
+#             line[2 * w] = 0x0A
+#             for y in range(h):
+#                 base = off + y * w
+#                 line[0:2 * w:2] = bytes(buf[base:base + w]).translate(TO_ASCII)
+#                 f.write(line)
+#     except IOError as e:
+#         print(f"Erro ao criar o arquivo PBM: {e}")
 
 
 def split_columns(w, n_tasks):
@@ -101,8 +101,8 @@ def run(w, h, max_iter, n_tasks=None, save_interval=500):
         for y in range(h):
             buf[y * w + xc] = 1
 
-        if save_interval:
-            save_pbm(buf, 0, w, h, 0)
+        # if save_interval:
+        #     save_pbm(buf, 0, w, h, 0)
 
         barrier = mp.Barrier(n_tasks + 1)
         blocks = split_columns(w, n_tasks)
@@ -119,8 +119,8 @@ def run(w, h, max_iter, n_tasks=None, save_interval=500):
         for gen in range(max_iter):
             barrier.wait()
             cur_off = plane - cur_off
-            if save_interval and (gen + 1) % save_interval == 0:
-                save_pbm(buf, cur_off, w, h, gen + 1)
+            # if save_interval and (gen + 1) % save_interval == 0:
+            #     save_pbm(buf, cur_off, w, h, gen + 1)
 
         for p in procs:
             p.join()

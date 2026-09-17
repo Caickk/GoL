@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <time.h>
 
+/*
 // Função para gerar o arquivo PBM
 void save_pbm(void *u, int w, int h, int iter)
 {
@@ -28,6 +29,7 @@ void save_pbm(void *u, int w, int h, int iter)
    }
    fclose(f);
 }
+*/
 
 // Função principal que calcula a próxima geração do Game of Life.
 void evolve(void *u, int w, int h)
@@ -77,11 +79,11 @@ void game(int w, int h, int max_iter)
       }
    }
    
-   const int save_interval = 500; // Salva a cada 500 iterações
+   // const int save_interval = 500; // Salva a cada 500 iterações
    for (int iter = 0; iter <= max_iter; iter++) {
-      if (iter % save_interval == 0) {
-         save_pbm(univ, w, h, iter);
-      }
+      // if (iter % save_interval == 0) {
+      //    save_pbm(univ, w, h, iter);
+      // }
       evolve(univ, w, h);
    }
 }

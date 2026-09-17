@@ -1,15 +1,15 @@
 import time
 
-def save_pbm(univ, w, h, iter_count):
-    filename = f"gol_{iter_count}.pbm"
-    try:
-        with open(filename, "w") as f:
-            f.write(f"P1\n{w} {h}\n")
-            for row in univ:
-                # Replica o formato exato do C: "%d "
-                f.write("".join(f"{cell} " for cell in row) + "\n")
-    except IOError as e:
-        print(f"Erro ao criar o arquivo PBM: {e}")
+# def save_pbm(univ, w, h, iter_count):
+#     filename = f"gol_{iter_count}.pbm"
+#     try:
+#         with open(filename, "w") as f:
+#             f.write(f"P1\n{w} {h}\n")
+#             for row in univ:
+#                 # Replica o formato exato do C: "%d "
+#                 f.write("".join(f"{cell} " for cell in row) + "\n")
+#     except IOError as e:
+#         print(f"Erro ao criar o arquivo PBM: {e}")
 
 def evolve(univ, w, h):
     # Cria uma matriz temporária para armazenar o próximo estado
@@ -47,11 +47,11 @@ def game(w, h, max_iter):
     # Usa w // 2 e h // 2 para encontrar a linha e coluna centrais
     univ = [[1 if (x == w // 2 or y == h // 2) else 0 for x in range(w)] for y in range(h)]
 
-    save_interval = 500
+    # save_interval = 500
     # Laço iterativo simulando o jogo
     for iter_count in range(max_iter + 1):
-        if iter_count % save_interval == 0:
-            save_pbm(univ, w, h, iter_count)
+        # if iter_count % save_interval == 0:
+        #     save_pbm(univ, w, h, iter_count)
         evolve(univ, w, h)
 
 def main():

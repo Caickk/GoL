@@ -2,15 +2,15 @@ import multiprocessing as mp
 import os
 import time
 
-def save_pbm(univ, w, h, iter_count):
-    filename = f"gol_{iter_count}.pbm"
-    try:
-        with open(filename, "w") as f:
-            f.write(f"P1\n{w} {h}\n")
-            for row in univ:
-                f.write("".join(f"{cell} " for cell in row) + "\n")
-    except IOError as e:
-        print(f"Erro ao criar o arquivo PBM: {e}")
+# def save_pbm(univ, w, h, iter_count):
+#     filename = f"gol_{iter_count}.pbm"
+#     try:
+#         with open(filename, "w") as f:
+#             f.write(f"P1\n{w} {h}\n")
+#             for row in univ:
+#                 f.write("".join(f"{cell} " for cell in row) + "\n")
+#     except IOError as e:
+#         print(f"Erro ao criar o arquivo PBM: {e}")
 
 def _split_columns(w, n_tasks):
     base = w // n_tasks
@@ -31,9 +31,9 @@ def _worker(task_id, n_tasks, local_w, h, max_iter,
 
     for _gen in range(max_iter + 1):
         # Sincroniza e envia dados para o processo principal salvar o PBM
-        if _gen % save_interval == 0 and result_conn is not None:
-            result_conn.send(cur)
-            result_conn.recv() # Aguarda ACK do processo pai para continuar
+        # if _gen % save_interval == 0 and result_conn is not None:
+        #     result_conn.send(cur)
+        #     result_conn.recv() # Aguarda ACK do processo pai para continuar
 
         if n_tasks == 1:
             left_ghost = [cur[y][local_w - 1] for y in range(h)]
@@ -123,18 +123,19 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=True):
         if result_child_conns[i] is not None:
             result_child_conns[i].close()
 
-    save_interval = 500
+    # save_interval = 500
     for _gen in range(max_iter + 1):
-        if _gen % save_interval == 0 and gather_result:
-            final_board = [[0] * w for _ in range(h)]
-            for i, (x_start, x_end) in enumerate(col_blocks):
-                block = result_parent_conns[i].recv()
-                for y in range(h):
-                    for j, x in enumerate(range(x_start, x_end)):
-                        final_board[y][x] = block[y][j]
-                result_parent_conns[i].send(True) # Libera o worker
-            
-            save_pbm(final_board, w, h, _gen)
+        # if _gen % save_interval == 0 and gather_result:
+        #     final_board = [[0] * w for _ in range(h)]
+        #     for i, (x_start, x_end) in enumerate(col_blocks):
+        #         block = result_parent_conns[i].recv()
+        #         for y in range(h):
+        #             for j, x in enumerate(range(x_start, x_end)):
+        #                 final_board[y][x] = block[y][j]
+        #             result_parent_conns[i].send(True) # Libera o worker
+        # 
+        #     save_pbm(final_board, w, h, _gen)
+        pass
 
     for proc in processes:
         proc.join()

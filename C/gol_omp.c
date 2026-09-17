@@ -4,6 +4,7 @@
 #include <time.h>
 #include <omp.h>
 
+/*
 void save_pbm(void *u, int w, int h, int iter)
 {
     unsigned (*univ)[w] = u;
@@ -23,6 +24,7 @@ void save_pbm(void *u, int w, int h, int iter)
     }
     fclose(f);
 }
+*/
 
 // evolve: laços invertidos (x externo, y interno) para que a
 // divisão de trabalho do OpenMP seja por COLUNAS, nao por linhas.
@@ -87,11 +89,11 @@ void game(int w, int h, int max_iter)
         }
     }
 
-    const int save_interval = 500;
+    // const int save_interval = 500;
     for (int iter = 0; iter <= max_iter; iter++) {
-        if (iter % save_interval == 0) {
-            save_pbm(univ, w, h, iter);
-        }
+        // if (iter % save_interval == 0) {
+        //     save_pbm(univ, w, h, iter);
+        // }
         evolve(univ, w, h);
     }
     int final_alive = count_alive(univ, w, h);

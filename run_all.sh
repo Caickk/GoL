@@ -382,7 +382,7 @@ fi
 # 11. LIMPEZA DOS .pbm gerados durante os runs (opcional)
 # ============================================================
 
-rm -f "$WORK_DIR"/gol_*.pbm
+# rm -f "$WORK_DIR"/gol_*.pbm
 
 section "Concluido"
 echo "Resultados em: $OUT_DIR"
