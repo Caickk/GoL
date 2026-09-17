@@ -83,6 +83,15 @@ def _worker(shm, w, h, x0, x1, max_iter, barrier):
         cur_off, nxt_off = nxt_off, cur_off
 
 
+def count_alive(shm, w, h, cur_off):
+    """Reducao sem NENHUMA mensagem entre processos: como o buffer e
+    compartilhado, o processo pai le e soma diretamente, sem precisar
+    que os workers mandem nada de volta - diferente da versao com Pipe,
+    onde cada worker precisa enviar sua soma parcial explicitamente."""
+    plane = w * h
+    return sum(shm.buf[cur_off:cur_off + plane])
+
+
 def run(w, h, max_iter, n_tasks=None, save_interval=500):
     if n_tasks is None:
         n_tasks = os.cpu_count() or 1
@@ -125,10 +134,14 @@ def run(w, h, max_iter, n_tasks=None, save_interval=500):
         for p in procs:
             p.join()
 
+        final_alive = count_alive(shm, w, h, cur_off)
+
         del buf
     finally:
         shm.close()
         shm.unlink()
+
+    return final_alive
 
 
 def main():
@@ -142,9 +155,10 @@ def main():
           f"grade {w}x{h}, {max_iter} geracoes...")
 
     start = time.perf_counter()
-    run(w, h, max_iter, n_tasks=n_tasks, save_interval=interval)
+    final_alive = run(w, h, max_iter, n_tasks=n_tasks, save_interval=interval)
     end = time.perf_counter()
 
+    print(f"Total de celulas vivas ao final: {final_alive}")
     print(f"Tempo interno de execucao: {end - start:f} segundos")
 
 

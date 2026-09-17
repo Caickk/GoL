@@ -19,7 +19,6 @@ def evolve(univ, w, h):
     for y in range(h):
         for x in range(w):
             n = 0
-            
             # Laços internos para inspecionar a vizinhança 3x3
             for y1 in range(y - 1, y + 2):
                 for x1 in range(x - 1, x + 2):
@@ -30,7 +29,6 @@ def evolve(univ, w, h):
             # Desconta a própria célula caso ela esteja viva
             if univ[y][x]:
                 n -= 1
-            
             # Aplica as regras de sobrevivência e nascimento
             if n == 3 or (n == 2 and univ[y][x]):
                 new[y][x] = 1
@@ -41,6 +39,16 @@ def evolve(univ, w, h):
     for y in range(h):
         for x in range(w):
             univ[y][x] = new[y][x]
+
+
+def count_alive(univ, w, h):
+    # Soma sequencial das celulas vivas (versao serial: sem paralelismo,
+    # e o baseline para comparar com o count_alive das outras versoes)
+    total_alive = 0
+    for row in univ:
+        total_alive += sum(row)
+    return total_alive
+
 
 def game(w, h, max_iter):
     # Inicializa o tabuleiro: Uma cruz perfeita cruzando a matriz ao meio
@@ -54,12 +62,15 @@ def game(w, h, max_iter):
         #     save_pbm(univ, w, h, iter_count)
         evolve(univ, w, h)
 
+    final_alive = count_alive(univ, w, h)
+    print(f"Total de celulas vivas ao final: {final_alive}")
+
+
 def main():
 
     w = int(os.environ.get("GOL_W", 500))
     h = int(os.environ.get("GOL_H", 500))
     max_iter = int(os.environ.get("GOL_ITER", 5000))
-    
     # Captura o tempo EXATAMENTE ANTES do processamento iniciar
     start = time.perf_counter()
 

@@ -38,6 +38,32 @@ def copy_chunk(univ, new, h, start_x, end_x):
             univ[y][x] = new[y][x]
 
 
+def count_chunk(univ, h, start_x, end_x):
+    """Soma as celulas vivas de um bloco de colunas [start_x, end_x).
+    Cada thread devolve sua soma parcial via o retorno da funcao
+    (Future.result()), nunca escrevendo numa variavel compartilhada -
+    e assim que se evita precisar de threading.Lock aqui."""
+    total = 0
+    for y in range(h):
+        for x in range(start_x, end_x):
+            total += univ[y][x]
+    return total
+
+
+def count_alive(univ, w, h, executor, num_threads):
+    """Equivalente ao count_alive do C com reduction(+:total_alive):
+    cada thread soma seu proprio bloco de colunas (variavel local 'total',
+    igual a copia privada que o OpenMP da a cada thread); a soma final e
+    feita aqui, depois que todos os Futures retornaram."""
+    chunk_size = w // num_threads
+    futures = []
+    for i in range(num_threads):
+        start_x = i * chunk_size
+        end_x = w if i == num_threads - 1 else (i + 1) * chunk_size
+        futures.append(executor.submit(count_chunk, univ, h, start_x, end_x))
+    return sum(f.result() for f in futures)
+
+
 def evolve_mt(univ, w, h, executor, num_threads):
     new = [[0 for _ in range(w)] for _ in range(h)]
     chunk_size = w // num_threads
@@ -69,6 +95,10 @@ def game(w, h, max_iter, num_threads):
             # if iter_count % save_interval == 0:
             #     save_pbm(univ, w, h, iter_count)
             evolve_mt(univ, w, h, executor, num_threads)
+
+        final_alive = count_alive(univ, w, h, executor, num_threads)
+
+    print(f"Total de celulas vivas ao final: {final_alive}")
 
 
 def main():
