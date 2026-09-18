@@ -136,11 +136,11 @@ Métricas em nível de hardware, evidenciando o impacto da linguagem compilada v
 | **C Serial** | IPC (Instructions Per Cycle) | 0,76 | 1,76 |
 | **C Serial** | Cache-misses | 95,7 Milhões | 322 Milhões (L1) |
 | **C Serial** | Branch-misses | 57,0 Milhões | 0,25% (Taxa) |
-| **Python Serial** | Cycles (Ciclos Totais) | 5,3 Trilhões | |
-| **Python Serial** | Instructions (Instruções) | 17,5 Trilhões | |
-| **Python Serial** | IPC (Instructions Per Cycle) | 3,30 | |
-| **Python Serial** | Cache-misses | 342,5 Milhões | |
-| **Python Serial** | Branch-misses | 7,8 Bilhões | |
+| **Python Serial** | Cycles (Ciclos Totais) | 5,3 Trilhões | 10.089.609.249 |
+| **Python Serial** | Instructions (Instruções) | 17,5 Trilhões |27.897.569.960 |
+| **Python Serial** | IPC (Instructions Per Cycle) | 3,30 | 2,77|
+| **Python Serial** | Cache-misses | 342,5 Milhões | 46.645|
+| **Python Serial** | Branch-misses | 7,8 Bilhões | 11.582.149|
 
 ## 4. Simulação de Memória e Instruções (`Valgrind`)
 Validação cruzada com instrumentação determinística para a versão **C Serial**.
