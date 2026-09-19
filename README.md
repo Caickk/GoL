@@ -117,8 +117,8 @@ Identificação do hotspot e tempo cumulativo das funções críticas na arquite
 
 | Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
 | :--- | :--- | :--- | :--- |
-| **C Serial** (`gprof`) | Função Hotspot | `evolve`[cite: 3] | `evolve` |
-| **C Serial** (`gprof`) | % do tempo total | 100%[cite: 3] | 100.00% |
+| **C Serial** (`gprof`) | Função Hotspot | `evolve` | `evolve` |
+| **C Serial** (`gprof`) | % do tempo total | 100% | 100.00% |
 | **Python Serial** (`cProfile`) | Função Hotspot | `evolve` | `evolve` |
 | **Python Serial** (`cProfile`) | % do tempo total | Quase 100% | 99.9% |
 | **Python Thread (8 Threads)** | Maior Overhead de Sistema | | `Thread.join` e `acquire` |
