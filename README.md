@@ -4,6 +4,7 @@
 
 - [Camila De Araújo Bastos](https://github.com/camilaab)
 - [Caick Wendell Lopes dos Santos](https://github.com/caickkk)
+
 # 2. Descrição do algoritmo
 
 O código implementa uma versão serial do **Conway's Game of Life (Jogo da Vida)**, um autômato celular criado pelo matemático John Horton Conway. O algoritmo simula a evolução de uma grade bidimensional de células (vivas ou mortas) ao longo de sucessivas gerações, baseando-se no estado da vizinhança imediata (as 8 células ao redor) de cada posição.
@@ -22,39 +23,36 @@ Para atender a essas regras computacionalmente, a arquitetura do algoritmo foi e
 *   **Topologia do Universo (Matriz Toroidal):** As regras assumem uma grade infinita. Para simular isso na memória RAM sem causar falhas de acesso (*segmentation fault*), o algoritmo adota uma topologia toroidal. Usando a operação de módulo (`%`), as bordas da matriz se conectam: a borda direita encosta na esquerda, e a inferior na superior.
 *   **Lógica de Transição (Hotspot):** A função `evolve` é o núcleo do processamento. Nela, as quatro regras clássicas descritas acima foram otimizadas e condensadas em uma única expressão booleana eficiente para a CPU: `new[y][x] = (n == 3 || (n == 2 && univ[y][x]));`.
 
-# 3. Compilação e Execução das 5 Versões
+# 3. Metodologia, Compilação e Execução das 5 Versões
 
-Para atender aos requisitos de paralelismo e profiling, foram implementadas cinco versões do algoritmo. 
-
-**Parâmetros base da simulação:** Matriz de 500×500 células processada por 5.000 iterações (totalizando ~11,25 bilhões de verificações de vizinhos).
+Para avaliar o impacto das estratégias de paralelização, foram implementadas cinco versões do algoritmo partindo da mesma condição inicial e topologia toroidal. A matriz base processada é de 500×500 células ao longo de 5.000 iterações (totalizando ~11,25 bilhões de verificações de vizinhos).
 
 ### 3.1 C Serial
-Implementação nativa de referência, sem diretivas de paralelização.
+Base de referência de mais baixo nível, sem diretivas de paralelismo. Utiliza matrizes alocadas na pilha e laços aninhados simples, aplicando *double buffering* explícito. Apenas a contagem final isolada utiliza uma redução OpenMP.
 * **Compilação:** `gcc -O2 -g -o programa_serial programa_serial.c`
 * **Execução (Exemplo perf):** `perf stat ./programa_serial`
 
 ### 3.2 C Paralelo com OpenMP
-Paralelização via divisão do loop principal usando diretivas de memória compartilhada.
+Paraleliza a fase de evolução aplicando a diretiva `#pragma omp parallel for` ao laço externo, particionando a matriz por colunas. O *runtime* gere as *threads* e as barreiras implícitas de sincronização, sem causar condições de corrida na escrita.
 * **Compilação:** `gcc -O2 -g -fopenmp -o programa_openmp programa_openmp.c`
 * **Controle de Threads:** Variável de ambiente `OMP_NUM_THREADS` (1, 2, 4 e 8).
 
 ### 3.3 Python Serial
-Implementação pura em Python, sem bibliotecas externas (como NumPy), utilizando apenas estruturas nativas.
+Base de corretude interpretada, utilizando apenas estruturas nativas. É a tradução literal da versão em C, varrendo a matriz célula a célula e atualizando estados sequencialmente.
 * **Execução:** `python3 programa_serial.py`
 
 ### 3.4 Python Paralelo com Multithreading
-Distribuição de chunks da matriz entre threads usando o módulo `threading` do Python.
+Usa um `ThreadPoolExecutor` para decompor a matriz em colunas. Partilha o mesmo espaço de memória (evitando troca de mensagens), mas sincroniza cálculo e cópia em duas fases. A concorrência sofre forte impacto do *Global Interpreter Lock* (GIL).
 * **Execução:** `python3 programa_thread.py`
 
 ### 3.5 Python Paralelo com Multiprocessing
-Contorno do Global Interpreter Lock (GIL) através da criação de processos independentes via módulo `multiprocessing` (Pipe e Shared Memory)[cite: 5, 6, 8].
+Contorna o GIL alocando múltiplos interpretadores independentes (processos):
+*   **Via Pipe:** Cada processo mantém apenas o seu próprio bloco de colunas. A comunicação de bordas ("colunas fantasma") exige envios constantes através de *Pipes* bidirecionais, causando alto custo de serialização de dados (*pickling*).
+*   **Via Shared Memory:** Substitui os *Pipes* por leitura direta num único bloco global de memória RAM partilhada. Elimina o *pickling*, mas exige barreiras rigorosas de sistema operativo (`multiprocessing.Barrier`) para orquestrar a troca de gerações.
 * **Execução:** `python3 programa_multiprocess.py`
 
 ---
-Para satisfazer os critérios do experimento, os parâmetros de entrada (dimensões da matriz e número de iterações) devem ser grandes o suficiente para que o programa processe um volume de dados adequado, garantindo que o tempo de execução alcance pelo menos 2 segundos em *wall-clock time* utilizando a compilação base.
-
-Durante a coleta de métricas, a execução do binário foi encapsulada pelas ferramentas de profiling exigidas. Utilizando o exemplo de parâmetros acima, os comandos executados foram:
-
+Durante a recolha de métricas, a execução dos binários foi encapsulada pelas seguintes ferramentas e comandos:
 * **Medição de tempo total e recursos:** `/usr/bin/time -v ./gol`
 * **Contagem de eventos de hardware:** `perf stat ./gol`
 * **Gravação do overhead por função:** `perf record -g ./gol`
@@ -64,32 +62,25 @@ Durante a coleta de métricas, a execução do binário foi encapsulada pelas fe
 * **Anotação dos resultados do Cachegrind:** `cg_annotate cachegrind.out.<PID>`
 * **Rastreamento de chamadas de sistema:** `strace -c ./gol`
   
-# 4. Tabelas de resultados do time, gprof, perf, Valgrind e strace
-
-Abaixo estão os resultados extraídos de cada ferramenta de profiling em dois ambientes de hardware distintos, seguindo os parâmetros definidos na especificação do projeto.
-
-## 4.1 Especificações dos Ambientes de Teste
+# 4. Especificações dos Ambientes de Teste
 
 **Ambiente 1 (CPU 1)**
-* **Processador (CPU):** AMD Ryzen 5 7520U (4 Núcleos / 8 Threads)
+* **Processador:** AMD Ryzen 5 7520U (4 Núcleos / 8 Threads)
 * **Memória Cache:** L1: 128 KiB / L2: 2 MiB / L3: 4 MiB
 * **Memória RAM:** 16 GB (2x 8GB) LPDDR5 Samsung @ 5500 MT/s (Dual-Channel)
-* **Sistema Operacional:** Ubuntu 26
-* **Kernel Linux:** 7.0.0-27-generic
+* **SO / Kernel:** Ubuntu 26 / Linux 7.0.0-27-generic
 
 **Ambiente 2 (CPU 2)**
-* **Processador (CPU):** Intel® Core™ i5-1135G7 (4 Núcleos / 8 Threads)
-* **Memória Cache:** L1: 320 KiB / L2: 5MB / L3: 8MB 
+* **Processador:** Intel® Core™ i5-1135G7 (4 Núcleos / 8 Threads)
+* **Memória Cache:** L1: 320 KiB / L2: 5MB / L3: 8MB
 * **Memória RAM:** 12 GB DDR4
-* **Sistema Operacional:** Ubuntu 26.04 
-* **Kernel Linux:** 7.0.0-29-generic
+* **SO / Kernel:** Ubuntu 26.04 / Linux 7.0.0-29-generic
 
 # 5. Tabelas de Profiling Detalhado por Ferramenta e Versão
 
-As tabelas a seguir detalham as métricas extraídas pelas ferramentas de profiling, categorizadas explicitamente pela versão do algoritmo (C Serial, C OpenMP, Python Serial, etc.) e separadas por arquitetura de hardware (CPU 1 e CPU 2).
-
 ## 5.1 Medição de Tempo e Recursos (`/usr/bin/time -v`)
-Monitoramento do consumo de tempo e memória gerido pelo sistema operacional.
+
+Avaliação do tempo real de execução (Wall-clock), tempo de CPU em modo utilizador, consumo máximo de memória residente (Max RSS) e trocas de contexto impostas pelo sistema operativo para cada estratégia.
 
 | Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
 | :--- | :--- | :--- | :--- |
@@ -114,7 +105,12 @@ Monitoramento do consumo de tempo e memória gerido pelo sistema operacional.
 | **Python MP SHM (4 Proc.)** | Wall-clock time | 4:18.25 | 5m 30s |
 | **Python MP SHM (4 Proc.)** | Max RSS (KB) | 20.324 | 20.312 |
 
+**Constatação sobre Microarquitetura (AMD vs. Intel):** Apesar da mesma configuração lógica (4C/8T), a disparidade nos barramentos de cache afeta drasticamente o desempenho sob estresse. A CPU 2 (Intel) lida notavelmente melhor com a fragmentação de memória gerada pelas múltiplas *threads* do OpenMP e processos, pois possui capacidades maiores desde a base (L1 de 320 KB e L3 de 8 MB). Ela acomoda os blocos fragmentados com folga antes de recorrer a níveis mais lentos, sustentando um ganho de eficiência paralela muito superior ao do chip da AMD sob carga intensiva.
+
+**Conclusão sobre Concorrência (OpenMP vs. Python):** O paralelismo nativo em C (OpenMP) introduz um overhead quase nulo de gestão, revertendo \~96% do tempo da CPU diretamente para os cálculos úteis. No outro extremo, a abordagem Multithreading do Python evidencia o estrangulamento causado pelo GIL: as *threads* entram num ciclo ocioso disputando o interpretador, o que faz os *Context Switches* voluntários saltarem para mais de 1,7 milhão (esgotando recursos à toa). Escapar via *Multiprocessing* resolve o bloqueio de CPU, mas transfere o gargalo para a infraestrutura do SO (custos excessivos de cópia no Pipe ou *locks* caros de controlo na Memória Partilhada).
+
 ## 5.2 Rastreamento de Chamadas (`gprof` e `cProfile`)
+
 Identificação do hotspot e tempo cumulativo das funções críticas na arquitetura.
 
 | Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
@@ -127,7 +123,8 @@ Identificação do hotspot e tempo cumulativo das funções críticas na arquite
 | **Python MP Pipe (4 Proc.)** | Maior Overhead de Sistema | | `posix.read` / `recv` |
 
 ## 5.3 Contadores de Desempenho Físico (`perf stat`)
-Métricas em nível de hardware, evidenciando o impacto da linguagem compilada vs interpretada.
+
+Levantamento de eventos microarquiteturais da CPU, detalhando ciclos totais, instruções efetivamente processadas, vazão (IPC), faltas na cache L1 e erros de previsão de saltos.
 
 | Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
 | :--- | :--- | :--- | :--- |
@@ -137,13 +134,16 @@ Métricas em nível de hardware, evidenciando o impacto da linguagem compilada v
 | **C Serial** | Cache-misses | 95,7 Milhões | 322 Milhões (L1) |
 | **C Serial** | Branch-misses | 57,0 Milhões | 0,25% (Taxa) |
 | **Python Serial** | Cycles (Ciclos Totais) | 5,3 Trilhões | 10.089.609.249 |
-| **Python Serial** | Instructions (Instruções) | 17,5 Trilhões |27.897.569.960 |
-| **Python Serial** | IPC (Instructions Per Cycle) | 3,30 | 2,77|
-| **Python Serial** | Cache-misses | 342,5 Milhões | 46.645|
-| **Python Serial** | Branch-misses | 7,8 Bilhões | 11.582.149|
+| **Python Serial** | Instructions (Instruções) | 17,5 Trilhões | 27.897.569.960 |
+| **Python Serial** | IPC (Instructions Per Cycle) | 3,30 | 2,77 |
+| **Python Serial** | Cache-misses | 342,5 Milhões | 46.645 |
+| **Python Serial** | Branch-misses | 7,8 Bilhões | 11.582.149 |
+
+**Observação sobre a Ilusão do IPC em Python:** A métrica de IPC no script Python (ex: 3,30) exibe uma capacidade espantosa da CPU em limpar as esteiras de instruções. No entanto, esse IPC massivo esconde um grande gargalo de eficiência: o processador está a operar freneticamente apenas para lidar com o *overhead* do próprio interpretador CPython (tipagem dinâmica, recolha de lixo, varreduras do GIL). A execução consome impressionantes \~17,5 trilhões de instruções artificiais que não agregam valor algorítmico face aos enxutos 161 bilhões do binário nativo em C.
 
 ## 5.4 Simulação de Memória e Instruções (`Valgrind`)
-Validação cruzada com instrumentação determinística para a versão **C Serial**.
+
+Contagem exata de instruções simuladas e rastreamento da hierarquia de memória para identificar perdas de localidade na cache L1 e no último nível (LLC).
 
 | Versão do Programa | Ferramenta / Métrica Exigida | CPU 1 | CPU 2 |
 | :--- | :--- | :--- | :--- |
@@ -152,8 +152,11 @@ Validação cruzada com instrumentação determinística para a versão **C Seri
 | **C Serial** | Cachegrind: Misses L1 (D1mr) | | 10.106.438 |
 | **C Serial** | Cachegrind: Misses Último Nível (DLmr) | | 1.187 |
 
+**Análise sobre o Volume de Dados e Localidade de Cache:** O dimensionamento do problema (500x500) afeta diretamente o comportamento da memória. Como as matrizes ocupam cerca de 2 MB no total, toda a simulação cabe perfeitamente dentro da cache L3 de ambas as CPUs avaliadas. Na execução serial, a localidade espacial é excelente e as falhas de último nível (LLC misses) são quase nulas, indicando que a CPU raramente busca dados na RAM. O gargalo estrutural, portanto, não é a memória principal, mas sim o afunilamento de leitura na L1 causado pela fragmentação da matriz durante a execução paralela e pelo uso massivo do operador de módulo (`%`).
+
 ## 5.5 Chamadas de Sistema (`strace`)
-Mapeamento da comunicação entre o código do usuário e o Kernel do Sistema Operacional.
+
+Rastreamento do total de interrupções de kernel (syscalls) e identificação da chamada dominante para averiguar o nível de interação entre o programa e o sistema operativo.
 
 | Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
 | :--- | :--- | :--- | :--- |
@@ -162,4 +165,12 @@ Mapeamento da comunicação entre o código do usuário e o Kernel do Sistema Op
 | **Python Serial** | Total de Syscalls | | 80.446 chamadas |
 | **Python Serial** | Syscall dominante | | `brk` |
 
-## 5.6 Código de referencia: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
+## 5.6 Código de referência: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
+
+# 6. Conclusão
+
+A presente análise corrobora a obrigatoriedade do uso de linguagens compiladas nativas para Computação de Alto Desempenho (HPC) em cargas densamente matemáticas. A sobrecarga introduzida na tradução de *bytecode*, as sistemáticas perdas de localidade na cache decorrentes do gestor de objetos do interpretador e a limitação inata do *Global Interpreter Lock* (GIL) inviabilizam o uso de *threads* nativas em Python para a otimização de ciclos computacionais fechados.
+
+As rotas de fuga em Python demonstraram ser apenas paliativas para algoritmos *CPU-bound* restritos pela memória: embora o multiprocessamento contorne o bloqueio do GIL, ele apenas transfere o gargalo de desempenho para a infraestrutura do sistema operativo, incorrendo em altos custos de comunicação interprocessos (via serialização no *Pipe*) ou em latências severas de sincronização de estado global (*Shared Memory*). 
+
+Em contrapartida, a linguagem C, coligada com as diretivas de memória partilhada do OpenMP, demonstrou um uso absoluto e escalável dos recursos físicos do hardware. A ausência de intermediários de *software* e a gestão nativa das *threads* permitiram contornar o estresse na cache L1 de forma eficiente, garantindo processamentos com latência controlada e previsibilidade operacional máxima na simulação do autômato celular.
