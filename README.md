@@ -167,7 +167,6 @@ Rastreamento do total de interrupções de kernel (syscalls) e identificação d
 | **Python Serial** | Total de Syscalls | | 80.446 chamadas |
 | **Python Serial** | Syscall dominante | | `brk` |
 
-## 5.6 Código de referência: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
 
 # 6. Conclusão
 
@@ -176,3 +175,5 @@ A presente análise corrobora a obrigatoriedade do uso de linguagens compiladas 
 As rotas de fuga em Python demonstraram ser apenas paliativas para algoritmos *CPU-bound* restritos pela memória: embora o multiprocessamento contorne o bloqueio do GIL, ele apenas transfere o gargalo de desempenho para a infraestrutura do sistema operativo, incorrendo em altos custos de comunicação interprocessos (via serialização no *Pipe*) ou em latências severas de sincronização de estado global (*Shared Memory*). 
 
 Em contrapartida, a linguagem C, coligada com as diretivas de memória partilhada do OpenMP, demonstrou um uso absoluto e escalável dos recursos físicos do hardware. A ausência de intermediários de *software* e a gestão nativa das *threads* permitiram contornar o estresse na cache L1 de forma eficiente, garantindo processamentos com latência controlada e previsibilidade operacional máxima na simulação do autômato celular.
+
+# 7. Código de referência: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
