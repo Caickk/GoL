@@ -143,9 +143,14 @@ Levantamento de eventos microarquiteturais da CPU, detalhando ciclos totais, ins
 | **C Serial** | Cycles (Ciclos Totais) | 212,6 Bilhões | 91,36 Bilhões |
 | **C Serial** | Instructions (Instruções) | 161,2 Bilhões | 160,94 Bilhões |
 | **C Serial** | IPC (Instructions Per Cycle) | 0,76 | 1,76 |
-| **C Serial** | Cache-misses | 95,7 Milhões | 322 Milhões (L1) |
-| **C Serial** | Branch-misses | 57,0 Milhões | 0,25% (Taxa) |
+| **C Serial** | Cache-references |  | 311.798.970 |
+| **C Serial** | Cache-misses | 95,7 Milhões | 921.887 |
+| **C Serial** | Branches |  | 17.653.280.461 |
+| **C Serial** | Branch-misses | 57,0 Milhões | 87.288.195 |
 | **C Serial** | L1-dcache-load-misses | 350.914.081 | 322.631.507 |
+| **C Serial** | LLC-load-misses |  | 129.138 |
+| **C Serial** | Context-switches (perf, software event) |  | 196 |
+| **C Serial** | CPU-migrations (perf, software event) |  | 2 |
 | **C OpenMP (4 Threads)** | Cycles (Ciclos Totais) | 218.250.646.648 | 99.349.508.539 |
 | **C OpenMP (4 Threads)** | Instructions (Instruções) | 174.515.834.279 | 174.223.785.837 |
 | **C OpenMP (4 Threads)** | IPC (Instructions Per Cycle) | 0,80 | 1,75 |
@@ -184,6 +189,17 @@ Levantamento de eventos microarquiteturais da CPU, detalhando ciclos totais, ins
 
 
 **Observação sobre a Ilusão do IPC em Python:** A métrica de IPC no script Python (ex: 3,30) exibe uma capacidade espantosa da CPU em limpar as esteiras de instruções. No entanto, esse IPC massivo esconde um grande gargalo de eficiência: o processador está a operar freneticamente apenas para lidar com o *overhead* do próprio interpretador CPython (tipagem dinâmica, recolha de lixo, varreduras do GIL). A execução consome impressionantes \~17,5 trilhões de instruções artificiais que não agregam valor algorítmico face aos enxutos 161 bilhões do binário nativo em C.
+
+## 5.3.1 Perfil de Overhead por Função (`perf report`)
+
+Relatório obtido a partir de `perf record -g` e `perf report --stdio`, apresentando o overhead por função no **C Serial (CPU 2)**.
+
+| **Função** | **% Children** | **% Self** |
+| :--- | ---: | ---: |
+| `evolve` | 99,21% | 99,03% |
+| `__memmove_evex_unaligned_erms` | 0,79% | 0,79% |
+
+A função `evolve` concentra praticamente todo o overhead amostrado pelo `perf`, enquanto a rotina `__memmove_evex_unaligned_erms`, responsável pela cópia vetorizada de `new` para `univ`, representa uma parcela pequena, mas mensurável, do tempo de execução. Esse resultado complementa a análise da Seção 5.4.1, que identifica a cópia de memória como uma parcela reduzida do total de instruções.
 
 ## 5.4 Simulação de Memória e Instruções (`Valgrind`)
 
@@ -228,8 +244,8 @@ Rastreamento do total de interrupções de kernel (syscalls) e identificação d
 
 | Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
 | :--- | :--- | :--- | :--- |
-| **C Serial** | Total de Syscalls | | 34 chamadas |
-| **C Serial** | Syscall dominante | | `execve` |
+| **C Serial** | Total de Syscalls | | 35 chamadas |
+| **C Serial** | Syscall mais frequente (por contagem) | | `mmap` (8 ocorrências) |
 | **Python Serial** | Total de Syscalls | | 80.446 chamadas |
 | **Python Serial** | Syscall dominante | | `brk` |
 
