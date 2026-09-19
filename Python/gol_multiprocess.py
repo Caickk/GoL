@@ -23,6 +23,14 @@ def _split_columns(w, n_tasks):
         x += size
     return blocks
 
+def count_alive(block):
+    """Função padronizada para somar as células vivas do bloco local."""
+    total = 0
+    for row in block:
+        for val in row:
+            total += val
+    return total
+
 def _worker(task_id, n_tasks, local_w, h, max_iter,
             init_cols, left_conn, right_conn, result_conn, count_conn):
     cur = init_cols
@@ -69,10 +77,8 @@ def _worker(task_id, n_tasks, local_w, h, max_iter,
 
         cur, nxt = nxt, cur
 
-    # Reducao: cada worker soma o proprio bloco de colunas (equivalente
-    # a copia privada do OpenMP) e manda o total parcial pelo pipe
-    # dedicado a contagem - so uma vez, fora do laco de geracoes.
-    local_alive = sum(sum(row) for row in cur)
+    # Redução: chama a função padronizada count_alive para somar o bloco local
+    local_alive = count_alive(cur)
     count_conn.send(local_alive)
 
     if result_conn is not None:
@@ -110,12 +116,10 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=True):
     result_child_conns = [None] * n_tasks
     if gather_result:
         for i in range(n_tasks):
-            p_conn, c_conn = mp.Pipe(duplex=True) # Alterado para True para permitir ACK
+            p_conn, c_conn = mp.Pipe(duplex=True)
             result_parent_conns[i] = p_conn
             result_child_conns[i] = c_conn
 
-    # Pipe dedicado so para a contagem final de celulas vivas (reducao),
-    # separado do result_conn (que era usado para o dump do grid inteiro).
     count_parent_conns = [None] * n_tasks
     count_child_conns = [None] * n_tasks
     for i in range(n_tasks):
@@ -151,13 +155,11 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=True):
         #         for y in range(h):
         #             for j, x in enumerate(range(x_start, x_end)):
         #                 final_board[y][x] = block[y][j]
-        #             result_parent_conns[i].send(True) # Libera o worker
+        #             result_parent_conns[i].send(True)
         # 
         #     save_pbm(final_board, w, h, _gen)
         pass
 
-    # Recebe as somas parciais ANTES do join, para nao arriscar deadlock
-    # caso o buffer do pipe se esgote (aqui e so um int, mas e boa pratica).
     total_alive = 0
     for i in range(n_tasks):
         total_alive += count_parent_conns[i].recv()
@@ -168,19 +170,16 @@ def run_parallel_columns(w, h, max_iter, n_tasks=None, gather_result=True):
     return total_alive
 
 def main():
-
     w = int(os.environ.get("GOL_W", 500))
     h = int(os.environ.get("GOL_H", 500))
     max_iter = int(os.environ.get("GOL_ITER", 5000))
     n_tasks = int(os.environ.get("GOL_WORKERS", 4))  
-    
 
     print(f"Executando com {n_tasks} tarefas (blocos de colunas), "
           f"grade {w}x{h}, {max_iter} gerações...")
 
     start = time.perf_counter()
 
-    # gather_result forçado para True para habilitar a captura e salvamento
     final_alive = run_parallel_columns(w, h, max_iter, n_tasks=n_tasks, gather_result=True)
 
     end = time.perf_counter()
