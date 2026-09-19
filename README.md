@@ -102,8 +102,10 @@ Avaliação do tempo real de execução (Wall-clock), tempo de CPU em modo utili
 | **Python Thread (8 Threads)** | Context switches (vol/invol) | 2.06M / 20k | 1.73M / 13.184 |
 | **Python MP Pipe (4 Proc.)** | Wall-clock time | 3:18.89 | 4m 59s |
 | **Python MP Pipe (4 Proc.)** | Max RSS (KB) | 19.084 | 19.140 |
+| **Python MP Pipe (4 Proc.)** | Context switches (vol/invol) | 15.435 / 4.531 | 16.227 / 5.707 |
 | **Python MP SHM (4 Proc.)** | Wall-clock time | 4:18.25 | 5m 30s |
 | **Python MP SHM (4 Proc.)** | Max RSS (KB) | 20.324 | 20.312 |
+| **Python MP SHM (4 Proc.)** | Context switches (vol/invol) | 66.210 / 6.658 | 63.930 / 8.383 |
 
 **Constatação sobre Microarquitetura (AMD vs. Intel):** Apesar da mesma configuração lógica (4C/8T), a disparidade nos barramentos de cache afeta drasticamente o desempenho sob estresse. A CPU 2 (Intel) lida notavelmente melhor com a fragmentação de memória gerada pelas múltiplas *threads* do OpenMP e processos, pois possui capacidades maiores desde a base (L1 de 320 KB e L3 de 8 MB). Ela acomoda os blocos fragmentados com folga antes de recorrer a níveis mais lentos, sustentando um ganho de eficiência paralela muito superior ao do chip da AMD sob carga intensiva.
 
