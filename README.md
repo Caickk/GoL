@@ -82,34 +82,40 @@ Durante a recolha de métricas, a execução dos binários foi encapsulada pelas
 
 Avaliação do tempo real de execução (Wall-clock), tempo de CPU em modo utilizador, consumo máximo de memória residente (Max RSS) e trocas de contexto impostas pelo sistema operativo para cada estratégia.
 
-| Versão do Programa | Métrica Exigida | CPU 1 | CPU 2 |
-| :--- | :--- | :--- | :--- |
-| **C Serial** | Wall-clock time (real) | 0:49.44 | 22.10s |
-| **C Serial** | User time (CPU) | 49.43s | 22.08s |
-| **C Serial** | System time | 0.00s | 0.00s |
-| **C Serial** | Percentual de CPU | 99% | 99% |
-| **C Serial** | Max RSS (KB) | 3.724 | 3.960 |
-| **C Serial** | Context switches (vol/invol) | 1 / 565 | 1 / 709 |
-| **C Serial** | Page faults (Major/Minor) | 0 / 570 | 0 / 570 |
-| **C OpenMP (4 Threads)** | Wall-clock time | 0:13.15 | 7.90s |
-| **C OpenMP (4 Threads)** | User time | 52.61s | 31.60s |
-| **C OpenMP (4 Threads)** | System time | 0.00s | 0.00s |
-| **C OpenMP (4 Threads)** | Percentual de CPU | 399% | 399% |
-| **C OpenMP (4 Threads)** | Max RSS (KB) | 4.144 | 4.252 |
-| **C OpenMP (4 Threads)** | Context switches (vol/invol) | 1 / 258 | 1 / 112 |
-| **C OpenMP (4 Threads)** | Page faults (Major/Minor) | 0 / 588 | 0 / 589 |
-| **Python Serial** | Wall-clock time | 20:56.63 | 24m 33s |
-| **Python Serial** | User time | 1251.39s | ~1473s |
-| **Python Serial** | Max RSS (KB) | 13.868 | ~19.000 |
-| **Python Serial** | Context switches (vol/invol) | 1 / 14.948 | 1 / 10.048 |
-| **Python Thread (8 Threads)** | Wall-clock time | 22:21.28 | 19m 56s |
-| **Python Thread (8 Threads)** | Context switches (vol/invol) | 2.06M / 20k | 1.73M / 13.184 |
-| **Python MP Pipe (4 Proc.)** | Wall-clock time | 3:18.89 | 4m 59s |
-| **Python MP Pipe (4 Proc.)** | Max RSS (KB) | 19.084 | 19.140 |
-| **Python MP Pipe (4 Proc.)** | Context switches (vol/invol) | 15.435 / 4.531 | 16.227 / 5.707 |
-| **Python MP SHM (4 Proc.)** | Wall-clock time | 4:18.25 | 5m 30s |
-| **Python MP SHM (4 Proc.)** | Max RSS (KB) | 20.324 | 20.312 |
-| **Python MP SHM (4 Proc.)** | Context switches (vol/invol) | 66.210 / 6.658 | 63.930 / 8.383 |
+| **Versão do Programa**        | **Métrica Exigida**          | **CPU 1**      | **CPU 2**             |
+| ----------------------------- | ---------------------------- | -------------- | --------------------- |
+| **C Serial**                  | Wall-clock time (real)       | 0:49.44        | 22.10s                |
+| **C Serial**                  | User time (CPU)              | 49.43s         | 22.08s                |
+| **C Serial**                  | System time                  | 0.00s          | 0.00s                 |
+| **C Serial**                  | Percentual de CPU            | 99%            | 99%                   |
+| **C Serial**                  | Max RSS (KB)                 | 3.724          | 3.960                 |
+| **C Serial**                  | Context switches (vol/invol) | 1 / 565        | 1 / 709               |
+| **C Serial**                  | Page faults (Major/Minor)    | 0 / 570        | 0 / 570               |
+| **C OpenMP (4 Threads)**      | Wall-clock time              | 0:13.15        | 7.90s                 |
+| **C OpenMP (4 Threads)**      | User time                    | 52.61s         | 31.60s                |
+| **C OpenMP (4 Threads)**      | System time                  | 0.00s          | 0.00s                 |
+| **C OpenMP (4 Threads)**      | Percentual de CPU            | 399%           | 399%                  |
+| **C OpenMP (4 Threads)**      | Max RSS (KB)                 | 4.144          | 4.252                 |
+| **C OpenMP (4 Threads)**      | Context switches (vol/invol) | 1 / 258        | 1 / 112               |
+| **C OpenMP (4 Threads)**      | Page faults (Major/Minor)    | 0 / 588        | 0 / 589               |
+| **Python Serial**             | Wall-clock time              | 20:56.63       | 20:01.01              |
+| **Python Serial**             | User time                    | 1251.39s       | 1198.54s              |
+| **Python Serial**             | Max RSS (KB)                 | 13.868         | 13.992                |
+| **Python Serial**             | Context switches (vol/invol) | 1 / 14.948     | 1 / 10.048            |
+| **Python Serial**             | Page faults (Major/Minor)    | 0 / 2.397.003  | 0 / 2.397.003         |
+| **Python Thread (4 Threads)** | Wall-clock time              | 22:21.28       | 19:13.51              |
+| **Python Thread (4 Threads)** | User time                    | —              | 1155.78s              |
+| **Python Thread (4 Threads)** | Max RSS (KB)                 | 18.604         | 18.852                |
+| **Python Thread (4 Threads)** | Context switches (vol/invol) | 1.34M / 17k    | 884.100 / 7.288       |
+| **Python Thread (4 Threads)** | Page faults (Major/Minor)    | 0 / 3.170      | 0 / 3.167             |
+| **Python MP Pipe (4 Proc.)**  | Wall-clock time              | 3:18.89        | 4m 59s                |
+| **Python MP Pipe (4 Proc.)**  | Max RSS (KB)                 | 19.084         | 19.140                |
+| **Python MP Pipe (4 Proc.)**  | Context switches (vol/invol) | 15.435 / 4.531 | 16.227 / 5.707        |
+| **Python MP Pipe (4 Proc.)**  | Page faults (Major/Minor)    | 0 / 9.121      | 0 / 9.161             |
+| **Python MP SHM (4 Proc.)**   | Wall-clock time              | 4:18.25        | 5m 30s                |
+| **Python MP SHM (4 Proc.)**   | Max RSS (KB)                 | 20.324         | 20.312                |
+| **Python MP SHM (4 Proc.)**   | Context switches (vol/invol) | 66.210 / 6.658 | 63.930 / 8.383        |
+| **Python MP SHM (4 Proc.)**   | Page faults (Major/Minor)    | 0 / 8.310      | 0 / 8.315             |
 
 **Constatação sobre Microarquitetura (AMD vs. Intel):** Apesar da mesma configuração lógica (4C/8T), a disparidade nos barramentos de cache afeta drasticamente o desempenho sob estresse. A CPU 2 (Intel) lida notavelmente melhor com a fragmentação de memória gerada pelas múltiplas *threads* do OpenMP e processos, pois possui capacidades maiores desde a base (L1 de 320 KB e L3 de 8 MB). Ela acomoda os blocos fragmentados com folga antes de recorrer a níveis mais lentos, sustentando um ganho de eficiência paralela muito superior ao do chip da AMD sob carga intensiva.
 
