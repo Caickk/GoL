@@ -285,3 +285,4 @@ As rotas de fuga em Python demonstraram ser apenas paliativas para algoritmos *C
 Em contrapartida, a linguagem C, coligada com as diretivas de memória partilhada do OpenMP, demonstrou um uso absoluto e escalável dos recursos físicos do hardware. A ausência de intermediários de *software* e a gestão nativa das *threads* permitiram contornar o estresse na cache L1 de forma eficiente, garantindo processamentos com latência controlada e previsibilidade operacional máxima na simulação do autômato celular.
 
 # 7. Código de referência: https://rosettacode.org/wiki/Conway%27s_Game_of_Life
+# 8. Acesso aos perf.data: https://drive.google.com/drive/folders/1cg9oiYW-o6qGy5-GZVJGUmN9oM5Y_O9B?usp=sharing
