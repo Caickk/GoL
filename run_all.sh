@@ -1,33 +1,9 @@
 #!/usr/bin/env bash
 #
-# run_all.sh - script de reprodutibilidade para o trabalho de
-# "Paralelismo com Memoria Compartilhada" (PGCC011).
-#
-# Roda TODAS as versoes exigidas pelo enunciado (C serial, C+OpenMP,
-# Python serial, Python threading, Python multiprocessing) e faz o
-# profiling completo pedido nas secoes 3.2 a 3.7: /usr/bin/time -v,
-# gprof, perf stat/record, valgrind (callgrind/cachegrind), strace,
-# cProfile, e a varredura de escalabilidade com 1/2/4/8 threads/processos.
-#
-# Como este grupo implementou DUAS versoes de multiprocessing
-# (gol_multiprocess.py, baseada em Pipe, e gol_multiprocess_shared_memory.py,
-# baseada em multiprocessing.shared_memory), o script roda o profiling
-# completo da secao 3.7 para as DUAS, lado a lado, para permitir comparar
-# IPC via mensagens vs. memoria compartilhada dentro do proprio
-# multiprocessing (alem da comparacao geral com OpenMP e threading).
-#
-# Uso:
-#   chmod +x run_all.sh
-#   ./run_all.sh
-#
-# Ajuste as variaveis de configuracao abaixo ANTES de rodar, sobretudo
-# GOL_ITER e SCALE_ITER, dependendo da velocidade da sua maquina (veja
-# os comentarios de cada uma).
+# run_all.sh - Script de Reprodutibilidade e Geração de Tabelas HPC
+# Trabalho de "Paralelismo com Memoria Compartilhada" (PGCC011).
 
 set -uo pipefail
-# (Nao uso 'set -e': se uma ferramenta de profiling individual falhar,
-#  quero que o script registre o erro e continue para as demais etapas,
-#  em vez de abortar a reproducao inteira no meio.)
 
 # ============================================================
 # 0. CONFIGURACAO
@@ -41,72 +17,54 @@ BIN_DIR="$OUT_DIR/bin"
 LOG_DIR="$OUT_DIR/logs"
 PERF_DIR="$OUT_DIR/perf"
 VALGRIND_DIR="$OUT_DIR/valgrind"
-WORK_DIR="$OUT_DIR/workdir"   # aqui rodamos os binarios (evita sujar o repo com gol_*.pbm)
+WORK_DIR="$OUT_DIR/workdir" 
 
-# Volume de dados. Requisito 3.1.1: a versao C serial deve rodar >=20s
-# com -O2. Testado neste ambiente (1 nucleo): 500x500x5000 ~ 32s no C
-# serial. AJUSTE conforme sua maquina: se sua versao C rodar em menos
-# de 20s, aumente GOL_ITER (e edite o mesmo valor hardcoded dentro de
-# gol.c e gol_omp.c, ja que esses .c NAO leem variavel de ambiente).
 GOL_W=500
 GOL_H=500
 GOL_ITER=5000
-
-# Contagens de thread/processo exigidas pelo enunciado (secoes 3.1.2,
-# 3.1.4, 3.1.5): 1, 2, 4 e 8.
 COUNTS=(1 2 4 8)
-
-# Iteracoes usadas especificamente na VARREDURA de escalabilidade
-# (1/2/4/8 threads/processos). Por padrao igual a GOL_ITER, mas em
-# Python puro isso pode levar HORAS no total (4 configuracoes x varias
-# versoes). Se estiver testando o script ou sua maquina for lenta,
-# reduza SCALE_ITER (ex.: 500) so para a varredura de escalabilidade;
-# mantenha GOL_ITER cheio para os profilings individuais (gprof, perf
-# record, valgrind), que rodam uma unica vez por versao.
 SCALE_ITER="${SCALE_ITER:-$GOL_ITER}"
-
-# Timeout de seguranca por execucao individual (segundos). Evita que
-# uma configuracao lenta trave o script inteiro indefinidamente.
 RUN_TIMEOUT="${RUN_TIMEOUT:-1800}"
-
-# Reducao de entrada para valgrind --tool=callgrind (spec sugere N/10).
-VALGRIND_ITER=$((GOL_ITER / 10))
-[ "$VALGRIND_ITER" -lt 10 ] && VALGRIND_ITER=10
 
 mkdir -p "$BIN_DIR" "$LOG_DIR" "$PERF_DIR" "$VALGRIND_DIR" "$WORK_DIR"
 
 CSV_TIME_V="$OUT_DIR/summary_time_v.csv"
 CSV_SCALE="$OUT_DIR/summary_scalability.csv"
+REPORT_MD="$OUT_DIR/RELATORIO_FINAL.md"
+REPORT_CSV="$OUT_DIR/RESULTADOS_PLANILHA.csv"
 
 # ============================================================
-# 1. DETECCAO DE FERRAMENTAS (degrada graciosamente se faltar)
+# 1. VERIFICACAO DE KERNEL (Para o Perf Report funcionar)
+# ============================================================
+# Se kptr_restrict estiver alto, o perf report não consegue ler os nomes das funções (gera apenas endereços hexadecimais).
+if [ -f /proc/sys/kernel/kptr_restrict ]; then
+    KPTR=$(cat /proc/sys/kernel/kptr_restrict)
+    if [ "$KPTR" -ne 0 ]; then
+        echo -e "\n[ATENCAO] O 'kernel.kptr_restrict' está ativado ($KPTR)."
+        echo "Isso bloqueia a leitura das funcoes (Hotspots) pelo 'perf report'."
+        echo "Para tabelas 100% completas, cancele (Ctrl+C), rode:"
+        echo "   sudo sysctl -w kernel.kptr_restrict=0"
+        echo "e inicie o script novamente."
+        echo "Aguardando 5 segundos para continuar mesmo assim...\n"
+        sleep 5
+    fi
+fi
+
+# ============================================================
+# 2. FUNCOES AUXILIARES DE PROFILING
 # ============================================================
 
-HAVE_TIME=0;     command -v /usr/bin/time  >/dev/null 2>&1 && HAVE_TIME=1
-HAVE_PERF=0;     command -v perf           >/dev/null 2>&1 && HAVE_PERF=1
-HAVE_VALGRIND=0; command -v valgrind       >/dev/null 2>&1 && HAVE_VALGRIND=1
-HAVE_STRACE=0;   command -v strace         >/dev/null 2>&1 && HAVE_STRACE=1
-HAVE_GPROF=0;    command -v gprof          >/dev/null 2>&1 && HAVE_GPROF=1
-HAVE_CACHEGRIND_ANNOTATE=0; command -v cg_annotate >/dev/null 2>&1 && HAVE_CACHEGRIND_ANNOTATE=1
-HAVE_CALLGRIND_ANNOTATE=0;  command -v callgrind_annotate >/dev/null 2>&1 && HAVE_CALLGRIND_ANNOTATE=1
-
-warn_missing() {
-    echo "[AVISO] '$1' nao encontrado no PATH - etapa pulada. Instale com: $2"
-}
-
-# ============================================================
-# 2. FUNCOES AUXILIARES
-# ============================================================
+HAVE_TIME=0;      command -v /usr/bin/time  >/dev/null 2>&1 && HAVE_TIME=1
+HAVE_PERF=0;      command -v perf           >/dev/null 2>&1 && HAVE_PERF=1
+HAVE_VALGRIND=0;  command -v valgrind       >/dev/null 2>&1 && HAVE_VALGRIND=1
+HAVE_STRACE=0;    command -v strace         >/dev/null 2>&1 && HAVE_STRACE=1
+HAVE_GPROF=0;     command -v gprof          >/dev/null 2>&1 && HAVE_GPROF=1
 
 section() { echo; echo "==================================================================="; echo "== $1"; echo "==================================================================="; }
 
-# extract_time_v_csv <label> <arquivo_time_v.log>
-# Faz o parse do relatorio do `/usr/bin/time -v` e acrescenta uma linha
-# ao CSV consolidado (requisito 3.2: tabela comparativa das 5 versoes).
 extract_time_v_csv() {
     local label="$1" logfile="$2"
     [ -f "$logfile" ] || return 0
-
     local wall user sys cpu maxrss majpf minpf volcs invcs
     wall=$(grep -oP '(?<=Elapsed \(wall clock\) time \(h:mm:ss or m:ss\): ).*' "$logfile" || echo "NA")
     user=$(grep -oP '(?<=User time \(seconds\): ).*' "$logfile" || echo "NA")
@@ -117,280 +75,210 @@ extract_time_v_csv() {
     minpf=$(grep -oP '(?<=Minor \(reclaiming a frame\) page faults: ).*' "$logfile" || echo "NA")
     volcs=$(grep -oP '(?<=Voluntary context switches: ).*' "$logfile" || echo "NA")
     invcs=$(grep -oP '(?<=Involuntary context switches: ).*' "$logfile" || echo "NA")
-
     echo "$label,$wall,$user,$sys,$cpu,$maxrss,$majpf,$minpf,$volcs,$invcs" >> "$CSV_TIME_V"
 }
 
-# run_time_v <label> <comando...>
-# Roda /usr/bin/time -v (se disponivel; senao cai para o `time` do
-# bash, com metricas mais limitadas) e grava stdout/stderr separados.
 run_time_v() {
     local label="$1"; shift
-    local out="$LOG_DIR/${label}_stdout.log"
     local err_time="$LOG_DIR/${label}_time.log"
     echo "  [time -v] $label"
-
     if [ "$HAVE_TIME" -eq 1 ]; then
-        timeout "$RUN_TIMEOUT" /usr/bin/time -v -o "$err_time" "$@" > "$out" 2>>"$err_time" \
-            || echo "  [AVISO] '$label' terminou com erro/timeout (ver $err_time)"
+        timeout "$RUN_TIMEOUT" /usr/bin/time -v -o "$err_time" "$@" > "$LOG_DIR/${label}_stdout.log" 2>>"$err_time" || true
         extract_time_v_csv "$label" "$err_time"
-    else
-        # Fallback sem metricas de RSS/page faults/context switches:
-        # 'time' aqui e a keyword do bash (nao um binario), entao nao
-        # pode passar por env/timeout como comando - precisa envolver
-        # a chamada inteira (incluindo o timeout) num bloco { }.
-        echo "  [AVISO] /usr/bin/time nao encontrado - usando 'time' do bash (metricas limitadas: sem RSS/page faults/context switches)"
-        { time timeout "$RUN_TIMEOUT" "$@" ; } > "$out" 2>"$err_time" \
-            || echo "  [AVISO] '$label' terminou com erro/timeout (ver $err_time)"
     fi
 }
 
-# run_perf_stat <label> <comando...>
 run_perf_stat() {
     local label="$1"; shift
-    if [ "$HAVE_PERF" -ne 1 ]; then warn_missing perf "sudo apt install linux-tools-common linux-tools-\$(uname -r)"; return; fi
-    echo "  [perf stat] $label"
-    timeout "$RUN_TIMEOUT" perf stat \
-        -e cycles,instructions,cache-references,cache-misses,branches,branch-misses,L1-dcache-load-misses,LLC-load-misses \
-        -o "$PERF_DIR/${label}_stat.log" -- "$@" > "$LOG_DIR/${label}_perfstat_stdout.log" 2>&1 \
-        || echo "  [AVISO] perf stat de '$label' falhou/timeout"
+    if [ "$HAVE_PERF" -eq 1 ]; then
+        echo "  [perf stat] $label"
+        timeout "$RUN_TIMEOUT" perf stat \
+            -e cycles,instructions,cache-references,cache-misses,branches,branch-misses,L1-dcache-load-misses,LLC-load-misses,context-switches,cpu-migrations \
+            -o "$PERF_DIR/${label}_stat.log" -- "$@" > "$LOG_DIR/${label}_perfstat_stdout.log" 2>&1 || true
+    fi
 }
 
-# run_perf_record <label> <comando...>
-# Gera perf.data (requisito 4.2: "Arquivo perf.data compactado") e o
-# relatorio textual via `perf report --stdio`.
 run_perf_record() {
     local label="$1"; shift
-    if [ "$HAVE_PERF" -ne 1 ]; then return; fi
-    echo "  [perf record] $label"
-    ( cd "$PERF_DIR" && timeout "$RUN_TIMEOUT" perf record -g -o "${label}.perf.data" -- "$@" \
-        > "$LOG_DIR/${label}_perfrecord_stdout.log" 2>&1 ) \
-        || echo "  [AVISO] perf record de '$label' falhou/timeout"
-    if [ -f "$PERF_DIR/${label}.perf.data" ]; then
-        perf report --stdio -i "$PERF_DIR/${label}.perf.data" > "$PERF_DIR/${label}_report.txt" 2>&1
+    if [ "$HAVE_PERF" -eq 1 ]; then
+        echo "  [perf record] $label"
+        ( cd "$PERF_DIR" && timeout "$RUN_TIMEOUT" perf record -g -o "${label}.perf.data" -- "$@" > /dev/null 2>&1 ) || true
+        [ -f "$PERF_DIR/${label}.perf.data" ] && perf report --stdio -i "$PERF_DIR/${label}.perf.data" > "$PERF_DIR/${label}_report.txt" 2>&1
     fi
 }
 
 run_strace() {
     local label="$1"; shift
-    if [ "$HAVE_STRACE" -ne 1 ]; then warn_missing strace "sudo apt install strace"; return; fi
-    echo "  [strace -c] $label"
-    timeout "$RUN_TIMEOUT" strace -c -o "$LOG_DIR/${label}_strace.log" -- "$@" \
-        > "$LOG_DIR/${label}_strace_stdout.log" 2>&1 \
-        || echo "  [AVISO] strace de '$label' falhou/timeout"
+    if [ "$HAVE_STRACE" -eq 1 ]; then
+        echo "  [strace -c] $label"
+        timeout "$RUN_TIMEOUT" strace -c -o "$LOG_DIR/${label}_strace.log" -- "$@" > /dev/null 2>&1 || true
+    fi
 }
 
-# scalability_sweep <prefixo> <lista_de_env_extra_por_run> <comando...>
-# Roda o comando com cada valor de COUNTS, medindo wall-clock via
-# /usr/bin/time -v, e grava uma linha no CSV de escalabilidade.
-# $2 e o NOME da variavel de ambiente que carrega a contagem
-# (ex.: "OMP_NUM_THREADS" ou "GOL_WORKERS").
 scalability_sweep() {
     local prefix="$1" envvar="$2"; shift 2
     for n in "${COUNTS[@]}"; do
         local label="${prefix}_n${n}"
         echo "  [escalabilidade] $prefix com $envvar=$n"
         local err_time="$LOG_DIR/${label}_time.log"
-        if [ "$HAVE_TIME" -eq 1 ]; then
-            env "$envvar=$n" timeout "$RUN_TIMEOUT" /usr/bin/time -v -o "$err_time" "$@" \
-                > "$LOG_DIR/${label}_stdout.log" 2>>"$err_time" \
-                || echo "    [AVISO] '$label' terminou com erro/timeout"
-        else
-            # 'time' e keyword do bash, nao pode ser argumento de env;
-            # exporta a variavel dentro de uma subshell e usa 'time' ali.
-            ( export "$envvar=$n"; time timeout "$RUN_TIMEOUT" "$@" ) \
-                > "$LOG_DIR/${label}_stdout.log" 2>"$err_time" \
-                || echo "    [AVISO] '$label' terminou com erro/timeout"
-        fi
-        local wall
-        if [ "$HAVE_TIME" -eq 1 ]; then
-            wall=$(grep -oP '(?<=Elapsed \(wall clock\) time \(h:mm:ss or m:ss\): ).*' "$err_time" 2>/dev/null)
-        else
-            # fallback: saida do 'time' do bash, formato "real\t0mX.Ys"
-            wall=$(grep -oP '(?<=^real\t).*' "$err_time" 2>/dev/null)
-        fi
-        [ -z "${wall:-}" ] && wall="NA"
+        env "$envvar=$n" timeout "$RUN_TIMEOUT" /usr/bin/time -v -o "$err_time" "$@" > /dev/null 2>>"$err_time" || true
+        local wall=$(grep -oP '(?<=Elapsed \(wall clock\) time \(h:mm:ss or m:ss\): ).*' "$err_time" 2>/dev/null || echo "NA")
         echo "$prefix,$n,$wall" >> "$CSV_SCALE"
     done
 }
 
 # ============================================================
-# 3. lscpu (exigido em 2. ORGANIZACAO)
+# 3. SETUP 
 # ============================================================
-
-section "Informacoes de hardware (lscpu)"
-lscpu | tee "$OUT_DIR/lscpu.txt"
-
-echo "" > "$CSV_TIME_V"
-echo "label,wall_clock,user_s,sys_s,cpu_pct,maxrss_kb,major_pf,minor_pf,vol_ctxsw,invol_ctxsw" > "$CSV_TIME_V"
+echo "label,Wall-clock,User_Time,System_Time,CPU_%,Max_RSS(KB),Major_PF,Minor_PF,Vol_CS,Invol_CS" > "$CSV_TIME_V"
 echo "prefix,n_threads_ou_processos,wall_clock" > "$CSV_SCALE"
-
 cd "$WORK_DIR" || exit 1
 
 # ============================================================
-# 4. COMPILACAO DAS VERSOES C
+# 4. COMPILACAO C
 # ============================================================
-
 section "Compilando versoes C"
-gcc -O2 -g            -o "$BIN_DIR/gol_serial"       "$C_DIR/gol.c"
-gcc -pg -O2 -g         -o "$BIN_DIR/gol_serial_gprof" "$C_DIR/gol.c"
+gcc -O2 -g         -o "$BIN_DIR/gol_serial"        "$C_DIR/gol.c"
+gcc -pg -O2 -g       -o "$BIN_DIR/gol_serial_gprof" "$C_DIR/gol.c"
 gcc -O2 -g -fopenmp    -o "$BIN_DIR/gol_omp"          "$C_DIR/gol_omp.c"
-echo "Binarios em $BIN_DIR"
 
 # ============================================================
-# 5. C SERIAL (3.2 + 3.3)
+# 5. C SERIAL
 # ============================================================
-
-section "C Serial: /usr/bin/time -v"
+section "Profiling: C Serial"
 run_time_v "c_serial" "$BIN_DIR/gol_serial"
-
-section "C Serial: gprof (3.3.1)"
 if [ "$HAVE_GPROF" -eq 1 ]; then
-    ( cd "$WORK_DIR" && "$BIN_DIR/gol_serial_gprof" > "$LOG_DIR/c_serial_gprof_stdout.log" )
-    if [ -f "$WORK_DIR/gmon.out" ]; then
-        gprof "$BIN_DIR/gol_serial_gprof" "$WORK_DIR/gmon.out" > "$LOG_DIR/c_serial_gprof_report.txt"
-        echo "  relatorio em $LOG_DIR/c_serial_gprof_report.txt"
-    else
-        echo "  [AVISO] gmon.out nao foi gerado"
-    fi
-else
-    warn_missing gprof "sudo apt install binutils"
+    ( cd "$WORK_DIR" && "$BIN_DIR/gol_serial_gprof" >/dev/null 2>&1 )
+    [ -f "$WORK_DIR/gmon.out" ] && gprof "$BIN_DIR/gol_serial_gprof" "$WORK_DIR/gmon.out" > "$LOG_DIR/c_serial_gprof_report.txt"
 fi
-
-section "C Serial: perf stat + perf record (3.3.2)"
-run_perf_stat   "c_serial" "$BIN_DIR/gol_serial"
-run_perf_record  "c_serial" "$BIN_DIR/gol_serial"
-
-section "C Serial: valgrind --tool=callgrind (3.3.3, entrada reduzida ~N/10)"
-if [ "$HAVE_VALGRIND" -eq 1 ]; then
-    # gol.c tem w/h/max_iter fixos no codigo-fonte; nao ha como passar
-    # VALGRIND_ITER via env. Compile uma variante reduzida se quiser
-    # rodar o callgrind/cachegrind com o N/10 exato do enunciado -
-    # ver nota no final do script. Aqui rodamos com timeout generoso
-    # sobre o binario padrao para nao travar o pipeline.
-    ( cd "$VALGRIND_DIR" && timeout "$RUN_TIMEOUT" valgrind --tool=callgrind \
-        --callgrind-out-file=callgrind.out.c_serial \
-        "$BIN_DIR/gol_serial" > "$LOG_DIR/c_serial_callgrind_stdout.log" 2>"$LOG_DIR/c_serial_callgrind_stderr.log" ) \
-        || echo "  [AVISO] callgrind timeout/erro - considere compilar gol.c com max_iter menor"
-    if [ "$HAVE_CALLGRIND_ANNOTATE" -eq 1 ] && [ -f "$VALGRIND_DIR/callgrind.out.c_serial" ]; then
-        callgrind_annotate "$VALGRIND_DIR/callgrind.out.c_serial" > "$VALGRIND_DIR/callgrind_c_serial_annotate.txt"
-    fi
-
-    section "C Serial: valgrind --tool=cachegrind (3.3.3)"
-    ( cd "$VALGRIND_DIR" && timeout "$RUN_TIMEOUT" valgrind --tool=cachegrind \
-        --cachegrind-out-file=cachegrind.out.c_serial \
-        "$BIN_DIR/gol_serial" > "$LOG_DIR/c_serial_cachegrind_stdout.log" 2>"$LOG_DIR/c_serial_cachegrind_stderr.log" ) \
-        || echo "  [AVISO] cachegrind timeout/erro - considere compilar gol.c com max_iter menor"
-    if [ "$HAVE_CACHEGRIND_ANNOTATE" -eq 1 ] && [ -f "$VALGRIND_DIR/cachegrind.out.c_serial" ]; then
-        cg_annotate "$VALGRIND_DIR/cachegrind.out.c_serial" > "$VALGRIND_DIR/cachegrind_c_serial_annotate.txt"
-    fi
-else
-    warn_missing valgrind "sudo apt install valgrind"
-fi
-
-section "C Serial: strace -c (3.3.4)"
+run_perf_stat "c_serial" "$BIN_DIR/gol_serial"
+run_perf_record "c_serial" "$BIN_DIR/gol_serial"
 run_strace "c_serial" "$BIN_DIR/gol_serial"
 
-# ============================================================
-# 6. C OPENMP (3.4)
-# ============================================================
+if [ "$HAVE_VALGRIND" -eq 1 ]; then
+    echo "  [valgrind callgrind+cache] c_serial"
+    ( cd "$VALGRIND_DIR" && timeout "$RUN_TIMEOUT" valgrind --tool=callgrind --cache-sim=yes \
+        --callgrind-out-file=callgrind.out.c_serial "$BIN_DIR/gol_serial" > /dev/null 2>&1 )
+    [ -f "$VALGRIND_DIR/callgrind.out.c_serial" ] && callgrind_annotate --auto=yes "$VALGRIND_DIR/callgrind.out.c_serial" > "$VALGRIND_DIR/callgrind_c_serial_annotate.txt"
+fi
 
-section "C OpenMP: perf stat/record com OMP_NUM_THREADS=4 (3.4.1)"
-OMP_NUM_THREADS=4 run_perf_stat   "c_omp_4t" "$BIN_DIR/gol_omp"
+# ============================================================
+# 6. C OPENMP
+# ============================================================
+section "Profiling: C OpenMP"
+OMP_NUM_THREADS=4 run_time_v "c_omp_4t" "$BIN_DIR/gol_omp"
+OMP_NUM_THREADS=4 run_perf_stat "c_omp_4t" "$BIN_DIR/gol_omp"
 OMP_NUM_THREADS=4 run_perf_record "c_omp_4t" "$BIN_DIR/gol_omp"
-
-section "C OpenMP: escalabilidade 1/2/4/8 threads (3.4.2)"
 scalability_sweep "c_omp" "OMP_NUM_THREADS" "$BIN_DIR/gol_omp"
 
 # ============================================================
-# 7. PYTHON SERIAL (3.5)
+# 7. PYTHON SERIAL
 # ============================================================
-
-section "Python Serial: /usr/bin/time -v"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER \
-    run_time_v "py_serial" python3 "$PY_DIR/gol.py"
-
-section "Python Serial: cProfile (3.5.1)"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER \
-    python3 -m cProfile -s cumulative "$PY_DIR/gol.py" > "$LOG_DIR/py_serial_cprofile.txt" 2>&1
-
-section "Python Serial: perf stat (3.5.2)"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER \
-    run_perf_stat "py_serial" python3 "$PY_DIR/gol.py"
-
-section "Python Serial: strace -c (3.5.3)"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER \
-    run_strace "py_serial" python3 "$PY_DIR/gol.py"
+section "Profiling: Python Serial"
+run_time_v "py_serial" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER python3 "$PY_DIR/gol.py"
+env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER python3 -m cProfile -s cumulative "$PY_DIR/gol.py" > "$LOG_DIR/py_serial_cprofile.txt" 2>&1
+run_perf_stat "py_serial" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER python3 "$PY_DIR/gol.py"
+run_perf_record "py_serial" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER python3 "$PY_DIR/gol.py"
+run_strace "py_serial" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER python3 "$PY_DIR/gol.py"
 
 # ============================================================
-# 8. PYTHON THREADING (3.6)
+# 8. PYTHON THREADING
 # ============================================================
-
-section "Python Threading: cProfile com 4 threads (3.6.1)"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 \
-    python3 -m cProfile -s cumulative "$PY_DIR/gol_multithread.py" > "$LOG_DIR/py_thread_4t_cprofile.txt" 2>&1
-
-section "Python Threading: perf stat/record com 4 threads (3.6.2)"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 \
-    run_perf_stat "py_thread_4t" python3 "$PY_DIR/gol_multithread.py"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 \
-    run_perf_record "py_thread_4t" python3 "$PY_DIR/gol_multithread.py"
-
-section "Python Threading: escalabilidade 1/2/4/8 threads (3.6.3)"
-GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$SCALE_ITER \
-    scalability_sweep "py_thread" "GOL_WORKERS" python3 "$PY_DIR/gol_multithread.py"
+section "Profiling: Python Multithreading"
+run_time_v "py_thread_4t" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 "$PY_DIR/gol_multithread.py"
+env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 -m cProfile -s cumulative "$PY_DIR/gol_multithread.py" > "$LOG_DIR/py_thread_4t_cprofile.txt" 2>&1
+run_perf_stat "py_thread_4t" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 "$PY_DIR/gol_multithread.py"
+run_perf_record "py_thread_4t" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 "$PY_DIR/gol_multithread.py"
+scalability_sweep "py_thread" "GOL_WORKERS" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$SCALE_ITER python3 "$PY_DIR/gol_multithread.py"
 
 # ============================================================
-# 9. PYTHON MULTIPROCESSING - DUAS VERSOES (3.7)
+# 9. PYTHON MULTIPROCESSING
 # ============================================================
-# Versao A: gol_multiprocess.py            (Pipe, colunas, mensagens)
-# Versao B: gol_multiprocess_shared_memory.py (shared_memory, colunas)
-
+section "Profiling: Python Multiprocessing"
 for VARIANT in "gol_multiprocess.py:mp_pipe" "gol_multiprocess_shared_memory.py:mp_shm"; do
     SCRIPT_NAME="${VARIANT%%:*}"
     TAG="${VARIANT##*:}"
-    SCRIPT_PATH="$PY_DIR/$SCRIPT_NAME"
-
-    section "Python Multiprocessing [$TAG = $SCRIPT_NAME]: cProfile com 4 processos (3.7.1)"
-    GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 \
-        python3 -m cProfile -s cumulative "$SCRIPT_PATH" > "$LOG_DIR/py_${TAG}_4p_cprofile.txt" 2>&1
-
-    section "Python Multiprocessing [$TAG]: perf stat/record com 4 processos (3.7.2)"
-    GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 \
-        run_perf_stat "py_${TAG}_4p" python3 "$SCRIPT_PATH"
-    GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 \
-        run_perf_record "py_${TAG}_4p" python3 "$SCRIPT_PATH"
-
-    section "Python Multiprocessing [$TAG]: escalabilidade 1/2/4/8 processos (3.7.3)"
-    GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$SCALE_ITER \
-        scalability_sweep "py_${TAG}" "GOL_WORKERS" python3 "$SCRIPT_PATH"
+    run_time_v "py_${TAG}_4p" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 "$PY_DIR/$SCRIPT_NAME"
+    env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 -m cProfile -s cumulative "$PY_DIR/$SCRIPT_NAME" > "$LOG_DIR/py_${TAG}_4p_cprofile.txt" 2>&1
+    run_perf_stat "py_${TAG}_4p" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 "$PY_DIR/$SCRIPT_NAME"
+    run_perf_record "py_${TAG}_4p" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$GOL_ITER GOL_WORKERS=4 python3 "$PY_DIR/$SCRIPT_NAME"
+    scalability_sweep "py_${TAG}" "GOL_WORKERS" env GOL_W=$GOL_W GOL_H=$GOL_H GOL_ITER=$SCALE_ITER python3 "$PY_DIR/$SCRIPT_NAME"
 done
 
 # ============================================================
-# 10. COMPACTAR perf.data (requisito 4.2)
+# 11. GERAÇÃO DO RELATÓRIO .MD E EXPORTAÇÃO PARA PLANILHA .CSV
 # ============================================================
+section "CONSOLIDANDO DADOS E GERANDO TABELAS..."
 
-section "Compactando arquivos perf.data"
-if [ "$HAVE_PERF" -eq 1 ] && ls "$PERF_DIR"/*.perf.data >/dev/null 2>&1; then
-    tar -C "$PERF_DIR" -czf "$OUT_DIR/perf_data_all.tar.gz" $(cd "$PERF_DIR" && ls *.perf.data)
-    echo "  gerado: $OUT_DIR/perf_data_all.tar.gz"
-else
-    echo "  [AVISO] nenhum perf.data encontrado para compactar (perf indisponivel ou falhou em todas as etapas)"
-fi
+> "$REPORT_CSV"
+> "$REPORT_MD"
 
-# ============================================================
-# 11. LIMPEZA DOS .pbm gerados durante os runs (opcional)
-# ============================================================
+function add_to_reports() {
+    local title="$1"
+    local content="$2"
+    
+    # Adiciona ao MD
+    echo -e "### $title\n\`\`\`text\n$content\n\`\`\`\n" >> "$REPORT_MD"
+    
+    # Adiciona ao CSV (Substitui múltiplos espaços por vírgula para manter as colunas na planilha)
+    echo "===== $title =====" >> "$REPORT_CSV"
+    echo "$content" \vert{} sed -E 's/^[ \t]+//' \vert{} tr -s ' \t' ',' >> "$REPORT_CSV"
+    echo "" >> "$REPORT_CSV"
+}
 
-# rm -f "$WORK_DIR"/gol_*.pbm
+echo "# RELATÓRIO DE DESEMPENHO E HPC" > "$REPORT_MD"
+echo "Arquivo exportavel gerado para análise." >> "$REPORT_MD"
+echo "===== TABELAS DE DESEMPENHO =====" > "$REPORT_CSV"
 
-section "Concluido"
-echo "Resultados em: $OUT_DIR"
-echo "  - $CSV_TIME_V        (tabela comparativa /usr/bin/time -v, requisito 3.2)"
-echo "  - $CSV_SCALE          (dados brutos de escalabilidade 1/2/4/8, requisitos 3.4.2/3.6.3/3.7.3)"
-echo "  - $LOG_DIR/            (gprof, cProfile, strace, stdout de cada run)"
-echo "  - $PERF_DIR/           (perf stat .log, perf report .txt, *.perf.data)"
-echo "  - $VALGRIND_DIR/       (callgrind/cachegrind, com annotate se as ferramentas *_annotate existirem)"
-echo
-echo "Lembrete: calcule speedup/eficiencia a partir de $CSV_SCALE (ex.: com pandas ou planilha)"
-echo "e monte as tabelas comparativas pedidas nas secoes 3.7.4 e 3.8 a partir de $CSV_TIME_V."
+# 1. TABELA GERAL
+echo -e "## 1. TABELA GERAL (/usr/bin/time -v)" >> "$REPORT_MD"
+echo '```text' >> "$REPORT_MD"
+column -s, -t "$CSV_TIME_V" >> "$REPORT_MD"
+echo -e '```\n' >> "$REPORT_MD"
+echo "===== 1. TABELA GERAL =====" >> "$REPORT_CSV"
+cat "$CSV_TIME_V" >> "$REPORT_CSV"
+echo "" >> "$REPORT_CSV"
+
+# 2. C SERIAL
+echo "## 2. ANÁLISE C SERIAL" >> "$REPORT_MD"
+add_to_reports "C Serial: Métricas de Hardware e IPC (perf stat)" "$(grep -E "cycles|instructions|insn per cycle|cache-misses|cache-references|branch-misses|branches|L1-dcache|LLC" "$PERF_DIR/c_serial_stat.log" || echo "Dados indisponíveis")"
+add_to_reports "C Serial: Hotspot % e Chamadas, Self e Inclusive (gprof)" "$(sed -n '/^ *[0-9]/p' "$LOG_DIR/c_serial_gprof_report.txt" 2>/dev/null | head -n 5 || echo "Gprof indisponível")"
+add_to_reports "C Serial: Callgrind Cache (Ir, Dr, D1mr, DLmr)" "$(grep -A 10 "PROGRAM TOTALS" "$VALGRIND_DIR/callgrind_c_serial_annotate.txt" 2>/dev/null || echo "Callgrind indisponível")"
+add_to_reports "C Serial: Top 3 Syscalls (strace)" "$(sed -n '/^ \+[0-9]/p' "$LOG_DIR/c_serial_strace.log" 2>/dev/null | sort -k4 -nr | head -n 3 || echo "Strace indisponível")"
+
+# 3. PYTHON SERIAL
+echo "## 3. ANÁLISE PYTHON SERIAL" >> "$REPORT_MD"
+add_to_reports "Py Serial: Métricas de Hardware e IPC (perf stat)" "$(grep -E "cycles|instructions|insn per cycle|cache-misses|cache-references|branch-misses|branches|L1-dcache|LLC" "$PERF_DIR/py_serial_stat.log" || echo "Dados indisponíveis")"
+add_to_reports "Py Serial: Hotspot e Overhead (cProfile)" "$(sed -n '/ ncalls /,/^$/p' "$LOG_DIR/py_serial_cprofile.txt" 2>/dev/null | head -n 10 || echo "cProfile indisponível")"
+add_to_reports "Py Serial: Custo Interno em C (perf report)" "$(grep -v "^#" "$PERF_DIR/py_serial_report.txt" 2>/dev/null | awk 'NF' | head -n 5 || echo "Perf Report indisponível")"
+add_to_reports "Py Serial: Top 3 Syscalls (strace)" "$(sed -n '/^ \+[0-9]/p' "$LOG_DIR/py_serial_strace.log" 2>/dev/null | sort -k4 -nr | head -n 3 || echo "Strace indisponível")"
+
+# 4. C OPENMP
+echo "## 4. ANÁLISE C PARALELO (OpenMP)" >> "$REPORT_MD"
+add_to_reports "C OpenMP: IPC, Cache e Trocas de Contexto (perf stat)" "$(grep -E "cycles|instructions|insn per cycle|cache-misses|branch-misses|context-switches|cpu-migrations" "$PERF_DIR/c_omp_4t_stat.log" || echo "Dados indisponíveis")"
+add_to_reports "C OpenMP: Overhead Diretivas OpenMP (perf report)" "$(grep -iE "gomp\vert{}omp" "$PERF_DIR/c_omp_4t_report.txt" 2>/dev/null | head -n 10 || echo "Nenhuma função GOMP identificada no topo do profiling.")"
+
+# 5. PYTHON THREADING
+echo "## 5. ANÁLISE PYTHON MULTITHREADING" >> "$REPORT_MD"
+add_to_reports "Py MT: Gasto de Threading Nativo C (perf report)" "$(grep -iE "evalframe\vert{}acquire\vert{}sem_wait\vert{}thread\vert{}lock" "$PERF_DIR/py_thread_4t_report.txt" 2>/dev/null | head -n 10 || echo "Símbolos não encontrados")"
+add_to_reports "Py MT: Gasto Threading Nível Python (cProfile)" "$(grep -iE "thread.*start\vert{}thread.*join\vert{}acquire\vert{}lock" "$LOG_DIR/py_thread_4t_cprofile.txt" 2>/dev/null || echo "Funções não registraram gargalo significativo")"
+
+# 6. PYTHON MULTIPROCESSING
+echo "## 6. ANÁLISE PYTHON MULTIPROCESSING (Pipe e Shared Memory)" >> "$REPORT_MD"
+add_to_reports "Py MP (Pipe): IPC e Instructions (perf stat)" "$(grep -E "cycles|instructions|insn per cycle" "$PERF_DIR/py_mp_pipe_4p_stat.log" || echo "Dados indisponíveis")"
+add_to_reports "Py MP (Pipe): Criação e Comunicação (cProfile)" "$(grep -iE "process\vert{}pipe\vert{}connection\vert{}send\vert{}recv\vert{}pickle\vert{}wait" "$LOG_DIR/py_mp_pipe_4p_cprofile.txt" 2>/dev/null || echo "Dados indisponíveis")
+* Nota: Filas (Queue.put/get) ou Pool.map = N/A (Implementação direta via Process + Pipe)"
+
+add_to_reports "Py MP (Shm): IPC e Instructions (perf stat)" "$(grep -E "cycles|instructions|insn per cycle" "$PERF_DIR/py_mp_shm_4p_stat.log" || echo "Dados indisponíveis")"
+add_to_reports "Py MP (Shm): Criação e Memoria (cProfile)" "$(grep -iE "process\vert{}sharedmemory\vert{}recv\vert{}wait" "$LOG_DIR/py_mp_shm_4p_cprofile.txt" 2>/dev/null || echo "Dados indisponíveis")"
+
+# 7. ESCALABILIDADE (SPEEDUP)
+echo -e "## 7. DADOS DE ESCALABILIDADE BRUTOS\n\`\`\`text" >> "$REPORT_MD"
+column -s, -t "$CSV_SCALE" >> "$REPORT_MD"
+echo -e "\`\`\`\n" >> "$REPORT_MD"
+echo "===== 7. ESCALABILIDADE (1,2,4,8) =====" >> "$REPORT_CSV"
+cat "$CSV_SCALE" >> "$REPORT_CSV"
+
+echo "SUCESSO! Seus dados estao prontos para o trabalho em:"
+echo " -> Relatorio formatado: $REPORT_MD"
+echo " -> Planilha CSV direta: $REPORT_CSV"

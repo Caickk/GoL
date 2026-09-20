@@ -66,10 +66,9 @@ int count_alive(void *u, int w, int h)
 {
     unsigned (*univ)[w] = u;
     int total_alive = 0;
-    // Reducao com particao por colunas
-    #pragma omp parallel for reduction(+:total_alive)
-    for (int x = 0; x < w; x++) {
-        for (int y = 0; y < h; y++) {
+    // Leitura estritamente sequencial, linha por coluna (sem paralelismo)
+    for (int y = 0; y < h; y++) {
+        for (int x = 0; x < w; x++) {
             total_alive += univ[y][x];
         }
     }
